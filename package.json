@@ -16,7 +16,7 @@
     "compile": "npx hardhat compile",
     "deploy:tokens": "npx hardhat ignition deploy ignition/modules/TestTokens.ts",
     "deploy:manager": "npx hardhat ignition deploy ignition/modules/BotManager.ts",
-    "remix": "remixd -s ./src/contracts -u https://remix.ethereum.org"
+    "remix": "remixd -s ./contracts -u https://remix.ethereum.org"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

@@ -1,4 +1,4 @@
-import { fillFromEnv, types } from '../dto/config.dto';
+import { fillFromEnv, types } from './dto/config.dto';
 
 const config = {
   DEFAULT_NETWORK: types.string,

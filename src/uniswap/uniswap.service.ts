@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Token } from '@uniswap/sdk-core';
 import { Pool } from '@uniswap/v3-sdk';
 import { ethers } from 'ethers';
-import { erc20Interface } from 'src/abi/erc20.interface';
-import { uniswapV3PoolInterface } from 'src/abi/uniswapv3.pool.interface';
+import { erc20Interface } from 'abi/erc20.interface';
+import { uniswapV3PoolInterface } from 'abi/uniswapv3.pool.interface';
 import { TRADE_CONFIG } from 'src/config/trade.config';
-import { provider } from 'src/network/provider';
+import { provider } from 'scripts/provider';
 
 @Injectable()
 export class UniswapService {

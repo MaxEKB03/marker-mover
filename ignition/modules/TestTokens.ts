@@ -1,10 +1,14 @@
 import { buildModule } from '@nomicfoundation/hardhat-ignition/modules';
 
 export default buildModule('TestTokens', (m) => {
-  const sellToken = m.contract('ERC20', ['1000000000000', 'USD', '6', 'USD'], {
+  const decimals = 18;
+  const amount0 = '1000000' + '0'.repeat(decimals);
+  const amount1 = '1000000000000' + '0'.repeat(decimals);
+
+  const sellToken = m.contract('ERC20', [amount0, 'USD', decimals, 'USD'], {
     id: 'SellToken',
   });
-  const buyToken = m.contract('ERC20', ['1000000000000', 'MTK', '6', 'MTK'], {
+  const buyToken = m.contract('ERC20', [amount1, 'MTK', decimals, 'MTK'], {
     id: 'BuyToken',
   });
 

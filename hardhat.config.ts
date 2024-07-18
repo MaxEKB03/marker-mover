@@ -1,7 +1,8 @@
-import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
+import { HardhatUserConfig } from 'hardhat/config';
+import { getWalletsByRange } from './scripts/address-factory';
 import config from './src/config/base.config';
-import { getWalletsByRange } from './src/network/address-factory';
+import './tasks';
 
 const accounts = getWalletsByRange(0, 10).map((wallet) => wallet.privateKey);
 
@@ -27,12 +28,6 @@ const hardhatConfig: HardhatUserConfig = {
         runs: 200,
       },
     },
-  },
-  paths: {
-    sources: './src/contracts',
-    tests: './src/test',
-    cache: './cache',
-    artifacts: './artifacts',
   },
 };
 

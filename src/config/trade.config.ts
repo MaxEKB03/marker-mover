@@ -1,5 +1,6 @@
 import { FeeAmount } from '@uniswap/v3-sdk';
 import config from './base.config';
+import { getDeployed } from '../../scripts/getDeployed';
 
 export interface TradeConfig {
   USDT_ADDRESS: string;
@@ -16,6 +17,8 @@ export interface TradeConfig {
 }
 
 export const IS_MAINNET = config.DEFAULT_NETWORK === 'mainnet';
+
+const deployed = getDeployed();
 
 export const TRADE_CONFIG = IS_MAINNET
   ? // mainnet
@@ -34,15 +37,15 @@ export const TRADE_CONFIG = IS_MAINNET
   : // testnet
     {
       CHAIN_ID: 97,
-      USDT_ADDRESS: '0x418B99dCB7c006C192561AB2420190Eb2F91f472',
-      USDT_DECIMALS: 6,
+      USDT_ADDRESS: deployed['TestTokens#SellToken'],
+      USDT_DECIMALS: 18,
 
-      TOKEN_ADDRESS: '0x1239366DFeDF0364c4BDFEdfb297ce55eB6Ef730',
-      TOKEN_DECIMALS: 6,
+      TOKEN_ADDRESS: deployed['TestTokens#BuyToken'],
+      TOKEN_DECIMALS: 18,
 
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
-      POOL_ADDRESS: '0xB736D811E7C0Cb268092AeFd3d427129062a19cd',
+      POOL_ADDRESS: deployed['Pool#Pancake'],
       POOL_FEE: FeeAmount.LOW,
 
-      PATH: '0x418b99dcb7c006c192561ab2420190eb2f91f4720001f41239366dfedf0364c4bdfedfb297ce55eb6ef730',
+      BOT_MANAGER: deployed['BotManager#BotManager'],
     };

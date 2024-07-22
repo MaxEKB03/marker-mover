@@ -8,6 +8,10 @@ import { IUniswapV3Pool } from '@uniswap/v3-core/contracts/interfaces/IUniswapV3
 import { BytesLib } from './lib/BytesLib.sol';
 import { SafeCast } from './lib/SafeCast.sol';
 
+interface IWhitelist {
+    function isWhitelist(address user) external view returns(bool);
+}
+
 contract BotManager is AccessControl {
     using BytesLib for bytes;
     using SafeCast for uint256;
@@ -15,6 +19,7 @@ contract BotManager is AccessControl {
     bytes32 private constant MANAGER_ROLE = keccak256("MANAGER");
     bytes32 private constant EXECUTER_ROLE = keccak256("EXECUTER");
 
+    IWhitelist private whitelist;
     address private pool;
 
     // path
@@ -30,7 +35,7 @@ contract BotManager is AccessControl {
     uint256 private constant DEFAULT_MAX_AMOUNT_IN = type(uint256).max;
     uint256 private maxAmountInCached = DEFAULT_MAX_AMOUNT_IN;
 
-    constructor(address _pool, address _manager) {
+    constructor(address _whitelist, address _pool, address _manager) {
         bank = msg.sender;
 
         _setRoleAdmin(MANAGER_ROLE, DEFAULT_ADMIN_ROLE);
@@ -45,12 +50,20 @@ contract BotManager is AccessControl {
         
         IUniswapV3Pool poolInstance = IUniswapV3Pool(_pool);
         
+        whitelist = IWhitelist(_whitelist);
         pool = _pool;
         fee = poolInstance.fee();
         token0 = poolInstance.token0();
         token1 = poolInstance.token1();
     }
     
+    modifier IsExecuter() {
+        bool local = hasRole(EXECUTER_ROLE, msg.sender);
+        bool remote = whitelist.isWhitelist(msg.sender);
+        require(local || remote, "Sender has not permissions");
+        _;
+    }
+
     function decodeData(bytes calldata inputs) public pure returns(bytes calldata) {
         bytes calldata path = inputs.toBytes(3);
         return path;

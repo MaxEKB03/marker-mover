@@ -1,6 +1,6 @@
 import '@nomicfoundation/hardhat-toolbox';
 import { HardhatUserConfig } from 'hardhat/config';
-import { getWalletsByRange } from './scripts/address-factory';
+import { getWalletsByRange } from './scripts/addressFactory';
 import config from './src/config/base.config';
 import './tasks';
 

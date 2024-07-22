@@ -58,7 +58,11 @@ export class VolumeService {
     );
 
     await this.increaseBalance();
-
+    // TODO: add select of type
+    // TODO: add select of amount
+    // TODO: add select of compute slippage
+    // TODO: send tx
+    // TODO: add waiter
     this.incrementWalletId();
   }
 

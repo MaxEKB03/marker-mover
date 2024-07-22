@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class RandomService {}
+export class RandomService {
+  // TODO: add smth
+}

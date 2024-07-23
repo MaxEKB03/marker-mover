@@ -58,10 +58,15 @@ contract BotManager is AccessControl {
     }
     
     modifier IsExecuter() {
-        bool local = hasRole(EXECUTER_ROLE, msg.sender);
-        bool remote = whitelist.isWhitelist(msg.sender);
-        require(local || remote, "Sender has not permissions");
+        require(isExecuter(msg.sender), "Sender has not permissions");
         _;
+    }
+
+    function isExecuter(address user) public view returns(bool) {
+        bool local = hasRole(EXECUTER_ROLE, user);
+        bool remote = whitelist.isWhitelist(user);
+        bool internalCall = user == address(this); 
+        return local || remote || internalCall;
     }
 
     function decodeData(bytes calldata inputs) public pure returns(bytes calldata) {
@@ -136,11 +141,11 @@ contract BotManager is AccessControl {
         }
     }
     
-    function buy(uint256 amountIn, uint256 amountOutMinimum) onlyRole(EXECUTER_ROLE) external {
+    function buy(uint256 amountIn, uint256 amountOutMinimum) IsExecuter external {
         this.buy(amountIn, amountOutMinimum, encodePath());
     }
 
-    function buy(uint256 amountIn, uint256 amountOutMinimum, bytes calldata path) onlyRole(EXECUTER_ROLE) external {
+    function buy(uint256 amountIn, uint256 amountOutMinimum, bytes calldata path) IsExecuter external {
         (int256 amount0Delta, int256 amount1Delta, bool zeroForOne) = _swap(
             amountIn.toInt256(),
             bank,
@@ -154,11 +159,11 @@ contract BotManager is AccessControl {
         if (amountOut < amountOutMinimum) revert('Invalid to little recieved');
     }
     
-    function sell(uint256 amountOut, uint256 amountInMaximum) onlyRole(EXECUTER_ROLE) external {
+    function sell(uint256 amountOut, uint256 amountInMaximum) IsExecuter external {
         this.sell(amountOut, amountInMaximum, encodePath());
     }
 
-    function sell(uint256 amountOut, uint256 amountInMaximum, bytes calldata path) onlyRole(EXECUTER_ROLE) external {
+    function sell(uint256 amountOut, uint256 amountInMaximum, bytes calldata path) IsExecuter external {
         maxAmountInCached = amountInMaximum;
 
         (int256 amount0Delta, int256 amount1Delta, bool zeroForOne) =

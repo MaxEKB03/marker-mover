@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 
 export const slippage = 0.5;
 
-export const minBalance: bigint = ethers.parseEther('0.0005');
-export const transferAmount: bigint = ethers.parseEther('0.002');
+export const minBalance: bigint = ethers.parseEther('0.001');
+export const transferAmount: bigint = ethers.parseEther('0.004');
 
 export const walletRange: { startId: number; endId: number } = {
   startId: 2,

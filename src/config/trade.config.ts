@@ -45,7 +45,7 @@ export const TRADE_CONFIG = IS_MAINNET
 
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
       POOL_ADDRESS: deployed['Pool#Pancake'],
-      POOL_FEE: FeeAmount.LOW,
+      POOL_FEE: FeeAmount.LOWEST,
 
       BOT_MANAGER: deployed['BotManager#BotManager'],
     };

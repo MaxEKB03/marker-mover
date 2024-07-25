@@ -85,22 +85,34 @@ export class VolumeService {
       : TRADE_CONFIG.USDT_DECIMALS;
     const tradeAmount = this.randomService.general(min, max);
 
-    const slippageAmount = isSelling ? tradeAmount : tradeAmount;
     const methodName = isSelling ? 'sell' : 'buy';
-    const txMethod = isSelling ? botManager['sell'] : botManager['buy'];
 
-    const amountOut = ethers.parseUnits(tradeAmount.toString(), decimalsOut);
-    const amountIn = ethers.parseUnits(slippageAmount.toString(), decimalsIn);
+    const slippageAmountPromise = isSelling
+      ? this.uniswapService.getOutputAmount(tradeAmount.toString())
+      : this.uniswapService.getInputAmount(tradeAmount.toString());
+    const slippageAmount = await slippageAmountPromise;
 
-    this.logger.log(
-      `Executing ${methodName} with ${amountOut} and ${amountIn}`,
+    const tradeAmountUnited = ethers.parseUnits(
+      tradeAmount.toString(),
+      decimalsIn,
+    );
+    const slippageAmountUnited = ethers.parseUnits(
+      slippageAmount.toString(),
+      decimalsIn,
     );
 
-    const tx: TransactionResponse = await txMethod(amountOut, amountIn);
-    const response = await tx.wait();
-    console.log(response);
+    this.logger.log(
+      `Executing ${methodName}:  ${tradeAmount} > ${slippageAmount}`,
+    );
+    console.log(tradeAmountUnited, slippageAmountUnited);
 
-    // TODO: add select of compute slippage
+    const txMethod = isSelling
+      ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
+      : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
+    const tx: TransactionResponse = await txMethod;
+    const response = await tx.wait();
+    console.log(response.hash);
+
     this.incrementWalletId();
   }
 

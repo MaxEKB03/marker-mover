@@ -106,6 +106,10 @@ export class VolumeService {
     );
     console.log(tradeAmountUnited, slippageAmountUnited);
 
+    if (tradeAmountUnited === 0n || slippageAmountUnited === 0n) {
+      return;
+    }
+
     const txMethod = isSelling
       ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
       : botManager['buy'](tradeAmountUnited, slippageAmountUnited);

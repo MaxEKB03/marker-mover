@@ -29,3 +29,8 @@ jobs:
       run: npx hardhat compile
     - name: "Build"
       run: npm run build
+  DeployProduction:
+    runs-on: ubuntu-latest
+    steps:
+    - name: "run set up"
+    

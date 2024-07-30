@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
     
     - name: "Create .env file"
-      run:
+      run: |
         touch .env
         echo DEFAULT_NETWORK="mainnet" >> .env
         echo PORT=3000 >> .env

@@ -22,13 +22,15 @@ jobs:
       with:
         node-version: '20.x'
         cache: 'npm'
-    - run: npm ci
-    - run:
+    
+    - name: "Create .env file"
+      run:
         touch .env
         echo DEFAULT_NETWORK="mainnet" >> .env
         echo PORT=3000 >> .env
         echo JSON_RPC_MAINNET=${{ secrets.JSON_RPC_MAINNET }} >> .env
         echo JSON_RPC_TESTNET=${{ secrets.JSON_RPC_TESTNET }} >> .env
         echo MNEMONIC=${{ secrets.MNEMONIC }} >> .env
+    - run: npm ci
     - run: npx hardhat compile
     - run: npm run build --if-present

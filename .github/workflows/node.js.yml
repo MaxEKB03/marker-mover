@@ -23,8 +23,7 @@ jobs:
         node-version: '20.x'
         cache: 'npm'
     - run: npm ci
-    - name: 'Create env file'
-      run: |
+    - run:
         touch .env
         echo DEFAULT_NETWORK="mainnet" >> .env
         echo PORT=3000 >> .env

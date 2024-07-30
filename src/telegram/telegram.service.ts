@@ -46,7 +46,7 @@ export class TelegramService {
     this.bot.telegram.sendMessage(config.OWNER_ID, 'botManager was stopped');
   }
 
-  async notify(error: string) {
-    this.bot.telegram.sendMessage(config.OWNER_ID, error);
+  async notify(text) {
+    this.bot.telegram.sendMessage(config.OWNER_ID, text);
   }
 }

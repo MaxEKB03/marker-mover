@@ -41,6 +41,7 @@ export class VolumeService {
   }
 
   private async listen() {
+    this.telegramService.notify('Farm is starting');
     while (true) {
       await wait(10);
       this.logger.log('Next iteration');

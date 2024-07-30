@@ -1,0 +1,36 @@
+name: Bot Manager workflow
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+    # Build & Checks
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20
+        cache: 'npm'
+        check-latest: true
+    - name: "Create .env file"
+      run: |
+        touch .env
+        echo DEFAULT_NETWORK="mainnet" >> .env
+        echo PORT=3000 >> .env
+        echo JSON_RPC_MAINNET=${{ secrets.JSON_RPC_MAINNET }} >> .env
+        echo JSON_RPC_TESTNET=${{ secrets.JSON_RPC_TESTNET }} >> .env
+        echo MNEMONIC=${{ secrets.MNEMONIC }} >> .env
+    - name: "Intsall depednecies"
+      run: npm ci
+    - name: "Compile contracts & typechain"
+      run: npx hardhat compile
+    - name: "Build"
+      run: npm run build
+  DeployProduction:
+    runs-on: ubuntu-latest
+    steps:
+    - name: "run set up"
+    

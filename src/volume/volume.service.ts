@@ -13,22 +13,23 @@ import {
 } from './dto/volume.dto';
 import { UniswapService } from 'src/uniswap/uniswap.service';
 import { TRADE_CONFIG } from 'src/config/trade.config';
+import { ControlsService } from './controls/controls.service';
+import { TelegramService } from 'src/telegram/telegram.service';
 
 @Injectable()
 export class VolumeService {
   logger: Logger = new Logger('Volume');
-
-  isRunning: Boolean = false;
 
   walletId: number = walletRange.startId; // current executer by order
 
   constructor(
     private readonly randomService: RandomService,
     private readonly uniswapService: UniswapService,
+    private readonly controlsService: ControlsService,
+    protected readonly telegramService: TelegramService,
   ) {
     this.getManager();
     this.listen();
-    this.isRunning = true;
   }
 
   private getManager() {
@@ -44,7 +45,7 @@ export class VolumeService {
       await wait(10);
       this.logger.log('Next iteration');
 
-      if (!this.isRunning) {
+      if (!this.controlsService.isRunning) {
         continue;
       }
 
@@ -52,7 +53,10 @@ export class VolumeService {
         await this.process();
       } catch (e) {
         console.log(e);
-        this.isRunning = false;
+        this.controlsService.isRunning = false;
+
+        const errorMessage = e.toString();
+        await this.telegramService.notify(errorMessage.slice(0, 250));
       }
     }
   }
@@ -80,7 +84,7 @@ export class VolumeService {
     const executerBalance = await provider.getBalance(executer.address);
 
     if (managerBalance < transferAmount) {
-      this.isRunning = false;
+      this.controlsService.isRunning = false;
       throw new Error('Manager balance is so low');
     }
 

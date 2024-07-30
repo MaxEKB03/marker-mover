@@ -6,6 +6,8 @@ const config = {
   JSON_RPC_TESTNET: types.string,
   MNEMONIC: types.string,
   PORT: types.number,
+  BOT_TOKEN: types.string,
+  OWNER_ID: types.number,
 };
 
 fillFromEnv(config);

@@ -1,10 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  ethers,
-  Transaction,
-  TransactionRequest,
-  TransactionResponse,
-} from 'ethers';
+import { ethers, TransactionResponse } from 'ethers';
 import { getWalletById } from 'scripts/addressFactory';
 import { provider } from 'scripts/provider';
 import { wait } from 'src/helpers/time';
@@ -16,7 +11,6 @@ import {
   TxTypes,
   walletRange,
 } from './dto/volume.dto';
-import { deflate } from 'zlib';
 import { UniswapService } from 'src/uniswap/uniswap.service';
 import { TRADE_CONFIG } from 'src/config/trade.config';
 
@@ -38,7 +32,7 @@ export class VolumeService {
   }
 
   private getManager() {
-    return getWalletById(1).connect(provider);
+    return getWalletById(0).connect(provider);
   }
 
   private getExecuter() {
@@ -70,54 +64,12 @@ export class VolumeService {
     );
 
     await this.increaseBalance();
-    const botManager = this.uniswapService.botManager.connect(executer);
 
-    const txType = this.randomService.ofConfigured(TxTypes);
-    const amountType = this.randomService.ofConfigured(AmountTypes);
-    const [min, max] = amountType.data;
+    await this.runTrade();
 
-    const isSelling = txType.id == 0;
-    const decimalsOut = isSelling
-      ? TRADE_CONFIG.USDT_DECIMALS
-      : TRADE_CONFIG.TOKEN_DECIMALS;
-    const decimalsIn = isSelling
-      ? TRADE_CONFIG.TOKEN_DECIMALS
-      : TRADE_CONFIG.USDT_DECIMALS;
-    const tradeAmount = this.randomService.general(min, max);
+    await this.waitRandomTime();
 
-    const methodName = isSelling ? 'sell' : 'buy';
-
-    const slippageAmountPromise = isSelling
-      ? this.uniswapService.getOutputAmount(tradeAmount.toString())
-      : this.uniswapService.getInputAmount(tradeAmount.toString());
-    const slippageAmount = await slippageAmountPromise;
-
-    const tradeAmountUnited = ethers.parseUnits(
-      tradeAmount.toString(),
-      decimalsIn,
-    );
-    const slippageAmountUnited = ethers.parseUnits(
-      slippageAmount.toString(),
-      decimalsIn,
-    );
-
-    this.logger.log(
-      `Executing ${methodName}:  ${tradeAmount} > ${slippageAmount}`,
-    );
-    console.log(tradeAmountUnited, slippageAmountUnited);
-
-    if (tradeAmountUnited === 0n || slippageAmountUnited === 0n) {
-      return;
-    }
-
-    const txMethod = isSelling
-      ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
-      : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
-    const tx: TransactionResponse = await txMethod;
-    const response = await tx.wait();
-    console.log(response.hash);
-
-    this.incrementWalletId();
+    // this.incrementWalletId();
   }
 
   private async increaseBalance() {
@@ -148,6 +100,63 @@ export class VolumeService {
       const tx = await manager.sendTransaction(txParams);
       await tx.wait();
     }
+  }
+
+  private async runTrade() {
+    const executer = this.getExecuter();
+
+    const botManager = this.uniswapService.botManager.connect(executer);
+
+    const txType = this.randomService.ofConfigured(TxTypes);
+    const amountType = this.randomService.ofConfigured(AmountTypes);
+    const [min, max] = amountType.data;
+
+    const isSelling = txType.id != 0;
+    const decimalsOut = isSelling
+      ? TRADE_CONFIG.USDT_DECIMALS
+      : TRADE_CONFIG.TOKEN_DECIMALS;
+    const decimalsIn = isSelling
+      ? TRADE_CONFIG.TOKEN_DECIMALS
+      : TRADE_CONFIG.USDT_DECIMALS;
+    const tradeAmount = this.randomService.general(min, max);
+
+    const methodName = isSelling ? 'sell' : 'buy';
+
+    const slippageAmountPromise = isSelling
+      ? this.uniswapService.getOutputAmount(tradeAmount.toString())
+      : this.uniswapService.getInputAmount(tradeAmount.toString());
+    const slippageAmount = await slippageAmountPromise;
+
+    const tradeAmountUnited = ethers.parseUnits(
+      tradeAmount.toString(),
+      decimalsIn,
+    );
+    const slippageAmountUnited = ethers.parseUnits(
+      slippageAmount.toString(),
+      decimalsOut,
+    );
+
+    this.logger.log(
+      `Executing ${methodName}:  ${tradeAmount} > ${slippageAmount}`,
+    );
+    console.log(tradeAmountUnited, slippageAmountUnited);
+
+    if (tradeAmountUnited === 0n || slippageAmountUnited === 0n) {
+      return;
+    }
+
+    const txMethod = isSelling
+      ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
+      : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
+    const tx: TransactionResponse = await txMethod;
+    const response = await tx.wait();
+    console.log(response.hash);
+  }
+
+  private async waitRandomTime() {
+    const threeMinutes = 180;
+
+    await wait(threeMinutes);
   }
 
   private incrementWalletId() {

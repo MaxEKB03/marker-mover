@@ -1,0 +1,7 @@
+{
+  "Whitelist#Whitelist": "0x6437afA78cDf8b6764e44EC5100f7497690fBDa1",
+  "Pool#Pancake": "0x6948d6c8532c6b0006cb67c6fb9c399792c8ac91",
+  "BotManager#BotManager": "0x9e2987ddC843760985bc5157121feF8c34dAEF99",
+  "TestTokens#BuyToken": "0x34980c35353A8D7B1A1BA02e02E387a8383e004A",
+  "TestTokens#SellToken": "0x55d398326f99059fF775485246999027B3197955"
+}

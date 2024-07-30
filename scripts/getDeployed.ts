@@ -8,6 +8,7 @@ export function getDeployed() {
       `./ignition/deployments/chain-${chainID}/deployed_addresses.json`,
     )
     .toLocaleString();
+
   const encoded = JSON.parse(data);
   return encoded;
 }

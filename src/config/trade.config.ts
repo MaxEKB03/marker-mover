@@ -24,15 +24,17 @@ export const TRADE_CONFIG = IS_MAINNET
   ? // mainnet
     {
       CHAIN_ID: 56,
-      USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+      USDT_ADDRESS: deployed['TestTokens#SellToken'],
       USDT_DECIMALS: 18,
 
-      TOKEN_ADDRESS: '',
+      TOKEN_ADDRESS: deployed['TestTokens#BuyToken'],
       TOKEN_DECIMALS: 18,
 
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
-      POOL_ADDRESS: '',
-      POOL_FEE: FeeAmount.MEDIUM,
+      POOL_ADDRESS: deployed['Pool#Pancake'],
+      POOL_FEE: FeeAmount.LOWEST,
+
+      BOT_MANAGER: deployed['BotManager#BotManager'],
     }
   : // testnet
     {

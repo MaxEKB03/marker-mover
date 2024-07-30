@@ -16,7 +16,7 @@
     "compile": "npx hardhat compile",
     "deploy": "npx hardhat run scripts/deploy/run.ts",
     "deploy:tokens": "npx hardhat ignition deploy ignition/modules/TestTokens.ts",
-    "deploy:whitelist": "npx hardhat ignition deploy ignition/modules/BotManager.ts",
+    "deploy:whitelist": "npx hardhat ignition deploy ignition/modules/Whitelist.ts",
     "deploy:manager": "npx hardhat ignition deploy ignition/modules/BotManager.ts",
     "remix": "remixd -s ./contracts -u https://remix.ethereum.org"
   },

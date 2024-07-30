@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core';
-import { Pool, Route, Tick, Trade } from '@uniswap/v3-sdk';
+import { Token } from '@uniswap/sdk-core';
+import { Pool, Tick } from '@uniswap/v3-sdk';
 import { Contract, ethers } from 'ethers';
 import { TRADE_CONFIG } from 'src/config/trade.config';
 import { provider } from 'scripts/provider';
@@ -31,9 +31,7 @@ export class UniswapService {
     provider,
   );
 
-  constructor() {
-    // this.smth();
-  }
+  constructor() {}
 
   async smth() {
     const usdToken = await this.createToken(

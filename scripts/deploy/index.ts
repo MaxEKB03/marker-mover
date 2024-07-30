@@ -1,9 +1,14 @@
 import { dictionary } from '../../ignition/dictionary';
-import { deployManager } from './manager';
-import { deployTokens } from './tokens';
 import { getWalletById, getWalletsByRange } from '../addressFactory';
 import { BaseContractMethod, ContractTransactionResponse } from 'ethers';
+// import { deployManager } from './manager';
+// import { deployTokens } from './tokens';
 import { deployWhitelist } from './whitelist';
+
+const steps = {
+  whitelist: true,
+  allowance: false,
+};
 
 const waitTx = async (callMethod: BaseContractMethod, ...args) => {
   const tx: ContractTransactionResponse = await callMethod(...args);
@@ -13,10 +18,10 @@ const waitTx = async (callMethod: BaseContractMethod, ...args) => {
 
 export async function deploy() {
   /////////////////////////////////////////////////////
-  const { buyToken, sellToken } = await deployTokens();
+  // const { buyToken, sellToken } = await deployTokens();
 
-  dictionary.addresses['buyToken'] = await buyToken.getAddress();
-  dictionary.addresses['sellToken'] = await sellToken.getAddress();
+  // dictionary.addresses['buyToken'] = await buyToken.getAddress();
+  // dictionary.addresses['sellToken'] = await sellToken.getAddress();
 
   // TODO: create pool
 
@@ -25,32 +30,36 @@ export async function deploy() {
 
   dictionary.addresses['whitelist'] = await whitelist.getAddress();
 
-  const isWhitelist = await whitelist.isWhitelist(getWalletById(2));
+  if (steps.whitelist) {
+    const isWhitelist = await whitelist.isWhitelist(getWalletById(2));
 
-  if (!isWhitelist) {
-    await waitTx(
-      whitelist.grant,
-      getWalletsByRange(2, 502).map((wallet) => wallet.address),
-    );
+    if (!isWhitelist) {
+      await waitTx(
+        whitelist.grant,
+        getWalletsByRange(2, 502).map((wallet) => wallet.address),
+      );
+    }
   }
 
   /////////////////////////////////////////////////////
-  const { botManager } = await deployManager();
-  const botManagerAddress = await botManager.getAddress();
+  // const { botManager } = await deployManager();
+  // const botManagerAddress = await botManager.getAddress();
 
-  dictionary.addresses['botManager'] = botManagerAddress;
+  // dictionary.addresses['botManager'] = botManagerAddress;
 
-  const owner = getWalletById(0).address;
+  // if (steps.allowance) {
+  //   const owner = getWalletById(0).address;
 
-  const balance0 = await buyToken.balanceOf(owner);
-  await waitTx(buyToken.approve, botManagerAddress, balance0);
-  const allowance0 = await buyToken.allowance(owner, botManagerAddress);
-  if (balance0 != allowance0) throw new Error('allowance0 is Invalid');
+  //   const balance0 = await buyToken.balanceOf(owner);
+  //   await waitTx(buyToken.approve, botManagerAddress, balance0);
+  //   const allowance0 = await buyToken.allowance(owner, botManagerAddress);
+  //   if (balance0 != allowance0) throw new Error('allowance0 is Invalid');
 
-  const balance1 = await sellToken.balanceOf(owner);
-  await waitTx(sellToken.approve, botManagerAddress, balance1);
-  const allowance1 = await sellToken.allowance(owner, botManagerAddress);
-  if (balance1 != allowance1) throw new Error('allowance1 is Invalid');
+  //   const balance1 = await sellToken.balanceOf(owner);
+  //   await waitTx(sellToken.approve, botManagerAddress, balance1);
+  //   const allowance1 = await sellToken.allowance(owner, botManagerAddress);
+  //   if (balance1 != allowance1) throw new Error('allowance1 is Invalid');
+  // }
 
   console.log('Success');
   console.log(dictionary.addresses);

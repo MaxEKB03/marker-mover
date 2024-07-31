@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ethers, TransactionResponse } from 'ethers';
+import { Contract, ethers, TransactionResponse } from 'ethers';
 import { getWalletById } from 'scripts/addressFactory';
 import { provider } from 'scripts/provider';
 import { wait } from 'src/helpers/time';
@@ -7,6 +7,7 @@ import { RandomService } from 'src/random/random.service';
 import {
   AmountTypes,
   minBalance,
+  minTimeWaiting,
   transferAmount,
   TxTypes,
   walletRange,
@@ -15,6 +16,7 @@ import { UniswapService } from 'src/uniswap/uniswap.service';
 import { TRADE_CONFIG } from 'src/config/trade.config';
 import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
+import { ERC20__factory } from 'typechain-types';
 
 @Injectable()
 export class VolumeService {
@@ -74,7 +76,7 @@ export class VolumeService {
 
     await this.waitRandomTime();
 
-    // this.incrementWalletId();
+    this.incrementWalletId();
   }
 
   private async increaseBalance() {
@@ -116,14 +118,42 @@ export class VolumeService {
     const amountType = this.randomService.ofConfigured(AmountTypes);
     const [min, max] = amountType.data;
 
-    const isSelling = txType.id != 0;
+    const isSellingByRandom = txType.id != 0;
+
+    const usdAmount = this.randomService.general(min, max);
+
+    const bankBalances = await this.getBankBalance();
+    const readableBalances = bankBalances.map((bigValue) =>
+      Math.round(Number(ethers.formatEther(bigValue))),
+    );
+    const tokenAmount = await this.usdToToken(usdAmount.toString());
+    let tradeAmount = isSellingByRandom
+      ? usdAmount
+      : Math.round(Number(ethers.formatEther(tokenAmount)));
+
+    const compareValue = isSellingByRandom
+      ? readableBalances[0]
+      : readableBalances[1];
+
+    const isPossible = tradeAmount * 1.2 < compareValue;
+
+    tradeAmount = !isPossible
+      ? !isSellingByRandom
+        ? usdAmount
+        : Math.round(Number(ethers.formatEther(tokenAmount)))
+      : tradeAmount;
+
+    const isSelling = isPossible ? isSellingByRandom : !isSellingByRandom; // Check balance to trade, else change direction
+    if (!isPossible) {
+      this.logger.log('Direction was changed, cause balance of bank is low');
+    }
+
     const decimalsOut = isSelling
       ? TRADE_CONFIG.USDT_DECIMALS
       : TRADE_CONFIG.TOKEN_DECIMALS;
     const decimalsIn = isSelling
       ? TRADE_CONFIG.TOKEN_DECIMALS
       : TRADE_CONFIG.USDT_DECIMALS;
-    const tradeAmount = this.randomService.general(min, max);
 
     const methodName = isSelling ? 'sell' : 'buy';
 
@@ -159,9 +189,15 @@ export class VolumeService {
   }
 
   private async waitRandomTime() {
-    const threeMinutes = 180;
+    const randomMin = minTimeWaiting * 0.2;
+    const randomMax = minTimeWaiting * 0.35;
+    const randomEnd = this.randomService.general(randomMin, randomMax);
+    const awaitTime = minTimeWaiting + randomEnd;
 
-    await wait(threeMinutes);
+    this.logger.log(
+      `Next tx will run after ${(awaitTime / 60).toFixed(2)} minutes`,
+    );
+    await wait(awaitTime);
   }
 
   private incrementWalletId() {
@@ -169,5 +205,53 @@ export class VolumeService {
     const addOne = this.walletId + 1;
 
     this.walletId = addOne < endId ? addOne : startId;
+  }
+
+  async usdToToken(usdInDecimal: string) {
+    const usdAmount = ethers.parseEther(usdInDecimal);
+    const token0 = await this.uniswapService.pool.token0();
+    const isFirst =
+      token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
+
+    const convertMethod = isFirst
+      ? this.uniswapService.getOutputAmount
+      : this.uniswapService.getInputAmount;
+
+    const inUsd = await convertMethod(usdAmount.toString());
+    return BigInt(inUsd);
+  }
+
+  async tokenToUSD(tokenBalance: number) {
+    const token0 = await this.uniswapService.pool.token0();
+    const isFirst =
+      token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
+
+    const convertMethod = isFirst
+      ? this.uniswapService.getInputAmount
+      : this.uniswapService.getOutputAmount;
+
+    const inUsd = await convertMethod(tokenBalance.toString());
+    return BigInt(inUsd);
+  }
+
+  async getBankBalance() {
+    const bankAddress = '0x7D89F5A712Fcc3968DbBAAF7a0c92e426e170C77';
+
+    const usdtContract = new Contract(
+      TRADE_CONFIG.USDT_ADDRESS,
+      ERC20__factory.abi,
+      provider,
+    );
+    const tokenContract = new Contract(
+      TRADE_CONFIG.TOKEN_ADDRESS,
+      ERC20__factory.abi,
+      provider,
+    );
+
+    const usdtBalance = await usdtContract.balanceOf(bankAddress);
+    const tokenBalance = await tokenContract.balanceOf(bankAddress);
+    const tokenInUSD = await this.tokenToUSD(tokenBalance);
+
+    return [usdtBalance, tokenBalance, tokenInUSD];
   }
 }

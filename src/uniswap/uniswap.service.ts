@@ -65,6 +65,8 @@ export class UniswapService {
       amountOut - (amountOut * TRADE_CONFIG.POOL_FEE) / 1000000;
     const amountIn = price * amountOutWithFee;
     const amountInWithSlippage = amountIn - (amountIn * 0.5) / 100;
+
+    return amountInWithSlippage;
   }
 
   async createToken(tokenAddress: string, decimals?: number): Promise<Token> {

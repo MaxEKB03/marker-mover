@@ -4,7 +4,7 @@ import { RandomConfigure, RandomElement } from 'src/volume/dto/volume.dto';
 @Injectable()
 export class RandomService {
   general(min: number, max: number): number {
-    return Math.round(Math.random() * (max - min));
+    return Math.round(Math.random() * (max - min) + min);
   }
 
   ofList<T>(list: Array<T>): T {

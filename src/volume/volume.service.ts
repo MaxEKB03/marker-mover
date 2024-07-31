@@ -178,12 +178,12 @@ export class VolumeService {
       return;
     }
 
-    // const txMethod = isSelling
-    //   ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
-    //   : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
-    // const tx: TransactionResponse = await txMethod;
-    // const response = await tx.wait();
-    // console.log(response.hash);
+    const txMethod = isSelling
+      ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
+      : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
+    const tx: TransactionResponse = await txMethod;
+    const response = await tx.wait();
+    console.log(response.hash);
   }
 
   private async waitRandomTime() {

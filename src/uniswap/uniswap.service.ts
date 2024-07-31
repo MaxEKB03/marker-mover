@@ -141,7 +141,7 @@ export class UniswapService {
     const amountOutWithFee =
       amountOut - (amountOut * TRADE_CONFIG.POOL_FEE) / 1000000;
     const amountIn = price * amountOutWithFee;
-    const amountInWithSlippage = amountIn - (amountOut * 0.1) / 100;
+    const amountInWithSlippage = amountIn - (amountOut * 0.05) / 100;
 
     return amountInWithSlippage;
   }
@@ -168,7 +168,7 @@ export class UniswapService {
     const amountInWithFee =
       amountIn - (amountIn * TRADE_CONFIG.POOL_FEE) / 1000000;
     const amountOut = amountInWithFee / price;
-    const amountOuWithSlippage = amountOut - (amountOut * 0.1) / 100;
+    const amountOuWithSlippage = amountOut - (amountOut * 0.01) / 100;
 
     return amountOuWithSlippage;
   }

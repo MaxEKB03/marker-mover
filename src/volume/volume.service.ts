@@ -22,8 +22,6 @@ import { ERC20__factory } from 'typechain-types';
 export class VolumeService {
   logger: Logger = new Logger('Volume');
 
-  walletId: number = walletRange.startId; // current executer by order
-
   constructor(
     private readonly randomService: RandomService,
     private readonly uniswapService: UniswapService,
@@ -39,7 +37,7 @@ export class VolumeService {
   }
 
   private getExecuter() {
-    return getWalletById(this.walletId).connect(provider);
+    return getWalletById(this.controlsService.walletId).connect(provider);
   }
 
   private async listen() {
@@ -67,7 +65,7 @@ export class VolumeService {
   private async process() {
     const executer = this.getExecuter();
     this.logger.log(
-      `Next executer ${this.walletId}/${walletRange.endId} is: ${executer.address}`,
+      `Next executer ${this.controlsService.walletId}/${walletRange.endId} is: ${executer.address}`,
     );
 
     await this.increaseBalance();
@@ -76,7 +74,7 @@ export class VolumeService {
 
     await this.waitRandomTime();
 
-    this.incrementWalletId();
+    this.controlsService.incrementWalletId();
   }
 
   private async increaseBalance() {
@@ -180,12 +178,12 @@ export class VolumeService {
       return;
     }
 
-    const txMethod = isSelling
-      ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
-      : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
-    const tx: TransactionResponse = await txMethod;
-    const response = await tx.wait();
-    console.log(response.hash);
+    // const txMethod = isSelling
+    //   ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
+    //   : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
+    // const tx: TransactionResponse = await txMethod;
+    // const response = await tx.wait();
+    // console.log(response.hash);
   }
 
   private async waitRandomTime() {
@@ -198,13 +196,6 @@ export class VolumeService {
       `Next tx will run after ${(awaitTime / 60).toFixed(2)} minutes`,
     );
     await wait(awaitTime);
-  }
-
-  private incrementWalletId() {
-    const { startId, endId } = walletRange;
-    const addOne = this.walletId + 1;
-
-    this.walletId = addOne < endId ? addOne : startId;
   }
 
   async usdToToken(usdInDecimal: string) {

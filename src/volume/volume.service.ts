@@ -178,12 +178,12 @@ export class VolumeService {
       return;
     }
 
-    const txMethod = isSelling
-      ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
-      : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
-    const tx: TransactionResponse = await txMethod;
-    const response = await tx.wait();
-    console.log(response.hash);
+    // const txMethod = isSelling
+    //   ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
+    //   : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
+    // const tx: TransactionResponse = await txMethod;
+    // const response = await tx.wait();
+    // console.log(response.hash);
   }
 
   private async waitRandomTime() {
@@ -204,12 +204,12 @@ export class VolumeService {
     const isFirst =
       token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
 
-    const convertMethod = isFirst
-      ? this.uniswapService.getOutputAmount
-      : this.uniswapService.getInputAmount;
+    const promise = isFirst
+      ? this.uniswapService.getOutputAmount(usdAmount.toString())
+      : this.uniswapService.getInputAmount(usdAmount.toString());
 
-    const inUsd = await convertMethod(usdAmount.toString());
-    return BigInt(inUsd);
+    const inToken = await promise;
+    return BigInt(inToken);
   }
 
   async tokenToUSD(tokenBalance: number) {
@@ -217,11 +217,11 @@ export class VolumeService {
     const isFirst =
       token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
 
-    const convertMethod = isFirst
-      ? this.uniswapService.getInputAmount
-      : this.uniswapService.getOutputAmount;
+    const promise = isFirst
+      ? this.uniswapService.getInputAmount(tokenBalance.toString())
+      : this.uniswapService.getOutputAmount(tokenBalance.toString());
 
-    const inUsd = await convertMethod(tokenBalance.toString());
+    const inUsd = await promise;
     return BigInt(inUsd);
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Token } from '@uniswap/sdk-core';
+import { CurrencyAmount, Token } from '@uniswap/sdk-core';
 import { Pool, Tick } from '@uniswap/v3-sdk';
 import { Contract, ethers } from 'ethers';
 import { TRADE_CONFIG } from 'src/config/trade.config';
@@ -140,10 +140,36 @@ export class UniswapService {
     const amountOut = Number(rawOutputAmount);
     const amountOutWithFee =
       amountOut - (amountOut * TRADE_CONFIG.POOL_FEE) / 1000000;
-    const amountIn = price * amountOutWithFee;
-    const amountInWithSlippage = amountIn - (amountOut * 0.05) / 100;
+    const amountIn = price * amountOut;
+    const amountInWithSlippage = amountIn - (amountIn * 0.3) / 100;
+
+    console.log(amountIn, amountInWithSlippage);
 
     return amountInWithSlippage;
+  }
+
+  async getOutputInput2(rawOutputAmount: string) {
+    const usdToken = await this.createToken(
+      TRADE_CONFIG.USDT_ADDRESS,
+      TRADE_CONFIG.USDT_DECIMALS,
+    );
+    const tradeToken = await this.createToken(
+      TRADE_CONFIG.TOKEN_ADDRESS,
+      TRADE_CONFIG.TOKEN_DECIMALS,
+    );
+
+    const pool = await this.createPool(
+      usdToken,
+      tradeToken,
+      TRADE_CONFIG.POOL_ADDRESS,
+    );
+
+    const outputAmount = CurrencyAmount.fromRawAmount(
+      tradeToken,
+      rawOutputAmount,
+    );
+    const inputAmount = await pool.getInputAmount(outputAmount);
+    return Number(inputAmount[0].toExact());
   }
 
   /**
@@ -167,9 +193,32 @@ export class UniswapService {
 
     const amountInWithFee =
       amountIn - (amountIn * TRADE_CONFIG.POOL_FEE) / 1000000;
-    const amountOut = amountInWithFee / price;
-    const amountOuWithSlippage = amountOut - (amountOut * 0.01) / 100;
+    const amountOut = amountIn / price;
+    const amountOuWithSlippage = amountOut - (amountOut * 0.3) / 100;
+
+    console.log(amountOut, amountOuWithSlippage);
 
     return amountOuWithSlippage;
+  }
+
+  async getOutputAmount2(rawInputAmount: string) {
+    const usdToken = await this.createToken(
+      TRADE_CONFIG.USDT_ADDRESS,
+      TRADE_CONFIG.USDT_DECIMALS,
+    );
+    const tradeToken = await this.createToken(
+      TRADE_CONFIG.TOKEN_ADDRESS,
+      TRADE_CONFIG.TOKEN_DECIMALS,
+    );
+
+    const pool = await this.createPool(
+      usdToken,
+      tradeToken,
+      TRADE_CONFIG.POOL_ADDRESS,
+    );
+
+    const inputAmount = CurrencyAmount.fromRawAmount(usdToken, rawInputAmount);
+    const outputAmount = await pool.getOutputAmount(inputAmount);
+    return Number(outputAmount[0].toExact());
   }
 }

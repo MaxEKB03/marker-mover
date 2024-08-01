@@ -162,7 +162,7 @@ export class VolumeService {
     );
 
     const getExactAmount = isSelling
-      ? this.uniswapService.getInputAmount2(Number(tradeAmount))
+      ? this.uniswapService.getOutputAmount2(Number(tokenAmount))
       : this.uniswapService.getOutputAmount2(Number(tradeAmount));
     const exactAmount = await getExactAmount;
 
@@ -172,9 +172,17 @@ export class VolumeService {
       slippageAmount.toString(),
       decimalsOut,
     );
-    this.logger.log(
-      `Executing ${methodName}:  ${tradeAmountUnited} > ${slippageAmountUnited}`,
-    );
+
+    if (isSelling) {
+      const formatted = ethers.formatEther(tokenAmount);
+      this.logger.log(
+        `Executing ${methodName}:  ${slippageAmountUnited} > ${formatted}`,
+      );
+    } else {
+      this.logger.log(
+        `Executing ${methodName}:  ${tradeAmountUnited} > ${slippageAmountUnited}`,
+      );
+    }
     console.log(tradeAmount, slippageAmount);
 
     if (tradeAmount === 0n || slippageAmount === 0n) {
@@ -182,7 +190,7 @@ export class VolumeService {
     }
 
     const txMethod = isSelling
-      ? botManager['sell'](slippageAmount, tradeAmount)
+      ? botManager['sell'](slippageAmount, tokenAmount)
       : botManager['buy'](tradeAmount, slippageAmount);
     const tx: TransactionResponse = await txMethod;
     const response = await tx.wait();

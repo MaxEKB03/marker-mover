@@ -278,7 +278,6 @@ export class UniswapService {
     const outputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: outputAmount };
-    console.log('EXACT OUTPUT');
 
     return res;
   }
@@ -312,8 +311,6 @@ export class UniswapService {
     const inputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: inputAmount };
-    console.log('EXACT INPUT', rawOutputAmount);
-    console.log(res);
 
     return res;
   }

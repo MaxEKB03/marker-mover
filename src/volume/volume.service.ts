@@ -169,13 +169,13 @@ export class VolumeService {
     const slippageAmount = BigInt(exactAmount.subAmount);
 
     const slippageAmountUnited = ethers.formatUnits(
-      exactAmount.subAmount.toString(),
+      slippageAmount.toString(),
       decimalsOut,
     );
     this.logger.log(
       `Executing ${methodName}:  ${tradeAmountUnited} > ${slippageAmountUnited}`,
     );
-    // console.log(tradeAmount, slippageAmount);
+    console.log(tradeAmount, slippageAmount);
 
     if (tradeAmount === 0n || slippageAmount === 0n) {
       return;

@@ -24,7 +24,7 @@ export const minTimeWaiting = 15 * 60;
 export const TxTypes: RandomConfigure = {
   sell: {
     id: 0,
-    percent: 100,
+    percent: 25,
   },
   buy: {
     id: 1,
@@ -35,7 +35,7 @@ export const TxTypes: RandomConfigure = {
 export const AmountTypes: RandomConfigure = {
   small: {
     id: 0,
-    // percent: 50,
+    // percent: 100,
     percent: 0,
     data: [2, 10],
   },

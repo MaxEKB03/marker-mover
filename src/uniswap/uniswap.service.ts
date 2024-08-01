@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CurrencyAmount, Token } from '@uniswap/sdk-core';
-import { Pool, Tick } from '@uniswap/v3-sdk';
+import { FullMath, Pool, Tick } from '@uniswap/v3-sdk';
 import { Contract, ethers } from 'ethers';
 import { TRADE_CONFIG } from 'src/config/trade.config';
 import { provider } from 'scripts/provider';
@@ -31,9 +31,13 @@ export class UniswapService {
     provider,
   );
 
-  constructor() {}
+  constructor() {
+    // this.smth();
+  }
 
   async smth() {
+    const amountIn = Number(ethers.parseEther('1'));
+
     const usdToken = await this.createToken(
       TRADE_CONFIG.USDT_ADDRESS,
       TRADE_CONFIG.USDT_DECIMALS,
@@ -56,17 +60,62 @@ export class UniswapService {
     );
 
     const slot0 = await poolContract.slot0();
+    const liquidity = Number(await poolContract.liquidity());
+    const Q96 = 79228162514264337593543950336;
 
-    const sqrtPriceX96: bigint = slot0[0];
-    const price = Number(sqrtPriceX96) ** 2 / 2 ** 192;
+    const sqrtPriceX96 = Number(slot0[0]);
+    const tick = Number(slot0[1]);
 
-    const amountOut = 1234;
-    const amountOutWithFee =
-      amountOut - (amountOut * TRADE_CONFIG.POOL_FEE) / 1000000;
-    const amountIn = price * amountOutWithFee;
-    const amountInWithSlippage = amountIn - (amountIn * 0.5) / 100;
+    // PRICE 1
+    const price1 = sqrtPriceX96 ** 2 / 2 ** 192;
 
-    return amountInWithSlippage;
+    // PRICE 2
+    const price2 = (1.0001 ** tick * 10 ** 18) / 10 ** 18;
+
+    // PRICE 3
+    const amount0 = Number(
+      FullMath.mulDivRoundingUp(
+        JSBI['BigInt'](liquidity),
+        JSBI['BigInt'](Q96),
+        JSBI['BigInt'](sqrtPriceX96),
+      ).toString(),
+    );
+
+    const amount1 = Number(
+      FullMath.mulDivRoundingUp(
+        JSBI['BigInt'](liquidity),
+        JSBI['BigInt'](sqrtPriceX96),
+        JSBI['BigInt'](Q96),
+      ).toString(),
+    );
+
+    const price3 = (amount1 * 10 ** 18) / amount0; // 18 is token0.decimals
+
+    // PRICE 4
+    const price4 = await this.getOutputAmount2(amountIn);
+
+    console.log('price1', price1);
+    console.log('price2', price2);
+    console.log('price3', ethers.formatUnits(price3.toString(), 18));
+    console.log('price4', price4, '\n');
+
+    const amountOut1 = amountIn * price1;
+    const amountOut2 = amountIn * price2;
+    const amountOut3 = amountIn * price3;
+    const amountOut4 = amountIn * price4.subAmount;
+
+    console.log('amountOut1', amountOut1);
+    console.log('amountOut2', amountOut2);
+    console.log('amountOut3', amountOut3);
+    console.log('amountOut4', amountOut4);
+
+    // const amountOut = 1234;
+    // const amountOutWithFee =
+    //   amountOut - (amountOut * TRADE_CONFIG.POOL_FEE) / 1000000;
+    // const amountIn = price1 * amountOutWithFee;
+    // const amountInWithSlippage = amountIn - (amountIn * 0.4) / 100;
+
+    // return amountInWithSlippage;
   }
 
   async createToken(tokenAddress: string, decimals?: number): Promise<Token> {
@@ -133,22 +182,108 @@ export class UniswapService {
     );
 
     const slot0 = await poolContract.slot0();
+    const liquidity = Number(await poolContract.liquidity());
+    const Q96 = 79228162514264337593543950336;
 
-    const sqrtPriceX96: bigint = slot0[0];
-    const price = Number(sqrtPriceX96) ** 2 / 2 ** 192;
+    const sqrtPriceX96 = Number(slot0[0]);
+    const price = Number(sqrtPriceX96) ** 2 / 2 ** 192 + 0.0003;
+    console.log('price', price);
+
+    const amount0 = Number(
+      FullMath.mulDivRoundingUp(
+        JSBI['BigInt'](liquidity),
+        JSBI['BigInt'](Q96),
+        JSBI['BigInt'](sqrtPriceX96),
+      ).toString(),
+    );
+
+    const amount1 = Number(
+      FullMath.mulDivRoundingUp(
+        JSBI['BigInt'](liquidity),
+        JSBI['BigInt'](sqrtPriceX96),
+        JSBI['BigInt'](Q96),
+      ).toString(),
+    );
+    const price2 = (amount1 * 10 ** 18) / amount0; // 18 is token0.decimals
+    console.log('price2', ethers.formatUnits(price2.toString(), 18));
 
     const amountOut = Number(rawOutputAmount);
     const amountOutWithFee =
       amountOut - (amountOut * TRADE_CONFIG.POOL_FEE) / 1000000;
-    const amountIn = price * amountOut;
-    const amountInWithSlippage = amountIn - (amountIn * 0.3) / 100;
+    const amountIn = amountOutWithFee * price;
+    const amountInWithSlippage = amountIn - (amountIn * 0.4) / 100;
 
     console.log(amountIn, amountInWithSlippage);
 
     return amountInWithSlippage;
   }
 
-  async getOutputInput2(rawOutputAmount: string) {
+  /**
+   *
+   * @param rawInputAmount token1 amount
+   * @returns token0 amount with slippage 0.5
+   */
+  async getOutputAmount(rawInputAmount: string) {
+    const poolContract = new ethers.Contract(
+      TRADE_CONFIG.POOL_ADDRESS,
+      uniswapV3PoolInterface,
+      provider,
+    );
+
+    const slot0 = await poolContract.slot0();
+    console.log(slot0[0]);
+
+    const sqrtPriceX96: bigint = slot0[0];
+    const price = 1 / (Number(sqrtPriceX96) ** 2 / 2 ** 192 + 0.0003);
+    console.log('price', price);
+
+    const amountIn = Number(rawInputAmount);
+
+    const amountInWithFee =
+      amountIn - (amountIn * TRADE_CONFIG.POOL_FEE) / 1000000;
+    const amountOut = amountInWithFee * price;
+    const amountOuWithSlippage = amountOut - (amountOut * 0.4) / 100;
+
+    // console.log(amountOut, amountOuWithSlippage);
+
+    return amountOuWithSlippage;
+  }
+
+  async getOutputAmount2(rawInputAmount: number) {
+    const usdToken = await this.createToken(
+      TRADE_CONFIG.USDT_ADDRESS,
+      TRADE_CONFIG.USDT_DECIMALS,
+    );
+    const tradeToken = await this.createToken(
+      TRADE_CONFIG.TOKEN_ADDRESS,
+      TRADE_CONFIG.TOKEN_DECIMALS,
+    );
+
+    const pool = await this.createPool(
+      usdToken,
+      tradeToken,
+      TRADE_CONFIG.POOL_ADDRESS,
+    );
+
+    const inputAmount = CurrencyAmount.fromRawAmount(
+      tradeToken,
+      rawInputAmount,
+    );
+
+    const currencyAmount = await pool.getOutputAmount(inputAmount);
+    const quoteAmount = Number(
+      ethers.parseUnits(currencyAmount[0].toExact(), 18),
+    );
+    const portionAmount = quoteAmount * 0.0025;
+    const outputAmount = quoteAmount - portionAmount;
+
+    const res = { quoteAmount, portionAmount, subAmount: outputAmount };
+    console.log('EXACT OUTPUT');
+
+    return res;
+  }
+
+  async getInputAmount2(rawOutputAmount: number) {
     const usdToken = await this.createToken(
       TRADE_CONFIG.USDT_ADDRESS,
       TRADE_CONFIG.USDT_DECIMALS,
@@ -165,60 +300,21 @@ export class UniswapService {
     );
 
     const outputAmount = CurrencyAmount.fromRawAmount(
-      tradeToken,
+      usdToken,
       rawOutputAmount,
     );
-    const inputAmount = await pool.getInputAmount(outputAmount);
-    return Number(inputAmount[0].toExact());
-  }
 
-  /**
-   *
-   * @param rawInputAmount token1 amount
-   * @returns token0 amount with slippage 0.5
-   */
-  async getOutputAmount(rawInputAmount: string) {
-    const poolContract = new ethers.Contract(
-      TRADE_CONFIG.POOL_ADDRESS,
-      uniswapV3PoolInterface,
-      provider,
+    const currencyAmount = await pool.getInputAmount(outputAmount);
+    const quoteAmount = Number(
+      ethers.parseUnits(currencyAmount[0].toExact(), 18),
     );
+    const portionAmount = quoteAmount * 0.0025;
+    const inputAmount = quoteAmount - portionAmount;
 
-    const slot0 = await poolContract.slot0();
+    const res = { quoteAmount, portionAmount, subAmount: inputAmount };
+    console.log('EXACT INPUT', rawOutputAmount);
+    console.log(res);
 
-    const sqrtPriceX96: bigint = slot0[0];
-    const price = Number(sqrtPriceX96) ** 2 / 2 ** 192;
-
-    const amountIn = Number(rawInputAmount);
-
-    const amountInWithFee =
-      amountIn - (amountIn * TRADE_CONFIG.POOL_FEE) / 1000000;
-    const amountOut = amountIn / price;
-    const amountOuWithSlippage = amountOut - (amountOut * 0.3) / 100;
-
-    console.log(amountOut, amountOuWithSlippage);
-
-    return amountOuWithSlippage;
-  }
-
-  async getOutputAmount2(rawInputAmount: string) {
-    const usdToken = await this.createToken(
-      TRADE_CONFIG.USDT_ADDRESS,
-      TRADE_CONFIG.USDT_DECIMALS,
-    );
-    const tradeToken = await this.createToken(
-      TRADE_CONFIG.TOKEN_ADDRESS,
-      TRADE_CONFIG.TOKEN_DECIMALS,
-    );
-
-    const pool = await this.createPool(
-      usdToken,
-      tradeToken,
-      TRADE_CONFIG.POOL_ADDRESS,
-    );
-
-    const inputAmount = CurrencyAmount.fromRawAmount(usdToken, rawInputAmount);
-    const outputAmount = await pool.getOutputAmount(inputAmount);
-    return Number(outputAmount[0].toExact());
+    return res;
   }
 }

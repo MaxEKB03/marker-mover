@@ -30,6 +30,7 @@ export class VolumeService {
   ) {
     this.getManager();
     this.listen();
+    // this.controlsService.isRunning = true;
   }
 
   private getManager() {
@@ -125,7 +126,7 @@ export class VolumeService {
       Math.round(Number(ethers.formatEther(bigValue))),
     );
     const tokenAmount = await this.usdToToken(usdAmount.toString());
-    let tradeAmount = isSellingByRandom
+    let tradeAmountUnited = isSellingByRandom
       ? usdAmount
       : Math.round(Number(ethers.formatEther(tokenAmount)));
 
@@ -133,13 +134,13 @@ export class VolumeService {
       ? readableBalances[0]
       : readableBalances[1];
 
-    const isPossible = tradeAmount * 1.2 < compareValue;
+    const isPossible = tradeAmountUnited * 1.2 < compareValue;
 
-    tradeAmount = !isPossible
+    tradeAmountUnited = !isPossible
       ? !isSellingByRandom
         ? usdAmount
         : Math.round(Number(ethers.formatEther(tokenAmount)))
-      : tradeAmount;
+      : tradeAmountUnited;
 
     const isSelling = isPossible ? isSellingByRandom : !isSellingByRandom; // Check balance to trade, else change direction
     if (!isPossible) {
@@ -155,32 +156,34 @@ export class VolumeService {
 
     const methodName = isSelling ? 'sell' : 'buy';
 
-    const slippageAmountPromise = isSelling
-      ? this.uniswapService.getOutputAmount(tradeAmount.toString())
-      : this.uniswapService.getInputAmount(tradeAmount.toString());
-    const slippageAmount = await slippageAmountPromise;
-
-    const tradeAmountUnited = ethers.parseUnits(
-      tradeAmount.toString(),
+    const tradeAmount = ethers.parseUnits(
+      tradeAmountUnited.toString(),
       decimalsIn,
     );
-    const slippageAmountUnited = ethers.parseUnits(
-      slippageAmount.toString(),
+
+    const getExactAmount = isSelling
+      ? this.uniswapService.getInputAmount2(Number(tradeAmount))
+      : this.uniswapService.getOutputAmount2(Number(tradeAmount));
+    const exactAmount = await getExactAmount;
+
+    const slippageAmount = BigInt(exactAmount.subAmount);
+
+    const slippageAmountUnited = ethers.formatUnits(
+      exactAmount.subAmount.toString(),
       decimalsOut,
     );
-
     this.logger.log(
-      `Executing ${methodName}:  ${tradeAmount} > ${slippageAmount}`,
+      `Executing ${methodName}:  ${tradeAmountUnited} > ${slippageAmountUnited}`,
     );
-    console.log(tradeAmountUnited, slippageAmountUnited);
+    // console.log(tradeAmount, slippageAmount);
 
-    if (tradeAmountUnited === 0n || slippageAmountUnited === 0n) {
+    if (tradeAmount === 0n || slippageAmount === 0n) {
       return;
     }
 
     const txMethod = isSelling
-      ? botManager['sell'](slippageAmountUnited, tradeAmountUnited)
-      : botManager['buy'](tradeAmountUnited, slippageAmountUnited);
+      ? botManager['sell'](slippageAmount, tradeAmount)
+      : botManager['buy'](tradeAmount, slippageAmount);
     const tx: TransactionResponse = await txMethod;
     const response = await tx.wait();
     console.log(response.hash);
@@ -199,16 +202,17 @@ export class VolumeService {
   }
 
   async usdToToken(usdInDecimal: string) {
-    const usdAmount = ethers.parseEther(usdInDecimal);
+    const usdAmount = Number(ethers.parseEther(usdInDecimal));
     const token0 = await this.uniswapService.pool.token0();
     const isFirst =
       token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
 
     const promise = isFirst
-      ? this.uniswapService.getOutputAmount(usdAmount.toString())
-      : this.uniswapService.getInputAmount(usdAmount.toString());
+      ? this.uniswapService.getInputAmount2(usdAmount)
+      : this.uniswapService.getOutputAmount2(usdAmount);
 
-    const inToken = await promise;
+    const { quoteAmount: inToken } = await promise;
+
     return BigInt(inToken);
   }
 
@@ -218,10 +222,11 @@ export class VolumeService {
       token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
 
     const promise = isFirst
-      ? this.uniswapService.getInputAmount(tokenBalance.toString())
-      : this.uniswapService.getOutputAmount(tokenBalance.toString());
+      ? this.uniswapService.getOutputAmount2(tokenBalance)
+      : this.uniswapService.getInputAmount2(tokenBalance);
 
-    const inUsd = await promise;
+    const { quoteAmount: inUsd } = await promise;
+
     return BigInt(inUsd);
   }
 
@@ -239,9 +244,9 @@ export class VolumeService {
       provider,
     );
 
-    const usdtBalance = await usdtContract.balanceOf(bankAddress);
-    const tokenBalance = await tokenContract.balanceOf(bankAddress);
-    const tokenInUSD = await this.tokenToUSD(tokenBalance);
+    const usdtBalance: bigint = await usdtContract.balanceOf(bankAddress);
+    const tokenBalance: bigint = await tokenContract.balanceOf(bankAddress);
+    const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
     return [usdtBalance, tokenBalance, tokenInUSD];
   }

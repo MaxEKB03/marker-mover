@@ -126,9 +126,6 @@ export class VolumeService {
     const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
       Math.round(Number(ethers.formatEther(bigValue))),
     );
-    console.log(bankBalances);
-    console.log(bankUsdAmount, bankTokenAmount);
-
     const tokenAmount = await this.usdToToken(usdAmount.toString());
     const tokenAmountFormatted = Math.round(
       Number(ethers.formatEther(tokenAmount)),

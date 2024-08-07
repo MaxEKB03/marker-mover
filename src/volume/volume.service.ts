@@ -142,9 +142,10 @@ export class VolumeService {
         : Math.round(Number(ethers.formatEther(tokenAmount)))
       : tradeAmountUnited;
 
+    let message = '';
     const isSelling = isPossible ? isSellingByRandom : !isSellingByRandom; // Check balance to trade, else change direction
     if (!isPossible) {
-      this.logger.log('Direction was changed, cause balance of bank is low');
+      message += 'Direction was changed, cause balance of bank is low\n';
     }
 
     const decimalsOut = isSelling
@@ -162,7 +163,8 @@ export class VolumeService {
     );
 
     const getExactAmount = isSelling
-      ? this.uniswapService.getOutputAmount2(Number(tokenAmount))
+      ? // ? this.uniswapService.getOutputAmount2(Number(tokenAmount))
+        this.uniswapService.getInputAmount2(Number(tradeAmount))
       : this.uniswapService.getOutputAmount2(Number(tradeAmount));
     const exactAmount = await getExactAmount;
 
@@ -173,28 +175,36 @@ export class VolumeService {
       decimalsOut,
     );
 
-    if (isSelling) {
-      const formatted = ethers.formatEther(tokenAmount);
-      this.logger.log(
-        `Executing ${methodName}:  ${slippageAmountUnited} > ${formatted}`,
-      );
-    } else {
-      this.logger.log(
-        `Executing ${methodName}:  ${tradeAmountUnited} > ${slippageAmountUnited}`,
-      );
-    }
+    message += `Executing ${methodName}: ${tradeAmountUnited} > ${slippageAmountUnited}`;
+    this.logger.log(message);
     console.log(tradeAmount, slippageAmount);
+
+    // if (isSelling) {
+    //   const formatted = ethers.formatEther(tokenAmount);
+    //   message += `Executing ${methodName}: ${slippageAmountUnited} > ${formatted}`;
+    //   this.logger.log(message);
+    //   console.log(tokenAmount, slippageAmount);
+    // } else {
+    // message += `Executing ${methodName}: ${tradeAmountUnited} > ${slippageAmountUnited}`;
+    // this.logger.log(message);
+    // console.log(tradeAmount, slippageAmount);
+    // }
 
     if (tradeAmount === 0n || slippageAmount === 0n) {
       return;
     }
 
     const txMethod = isSelling
-      ? botManager['sell'](slippageAmount, tokenAmount)
+      ? // ? botManager['sell'](tokenAmount, slippageAmount)
+        botManager['sell'](slippageAmount, tradeAmount)
       : botManager['buy'](tradeAmount, slippageAmount);
     const tx: TransactionResponse = await txMethod;
     const response = await tx.wait();
     console.log(response.hash);
+
+    this.telegramService.notify(
+      `${message}\n\nhttps://bscscan.com/tx/${response.hash}`,
+    );
   }
 
   private async waitRandomTime() {

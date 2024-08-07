@@ -19,7 +19,7 @@ export type RandomConfigure = {
   [name: string]: RandomElement;
 };
 
-export const minTimeWaiting = 15 * 60;
+export const minTimeWaiting = 8 * 60;
 
 export const TxTypes: RandomConfigure = {
   sell: {
@@ -37,7 +37,7 @@ export const AmountTypes: RandomConfigure = {
     id: 0,
     // percent: 100,
     percent: 0,
-    data: [2, 10],
+    data: [2, 2],
   },
   medium: {
     id: 1,
@@ -48,8 +48,8 @@ export const AmountTypes: RandomConfigure = {
   big: {
     id: 2,
     // percent: 15,
-    percent: 100,
-    data: [400, 700],
+    percent: 10,
+    data: [100, 190],
   },
   // massive: {
   //   id: 3,

@@ -32,90 +32,37 @@ export class UniswapService {
   );
 
   constructor() {
-    // this.smth();
+    // this.smth1();
+    // this.smth2();
   }
 
-  async smth() {
-    const amountIn = Number(ethers.parseEther('1'));
+  async smth1() {
+    const formattedIn = '1';
+    const amountIn = Number(ethers.parseEther(formattedIn));
 
-    const usdToken = await this.createToken(
-      TRADE_CONFIG.USDT_ADDRESS,
-      TRADE_CONFIG.USDT_DECIMALS,
-    );
-    const tradeToken = await this.createToken(
-      TRADE_CONFIG.TOKEN_ADDRESS,
-      TRADE_CONFIG.TOKEN_DECIMALS,
-    );
+    const price = await this.getOutputAmount2(amountIn);
 
-    const pool = await this.createPool(
-      usdToken,
-      tradeToken,
-      TRADE_CONFIG.POOL_ADDRESS,
-    );
+    const formattedOut = ethers.formatUnits(price.subAmount.toString(), 18);
+    console.log(`price ${formattedOut}`);
 
-    const poolContract = new ethers.Contract(
-      TRADE_CONFIG.POOL_ADDRESS,
-      uniswapV3PoolInterface,
-      provider,
-    );
+    const amountOut = price.subAmount;
 
-    const slot0 = await poolContract.slot0();
-    const liquidity = Number(await poolContract.liquidity());
-    const Q96 = 79228162514264337593543950336;
+    console.log(`${amountIn} > ${amountOut}`);
+    console.log(`${formattedIn} > ${formattedOut}`);
+  }
+  async smth2() {
+    const formattedOut = '1';
+    const amountOut = Number(ethers.parseEther(formattedOut));
 
-    const sqrtPriceX96 = Number(slot0[0]);
-    const tick = Number(slot0[1]);
+    const price = await this.getInputAmount2(amountOut);
 
-    // PRICE 1
-    const price1 = sqrtPriceX96 ** 2 / 2 ** 192;
+    const formattedIn = ethers.formatUnits(price.subAmount.toString(), 18);
+    console.log(`price ${formattedIn}`);
 
-    // PRICE 2
-    const price2 = (1.0001 ** tick * 10 ** 18) / 10 ** 18;
+    const amountIn = price.subAmount;
 
-    // PRICE 3
-    const amount0 = Number(
-      FullMath.mulDivRoundingUp(
-        JSBI['BigInt'](liquidity),
-        JSBI['BigInt'](Q96),
-        JSBI['BigInt'](sqrtPriceX96),
-      ).toString(),
-    );
-
-    const amount1 = Number(
-      FullMath.mulDivRoundingUp(
-        JSBI['BigInt'](liquidity),
-        JSBI['BigInt'](sqrtPriceX96),
-        JSBI['BigInt'](Q96),
-      ).toString(),
-    );
-
-    const price3 = (amount1 * 10 ** 18) / amount0; // 18 is token0.decimals
-
-    // PRICE 4
-    const price4 = await this.getOutputAmount2(amountIn);
-
-    console.log('price1', price1);
-    console.log('price2', price2);
-    console.log('price3', ethers.formatUnits(price3.toString(), 18));
-    console.log('price4', price4, '\n');
-
-    const amountOut1 = amountIn * price1;
-    const amountOut2 = amountIn * price2;
-    const amountOut3 = amountIn * price3;
-    const amountOut4 = amountIn * price4.subAmount;
-
-    console.log('amountOut1', amountOut1);
-    console.log('amountOut2', amountOut2);
-    console.log('amountOut3', amountOut3);
-    console.log('amountOut4', amountOut4);
-
-    // const amountOut = 1234;
-    // const amountOutWithFee =
-    //   amountOut - (amountOut * TRADE_CONFIG.POOL_FEE) / 1000000;
-    // const amountIn = price1 * amountOutWithFee;
-    // const amountInWithSlippage = amountIn - (amountIn * 0.4) / 100;
-
-    // return amountInWithSlippage;
+    console.log(`${amountOut} > ${amountIn}`);
+    console.log(`${formattedOut} > ${formattedIn}`);
   }
 
   async createToken(tokenAddress: string, decimals?: number): Promise<Token> {

@@ -19,7 +19,7 @@ export type RandomConfigure = {
   [name: string]: RandomElement;
 };
 
-export const minTimeWaiting = 8 * 60;
+export const minTimeWaiting = 14 * 60;
 
 export const TxTypes: RandomConfigure = {
   sell: {

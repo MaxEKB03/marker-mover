@@ -122,27 +122,36 @@ export class VolumeService {
     const usdAmount = this.randomService.general(min, max);
 
     const bankBalances = await this.getBankBalance();
-    const readableBalances = bankBalances.map((bigValue) =>
+
+    const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
       Math.round(Number(ethers.formatEther(bigValue))),
     );
+    console.log(bankBalances);
+    console.log(bankUsdAmount, bankTokenAmount);
+
     const tokenAmount = await this.usdToToken(usdAmount.toString());
+    const tokenAmountFormatted = Math.round(
+      Number(ethers.formatEther(tokenAmount)),
+    );
     let tradeAmountUnited = isSellingByRandom
       ? usdAmount
       : Math.round(Number(ethers.formatEther(tokenAmount)));
 
-    const compareValue = isSellingByRandom
-      ? readableBalances[0]
-      : readableBalances[1];
+    const compareValue = isSellingByRandom ? bankUsdAmount : bankTokenAmount;
 
     const isPossible = tradeAmountUnited * 1.2 < compareValue;
 
     tradeAmountUnited = !isPossible
       ? !isSellingByRandom
-        ? usdAmount
-        : Math.round(Number(ethers.formatEther(tokenAmount)))
+        ? usdAmount < bankUsdAmount
+          ? usdAmount
+          : bankUsdAmount - bankUsdAmount * 0.2
+        : tokenAmountFormatted < bankTokenAmount
+          ? tokenAmountFormatted
+          : bankTokenAmount - bankTokenAmount * 0.2
       : tradeAmountUnited;
 
-    let message = '';
+    let message = `\n${this.controlsService.walletId}/${walletRange.endId}|${executer.address}\n`;
     const isSelling = isPossible ? isSellingByRandom : !isSellingByRandom; // Check balance to trade, else change direction
     if (!isPossible) {
       message += 'Direction was changed, cause balance of bank is low\n';

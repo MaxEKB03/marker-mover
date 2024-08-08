@@ -170,8 +170,8 @@ export class VolumeService {
 
     const getExactAmount = isSelling
       ? // ? this.uniswapService.getOutputAmount2(Number(tokenAmount))
-        this.uniswapService.getInputAmount2(Number(tradeAmount))
-      : this.uniswapService.getOutputAmount2(Number(tradeAmount));
+        this.uniswapService.getOutputAmountReversed(Number(tradeAmount))
+      : this.uniswapService.getOutputAmount(Number(tradeAmount));
     const exactAmount = await getExactAmount;
 
     const slippageAmount = BigInt(exactAmount.subAmount);
@@ -207,10 +207,9 @@ export class VolumeService {
     const tx: TransactionResponse = await txMethod;
     const response = await tx.wait();
     console.log(response.hash);
+    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
 
-    this.telegramService.notify(
-      `${message}\n\nhttps://bscscan.com/tx/${response.hash}`,
-    );
+    this.telegramService.notify(message);
   }
 
   private async waitRandomTime() {
@@ -232,8 +231,8 @@ export class VolumeService {
       token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
 
     const promise = isFirst
-      ? this.uniswapService.getInputAmount2(usdAmount)
-      : this.uniswapService.getOutputAmount2(usdAmount);
+      ? this.uniswapService.getOutputAmountReversed(usdAmount)
+      : this.uniswapService.getOutputAmount(usdAmount);
 
     const { quoteAmount: inToken } = await promise;
 
@@ -246,8 +245,8 @@ export class VolumeService {
       token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
 
     const promise = isFirst
-      ? this.uniswapService.getOutputAmount2(tokenBalance)
-      : this.uniswapService.getInputAmount2(tokenBalance);
+      ? this.uniswapService.getOutputAmount(tokenBalance)
+      : this.uniswapService.getOutputAmountReversed(tokenBalance);
 
     const { quoteAmount: inUsd } = await promise;
 

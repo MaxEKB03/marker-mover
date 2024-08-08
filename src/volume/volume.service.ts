@@ -60,7 +60,7 @@ export class VolumeService {
         const errorMessage = e.toString();
         await this.telegramService.notify(errorMessage.slice(0, 250));
 
-        await wait(5);
+        await wait(300);
         this.controlsService.isRunning = true;
       }
     }

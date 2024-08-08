@@ -59,6 +59,9 @@ export class VolumeService {
 
         const errorMessage = e.toString();
         await this.telegramService.notify(errorMessage.slice(0, 250));
+
+        await wait(5);
+        this.controlsService.isRunning = true;
       }
     }
   }
@@ -102,7 +105,6 @@ export class VolumeService {
         gasPrice,
         nonce,
       };
-      // const signedTx = await manager.signTransaction(tx);
       const tx = await manager.sendTransaction(txParams);
       await tx.wait();
     }
@@ -169,8 +171,7 @@ export class VolumeService {
     );
 
     const getExactAmount = isSelling
-      ? // ? this.uniswapService.getOutputAmount2(Number(tokenAmount))
-        this.uniswapService.getOutputAmountReversed(Number(tradeAmount))
+      ? this.uniswapService.getOutputAmountReversed(Number(tradeAmount))
       : this.uniswapService.getOutputAmount(Number(tradeAmount));
     const exactAmount = await getExactAmount;
 
@@ -185,24 +186,12 @@ export class VolumeService {
     this.logger.log(message);
     console.log(tradeAmount, slippageAmount);
 
-    // if (isSelling) {
-    //   const formatted = ethers.formatEther(tokenAmount);
-    //   message += `Executing ${methodName}: ${slippageAmountUnited} > ${formatted}`;
-    //   this.logger.log(message);
-    //   console.log(tokenAmount, slippageAmount);
-    // } else {
-    // message += `Executing ${methodName}: ${tradeAmountUnited} > ${slippageAmountUnited}`;
-    // this.logger.log(message);
-    // console.log(tradeAmount, slippageAmount);
-    // }
-
     if (tradeAmount === 0n || slippageAmount === 0n) {
       return;
     }
 
     const txMethod = isSelling
-      ? // ? botManager['sell'](tokenAmount, slippageAmount)
-        botManager['sell'](slippageAmount, tradeAmount)
+      ? botManager['sell'](slippageAmount, tradeAmount)
       : botManager['buy'](tradeAmount, slippageAmount);
     const tx: TransactionResponse = await txMethod;
     const response = await tx.wait();

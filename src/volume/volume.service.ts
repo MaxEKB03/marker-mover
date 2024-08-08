@@ -175,7 +175,9 @@ export class VolumeService {
       : this.uniswapService.getOutputAmount(Number(tradeAmount));
     const exactAmount = await getExactAmount;
 
-    const slippageAmount = BigInt(exactAmount.subAmount);
+    const slippageAmount = isSelling
+      ? BigInt(exactAmount.quoteAmount)
+      : BigInt(exactAmount.subAmount);
 
     const slippageAmountUnited = ethers.formatUnits(
       slippageAmount.toString(),

@@ -15,47 +15,49 @@ export class TelegramService {
 
   async longPolling() {
     this.bot = new Telegraf(config.BOT_TOKEN);
+    this.bot.command('start', (ctx) => this.start(ctx));
     this.bot.command('run', (ctx) => this.run(ctx));
     this.bot.command('stop', (ctx) => this.stop(ctx));
     this.bot.command('nextWallet', (ctx) => this.nextWallet(ctx));
-    this.bot.on(message('text'), (ctx) => this.handleText(ctx));
+    this.bot.on(message('text'), (ctx) => this.start(ctx));
     this.bot.launch();
   }
 
-  async handleText(ctx: Context) {
-    if (ctx.chat.id !== config.OWNER_ID) {
+  async start(ctx: Context) {
+    if (!(ctx.chat.id === config.OWNER_ID || ctx.chat.id === config.ADMIN_ID)) {
       return;
     }
 
-    await ctx.reply('Hello');
+    console.log(`Ваш id: ${ctx.chat.id}`);
+    await ctx.reply(`Ваш id: ${ctx.chat.id}`);
   }
 
   private async run(ctx: Context) {
-    if (ctx.chat.id !== config.OWNER_ID) {
+    if (ctx.chat.id !== config.ADMIN_ID) {
       return;
     }
 
     this.volumeControlService.isRunning = true;
     await this.bot.telegram.sendMessage(
-      config.OWNER_ID,
+      config.ADMIN_ID,
       'botManager is running now',
     );
   }
 
   private async stop(ctx: Context) {
-    if (ctx.chat.id !== config.OWNER_ID) {
+    if (ctx.chat.id !== config.ADMIN_ID) {
       return;
     }
 
     this.volumeControlService.isRunning = false;
     await this.bot.telegram.sendMessage(
-      config.OWNER_ID,
+      config.ADMIN_ID,
       'botManager was stopped',
     );
   }
 
   private async nextWallet(ctx: Context) {
-    if (ctx.chat.id !== config.OWNER_ID) {
+    if (!(ctx.chat.id === config.ADMIN_ID)) {
       return;
     }
 
@@ -63,15 +65,20 @@ export class TelegramService {
       const nextId = Number(ctx.text.split(' ')[1]);
       this.volumeControlService.incrementWalletId(nextId);
       this.bot.telegram.sendMessage(
-        config.OWNER_ID,
+        config.ADMIN_ID,
         `Next wallet id is ${this.volumeControlService.walletId}`,
       );
     } catch (e) {
-      this.notify(e.toString().slice(0, 250));
+      await this.notifyAdmin(e.toString().slice(0, 250));
     }
   }
 
-  async notify(text) {
-    this.bot.telegram.sendMessage(config.OWNER_ID, text);
+  async notify(text: string) {
+    await this.bot.telegram.sendMessage(config.ADMIN_ID, text);
+    await this.bot.telegram.sendMessage(config.OWNER_ID, text);
+  }
+
+  async notifyAdmin(text: string) {
+    await this.bot.telegram.sendMessage(config.ADMIN_ID, text);
   }
 }

@@ -7,6 +7,7 @@ const config = {
   MNEMONIC: types.string,
   PORT: types.number,
   BOT_TOKEN: types.string,
+  ADMIN_ID: types.number,
   OWNER_ID: types.number,
 };
 

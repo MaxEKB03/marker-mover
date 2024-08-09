@@ -42,7 +42,7 @@ export class VolumeService {
   }
 
   private async listen() {
-    this.telegramService.notify('Farm is starting');
+    this.telegramService.notifyAdmin('Farm is starting');
     while (true) {
       await wait(10);
       this.logger.log('Next iteration');
@@ -58,7 +58,7 @@ export class VolumeService {
         this.controlsService.isRunning = false;
 
         const errorMessage = e.toString();
-        await this.telegramService.notify(errorMessage.slice(0, 250));
+        await this.telegramService.notifyAdmin(errorMessage.slice(0, 250));
 
         await wait(300);
         this.controlsService.isRunning = true;

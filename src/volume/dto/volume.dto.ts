@@ -43,7 +43,7 @@ export const AmountTypes: RandomConfigure = {
     id: 1,
     // percent: 35,
     percent: 100,
-    data: [50, 100],
+    data: [70, 130],
   },
   big: {
     id: 2,

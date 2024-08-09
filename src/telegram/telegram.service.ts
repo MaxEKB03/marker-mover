@@ -25,11 +25,12 @@ export class TelegramService {
 
   async start(ctx: Context) {
     if (!(ctx.chat.id === config.OWNER_ID || ctx.chat.id === config.ADMIN_ID)) {
+      console.log(`Ваш id: ${ctx.chat.id}`);
+      await ctx.reply(`Ваш id: ${ctx.chat.id}`);
       return;
     }
 
-    console.log(`Ваш id: ${ctx.chat.id}`);
-    await ctx.reply(`Ваш id: ${ctx.chat.id}`);
+    await ctx.reply(`Приветствую`);
   }
 
   private async run(ctx: Context) {

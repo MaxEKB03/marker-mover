@@ -42,14 +42,14 @@ export const AmountTypes: RandomConfigure = {
   medium: {
     id: 1,
     // percent: 35,
-    percent: 100,
+    percent: 0,
     data: [70, 130],
   },
   big: {
     id: 2,
     // percent: 15,
-    percent: 0,
-    data: [100, 200],
+    percent: 100,
+    data: [190, 290],
   },
   // massive: {
   //   id: 3,

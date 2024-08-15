@@ -25,8 +25,8 @@ export class TelegramService {
 
   async start(ctx: Context) {
     if (!(ctx.chat.id === config.OWNER_ID || ctx.chat.id === config.ADMIN_ID)) {
-      console.log(`Ваш id: ${ctx.chat.id}`);
-      await ctx.reply(`Ваш id: ${ctx.chat.id}`);
+      // console.log(`Ваш id: ${ctx.chat.id}`);
+      // await ctx.reply(`Ваш id: ${ctx.chat.id}`);
       return;
     }
 
@@ -65,7 +65,7 @@ export class TelegramService {
     try {
       const nextId = Number(ctx.text.split(' ')[1]);
       this.volumeControlService.incrementWalletId(nextId);
-      this.bot.telegram.sendMessage(
+      await this.bot.telegram.sendMessage(
         config.ADMIN_ID,
         `Next wallet id is ${this.volumeControlService.walletId}`,
       );

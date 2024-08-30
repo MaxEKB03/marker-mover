@@ -40,6 +40,8 @@ contract BotManagerV2 is AccessControl {
     uint256 private constant DEFAULT_MAX_AMOUNT_IN = type(uint256).max;
     uint256 private maxAmountInCached = DEFAULT_MAX_AMOUNT_IN;
 
+    bool private IS_V3;
+
     constructor(address _whitelist, address _pool, address _manager) {
         bank = msg.sender;
 
@@ -52,18 +54,19 @@ contract BotManagerV2 is AccessControl {
 
         _grantRole(MANAGER_ROLE, _manager);
 
-
-        IUniswapV3Pool poolInstance = IUniswapV3Pool(_pool);
-        IUniswapV2Pair pairInstance = IUniswapV2Pair(_pool);
         whitelist = IWhitelist(_whitelist);
-        
+
         // TODO: add get of version
-        if (true) {
-            fee = poolInstance.fee();
+        if (IS_V3) {
+            IUniswapV3Pool poolInstance = IUniswapV3Pool(_pool);
+
             token0 = poolInstance.token0();
+            fee = poolInstance.fee();
             token1 = poolInstance.token1();
             pool = _pool;
         } else {
+            IUniswapV2Pair pairInstance = IUniswapV2Pair(_pool);
+
             token0 = pairInstance.token0();
             token1 = pairInstance.token1();
             pair = _pool;
@@ -101,14 +104,31 @@ contract BotManagerV2 is AccessControl {
         return ([pool, token0, token1], encodePath());
     }
 
-    function setPool(address _pool) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        pool = _pool;
+    function setPool(
+        address _pool,
+        bool isV3
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        delete pool;
+        delete pair;
+        delete fee;
 
-        IUniswapV3Pool poolInstance = IUniswapV3Pool(_pool);
+        if (isV3) {
+            IUniswapV3Pool poolInstance = IUniswapV3Pool(_pool);
 
-        token0 = poolInstance.token0();
-        fee = poolInstance.fee();
-        token1 = poolInstance.token1();
+            token0 = poolInstance.token0();
+            fee = poolInstance.fee();
+            token1 = poolInstance.token1();
+
+            pool = _pool;
+        } else {
+            IUniswapV2Pair pairInstance = IUniswapV2Pair(_pool);
+
+            token0 = pairInstance.token0();
+            token1 = pairInstance.token1();
+            pair = _pool;
+        }
+
+        IS_V3 = isV3;
     }
 
     function grantExecuters(
@@ -172,6 +192,13 @@ contract BotManagerV2 is AccessControl {
         }
     }
 
+    function buy(
+        uint256 amountIn,
+        uint256 amountOutMinimum
+    ) external IsExecuter {
+        this.buyV3(amountIn, amountOutMinimum, encodePath());
+    }
+
     function buyV3(
         uint256 amountIn,
         uint256 amountOutMinimum
@@ -184,6 +211,7 @@ contract BotManagerV2 is AccessControl {
         uint256 amountOutMinimum,
         bytes calldata path
     ) external IsExecuter {
+        require(IS_V3, 'Pool has not support of V3');
         (int256 amount0Delta, int256 amount1Delta, bool zeroForOne) = _swapV3(
             amountIn.toInt256(),
             bank,
@@ -199,6 +227,13 @@ contract BotManagerV2 is AccessControl {
         if (amountOut < amountOutMinimum) revert('Invalid to little recieved');
     }
 
+    function sell(
+        uint256 amountOut,
+        uint256 amountInMaximum
+    ) external IsExecuter {
+        this.sellV3(amountOut, amountInMaximum, encodePath());
+    }
+
     function sellV3(
         uint256 amountOut,
         uint256 amountInMaximum
@@ -211,6 +246,8 @@ contract BotManagerV2 is AccessControl {
         uint256 amountInMaximum,
         bytes calldata path
     ) external IsExecuter {
+        require(IS_V3, 'Pool has not support of V3');
+
         maxAmountInCached = amountInMaximum;
 
         (int256 amount0Delta, int256 amount1Delta, bool zeroForOne) = _swapV3(
@@ -234,6 +271,8 @@ contract BotManagerV2 is AccessControl {
         uint256 amount1In,
         uint256 amount0OutMinimum
     ) external IsExecuter {
+        require(!IS_V3, 'Pool has not support of V2');
+
         IERC20(token1).transferFrom(bank, pair, amount1In);
         uint256 balanceBefore = IERC20(token0).balanceOf(bank);
 
@@ -247,6 +286,8 @@ contract BotManagerV2 is AccessControl {
         uint256 amount0In,
         uint256 amount1OutMinimum
     ) external IsExecuter {
+        require(!IS_V3, 'Pool has not support of V2');
+
         IERC20(token0).transferFrom(bank, pair, amount0In);
         uint256 balanceBefore = IERC20(token1).balanceOf(bank);
 

@@ -38,7 +38,7 @@ export class TelegramService {
       return;
     }
 
-    this.volumeControlService.isRunning = true;
+    this.volumeControlService.slots['SNK'].isRunning = true;
     await this.bot.telegram.sendMessage(
       config.ADMIN_ID,
       'botManager is running now',
@@ -50,7 +50,7 @@ export class TelegramService {
       return;
     }
 
-    this.volumeControlService.isRunning = false;
+    this.volumeControlService.slots['SNK'].isRunning = false;
     await this.bot.telegram.sendMessage(
       config.ADMIN_ID,
       'botManager was stopped',
@@ -64,22 +64,24 @@ export class TelegramService {
 
     try {
       const nextId = Number(ctx.text.split(' ')[1]);
-      this.volumeControlService.incrementWalletId(nextId);
+      this.volumeControlService.slots['SNK'].incrementWalletId(nextId);
       await this.bot.telegram.sendMessage(
         config.ADMIN_ID,
-        `Next wallet id is ${this.volumeControlService.walletId}`,
+        `Next wallet id is ${this.volumeControlService.slots['SNK'].walletId}`,
       );
     } catch (e) {
       await this.notifyAdmin(e.toString().slice(0, 250));
     }
   }
 
-  async notify(text: string) {
+  async notify(text: string, id?: string) {
+    text = id ? `${text}\n\n#${id}` : text;
     await this.bot.telegram.sendMessage(config.ADMIN_ID, text);
     await this.bot.telegram.sendMessage(config.OWNER_ID, text);
   }
 
-  async notifyAdmin(text: string) {
+  async notifyAdmin(text: string, id?: string) {
+    text = id ? `${text}\n\n#${id}` : text;
     await this.bot.telegram.sendMessage(config.ADMIN_ID, text);
   }
 }

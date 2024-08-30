@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { walletRange } from '../dto/volume.dto';
+import { WalletRange, walletRange } from '../dto/volume.dto';
+import { ControlsSlot } from './controls.slot';
 
 @Injectable()
 export class ControlsService {
-  isRunning = false;
-  walletId: number = walletRange.startId; // current executer by order
+  slots: { [id: string]: ControlsSlot } = {};
 
-  incrementWalletId(nextId?: number) {
-    const { startId, endId } = walletRange;
-    console.log(nextId);
+  createSlot(id: string, walletRange: WalletRange) {
+    this.slots[id] = new ControlsSlot(walletRange);
+  }
 
-    const addOne = nextId ?? this.walletId + 1;
-
-    this.walletId = addOne < endId ? addOne : startId;
+  deleteSlot(id: string) {
+    delete this.slots[id];
   }
 }

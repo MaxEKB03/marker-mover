@@ -37,8 +37,8 @@ export const TxTypes: RandomConfigure = {
 export const AmountTypes: RandomConfigure = {
   small: {
     id: 0,
-    percent: 100,
-    // percent: 0,
+    // percent: 100,
+    percent: 0,
     data: [2, 2],
   },
   medium: {
@@ -50,8 +50,8 @@ export const AmountTypes: RandomConfigure = {
   big: {
     id: 2,
     // percent: 15,
-    percent: 0,
-    // percent: 100,
+    // percent: 0,
+    percent: 100,
     data: [300, 1000],
   },
   // massive: {

@@ -4,7 +4,10 @@ export class ControlsSlot {
   isRunning = false;
   walletId: number; // current executer by order
 
-  constructor(private readonly walletRange: WalletRange) {
+  constructor(
+    private readonly walletRange: WalletRange,
+    public readonly managerId: number,
+  ) {
     this.walletId = walletRange.startId;
   }
   incrementWalletId(nextId?: number) {

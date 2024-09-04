@@ -7,6 +7,7 @@ import { TelegramService } from 'src/telegram/telegram.service';
 import { VolumeBase } from './volume.base';
 import { Dex, DexVersion, projects } from './dto/volume.projects';
 import { VolumeV3 } from './volume.v3';
+import { ContractsService } from 'src/contracts/contracts.service';
 
 @Injectable()
 export class VolumeService {
@@ -17,6 +18,7 @@ export class VolumeService {
     private readonly randomService: RandomService,
     private readonly uniswapService: UniswapService,
     private readonly controlsService: ControlsService,
+    private readonly contractsService: ContractsService,
     protected readonly telegramService: TelegramService,
   ) {
     this.init();
@@ -25,19 +27,21 @@ export class VolumeService {
   init() {
     for (let i = 0; i < projects.length; i++) {
       const project = projects[i];
-      const { id, walletRange } = project;
-      this.controlsService.createSlot(id, walletRange);
-      if (project.dexVersion === DexVersion.V3) {
+      const { id, managerId, walletRange, provider, tradeConfig } = project;
+      this.controlsService.createSlot(id, walletRange, managerId);
+      if (tradeConfig.dexVersion === DexVersion.V3) {
         this.slots[project.id] = new VolumeV3(
           id,
           walletRange,
+          tradeConfig,
           provider,
           this.randomService,
           this.uniswapService,
           this.controlsService,
+          this.contractsService,
           this.telegramService,
         );
-      } else if (project.dexVersion === DexVersion.V2) {
+      } else if (project.tradeConfig.dexVersion === DexVersion.V2) {
         //       // TODO: add v2 support
       }
     }

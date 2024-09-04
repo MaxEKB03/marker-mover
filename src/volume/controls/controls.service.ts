@@ -6,8 +6,8 @@ import { ControlsSlot } from './controls.slot';
 export class ControlsService {
   slots: { [id: string]: ControlsSlot } = {};
 
-  createSlot(id: string, walletRange: WalletRange) {
-    this.slots[id] = new ControlsSlot(walletRange);
+  createSlot(id: string, walletRange: WalletRange, managerId: number) {
+    this.slots[id] = new ControlsSlot(walletRange, managerId);
   }
 
   deleteSlot(id: string) {

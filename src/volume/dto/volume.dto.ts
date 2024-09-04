@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import config from 'src/config/base.config';
 
 export const slippage = 0.5;
 
@@ -34,29 +35,18 @@ export const TxTypes: RandomConfigure = {
   },
 };
 
-export const AmountTypes: RandomConfigure = {
-  small: {
-    id: 0,
-    // percent: 100,
-    percent: 0,
-    data: [2, 2],
-  },
-  medium: {
-    id: 1,
-    // percent: 35,
-    percent: 0,
-    data: [70, 130],
-  },
-  big: {
-    id: 2,
-    // percent: 15,
-    // percent: 0,
-    percent: 100,
-    data: [300, 1000],
-  },
-  // massive: {
-  //   id: 3,
-  //   percent: 5,
-  //   data: [1000, 10000],
-  // },
-};
+export const AmountTypes: RandomConfigure = config.PROD
+  ? {
+      big: {
+        id: 0,
+        percent: 100,
+        data: [300, 1000],
+      },
+    }
+  : {
+      small: {
+        id: 0,
+        percent: 100,
+        data: [2, 2],
+      },
+    };

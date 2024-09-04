@@ -5,9 +5,10 @@ import { VolumeModule } from './volume/volume.module';
 import { UniswapModule } from './uniswap/uniswap.module';
 import { RandomModule } from './random/random.module';
 import { TelegramModule } from './telegram/telegram.module';
+import { ContractsModule } from './contracts/contracts.module';
 
 @Module({
-  imports: [VolumeModule, UniswapModule, RandomModule, TelegramModule],
+  imports: [VolumeModule, UniswapModule, RandomModule, TelegramModule, ContractsModule],
   controllers: [AppController],
   providers: [AppService],
 })

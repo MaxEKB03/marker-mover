@@ -4,7 +4,7 @@ import { UniswapService } from 'src/uniswap/uniswap.service';
 import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
 import { getWalletById } from 'scripts/addressFactory';
-import { Contract, Provider, TransactionResponse } from 'ethers';
+import { Provider, TransactionResponse } from 'ethers';
 import { wait } from 'src/helpers/time';
 import {
   AmountTypes,
@@ -14,10 +14,10 @@ import {
   TxTypes,
 } from './dto/volume.dto';
 import { ethers } from 'ethers';
-import { TRADE_CONFIG } from 'src/config/trade.config';
-import { ERC20__factory } from 'typechain-types';
+import { TradeConfigV3 } from 'src/config/trade.config';
 import { ControlsSlot } from './controls/controls.slot';
 import { VolumeBase } from './volume.base';
+import { ContractsService } from 'src/contracts/contracts.service';
 
 export class VolumeV3 implements VolumeBase {
   storage: ControlsSlot = this.controlsService.slots[this.id];
@@ -27,10 +27,12 @@ export class VolumeV3 implements VolumeBase {
   constructor(
     private readonly id: string,
     private readonly walletRange: { startId: number; endId: number },
+    private readonly tradeConfig: TradeConfigV3,
     private readonly provider: Provider,
     private readonly randomService: RandomService,
     private readonly uniswapService: UniswapService,
     private readonly controlsService: ControlsService,
+    private readonly contractsService: ContractsService,
     protected readonly telegramService: TelegramService,
   ) {
     this.listen();
@@ -38,7 +40,7 @@ export class VolumeV3 implements VolumeBase {
   }
 
   private getManager() {
-    return getWalletById(0).connect(this.provider);
+    return getWalletById(this.storage.managerId).connect(this.provider);
   }
 
   private getExecuter() {
@@ -120,7 +122,11 @@ export class VolumeV3 implements VolumeBase {
   private async runTrade() {
     const executer = this.getExecuter();
 
-    const botManager = this.uniswapService.botManager.connect(executer);
+    const botManager = this.contractsService.botManager(
+      this.tradeConfig.BOT_MANAGER,
+      this.provider,
+      executer,
+    );
 
     const txType = this.randomService.ofConfigured(TxTypes);
     const amountType = this.randomService.ofConfigured(AmountTypes);
@@ -164,11 +170,11 @@ export class VolumeV3 implements VolumeBase {
     }
 
     const decimalsOut = isSelling
-      ? TRADE_CONFIG.USDT_DECIMALS
-      : TRADE_CONFIG.TOKEN_DECIMALS;
+      ? this.tradeConfig.USDT_DECIMALS
+      : this.tradeConfig.TOKEN_DECIMALS;
     const decimalsIn = isSelling
-      ? TRADE_CONFIG.TOKEN_DECIMALS
-      : TRADE_CONFIG.USDT_DECIMALS;
+      ? this.tradeConfig.TOKEN_DECIMALS
+      : this.tradeConfig.USDT_DECIMALS;
 
     const methodName = isSelling ? 'sell' : 'buy';
 
@@ -178,8 +184,14 @@ export class VolumeV3 implements VolumeBase {
     );
 
     const getExactAmount = isSelling
-      ? this.uniswapService.getOutputAmountReversed(Number(tradeAmount))
-      : this.uniswapService.getOutputAmount(Number(tradeAmount));
+      ? this.uniswapService.getOutputAmountReversed(
+          this.tradeConfig,
+          Number(tradeAmount),
+        )
+      : this.uniswapService.getOutputAmount(
+          this.tradeConfig,
+          Number(tradeAmount),
+        );
     const exactAmount = await getExactAmount;
 
     const slippageAmount = isSelling
@@ -226,13 +238,15 @@ export class VolumeV3 implements VolumeBase {
 
   async usdToToken(usdInDecimal: string) {
     const usdAmount = Number(ethers.parseEther(usdInDecimal));
-    const token0 = await this.uniswapService.pool.token0();
+    const token0: string = await this.contractsService
+      .pool(this.tradeConfig.POOL_ADDRESS, this.provider)
+      .token0();
     const isFirst =
-      token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
+      token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
 
     const promise = isFirst
-      ? this.uniswapService.getOutputAmountReversed(usdAmount)
-      : this.uniswapService.getOutputAmount(usdAmount);
+      ? this.uniswapService.getOutputAmountReversed(this.tradeConfig, usdAmount)
+      : this.uniswapService.getOutputAmount(this.tradeConfig, usdAmount);
 
     const { quoteAmount: inToken } = await promise;
 
@@ -240,13 +254,18 @@ export class VolumeV3 implements VolumeBase {
   }
 
   async tokenToUSD(tokenBalance: number) {
-    const token0 = await this.uniswapService.pool.token0();
+    const token0: string = await this.contractsService
+      .pool(this.tradeConfig.POOL_ADDRESS, this.provider)
+      .token0();
     const isFirst =
-      token0.toLowerCase() === TRADE_CONFIG.TOKEN_ADDRESS.toLowerCase();
+      token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
 
     const promise = isFirst
-      ? this.uniswapService.getOutputAmount(tokenBalance)
-      : this.uniswapService.getOutputAmountReversed(tokenBalance);
+      ? this.uniswapService.getOutputAmount(this.tradeConfig, tokenBalance)
+      : this.uniswapService.getOutputAmountReversed(
+          this.tradeConfig,
+          tokenBalance,
+        );
 
     const { quoteAmount: inUsd } = await promise;
 
@@ -256,14 +275,12 @@ export class VolumeV3 implements VolumeBase {
   async getBankBalance() {
     const bankAddress = '0x7D89F5A712Fcc3968DbBAAF7a0c92e426e170C77';
 
-    const usdtContract = new Contract(
-      TRADE_CONFIG.USDT_ADDRESS,
-      ERC20__factory.abi,
+    const usdtContract = this.contractsService.token(
+      this.tradeConfig.USDT_ADDRESS,
       this.provider,
     );
-    const tokenContract = new Contract(
-      TRADE_CONFIG.TOKEN_ADDRESS,
-      ERC20__factory.abi,
+    const tokenContract = this.contractsService.token(
+      this.tradeConfig.USDT_ADDRESS,
       this.provider,
     );
 

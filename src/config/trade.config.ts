@@ -1,7 +1,7 @@
 import { FeeAmount } from '@uniswap/v3-sdk';
 import config from './base.config';
 import { getDeployed } from '../../scripts/getDeployed';
-import { Dex, DexVersion } from 'src/volume/dto/volume.projects';
+import { Dex, DexVersion } from '../volume/dto/volume.projects';
 
 export interface DexConfig {
   dex: Dex;

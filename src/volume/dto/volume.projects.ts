@@ -1,8 +1,8 @@
 import { WalletRange } from './volume.dto';
 import { JsonRpcProvider, Provider } from 'ethers';
-import { TradeConfig } from 'src/config/trade.config';
+import { TradeConfig } from '../../config/trade.config';
 import { FeeAmount } from '@uniswap/v3-sdk';
-import config from 'src/config/base.config';
+import config from '../../config/base.config';
 
 export enum DexVersion {
   V2,

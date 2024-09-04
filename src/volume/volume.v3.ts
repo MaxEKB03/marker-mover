@@ -154,7 +154,7 @@ export class VolumeV3 implements VolumeBase {
     const isPossible = tradeAmountUnited * 1.2 < compareValue;
 
     tradeAmountUnited = !isPossible
-      ? !isSellingByRandom
+      ? isSellingByRandom
         ? usdAmount < bankUsdAmount
           ? usdAmount
           : bankUsdAmount - bankUsdAmount * 0.2

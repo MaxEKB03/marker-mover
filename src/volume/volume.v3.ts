@@ -154,13 +154,9 @@ export class VolumeV3 implements VolumeBase {
     const isPossible = tradeAmountUnited * 1.2 < compareValue;
 
     tradeAmountUnited = !isPossible
-      ? isSellingByRandom
-        ? usdAmount < bankUsdAmount
-          ? usdAmount
-          : bankUsdAmount - bankUsdAmount * 0.2
-        : tokenAmountFormatted < bankTokenAmount
-          ? tokenAmountFormatted
-          : bankTokenAmount - bankTokenAmount * 0.2
+      ? !isSellingByRandom
+        ? usdAmount
+        : tokenAmountFormatted
       : tradeAmountUnited;
 
     let message = `\n${this.storage.walletId}/${this.walletRange.endId}|${executer.address}\n`;

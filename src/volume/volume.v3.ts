@@ -1,67 +1,39 @@
-import { Logger } from '@nestjs/common';
 import { RandomService } from 'src/random/random.service';
 import { UniswapService } from 'src/uniswap/uniswap.service';
 import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
-import { getWalletById } from 'scripts/addressFactory';
 import { Provider, TransactionResponse } from 'ethers';
 import { wait } from 'src/helpers/time';
-import {
-  AmountTypes,
-  minBalance,
-  minTimeWaiting,
-  transferAmount,
-  TxTypes,
-} from './dto/volume.dto';
+import { AmountTypes, Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
 import { ethers } from 'ethers';
 import { TradeConfigV3 } from 'src/config/trade.config';
-import { ControlsSlot } from './controls/controls.slot';
 import { VolumeBase } from './volume.base';
 import { ContractsService } from 'src/contracts/contracts.service';
 
-export class VolumeV3 implements VolumeBase {
-  storage: ControlsSlot = this.controlsService.slots[this.id];
-
-  private logger: Logger = new Logger('Volume-' + this.id);
-
+export class VolumeV3 extends VolumeBase {
   constructor(
-    private readonly id: string,
-    private readonly walletRange: { startId: number; endId: number },
-    private readonly tradeConfig: TradeConfigV3,
-    private readonly provider: Provider,
-    private readonly randomService: RandomService,
-    private readonly uniswapService: UniswapService,
-    private readonly controlsService: ControlsService,
-    private readonly contractsService: ContractsService,
+    id: string,
+    controlsService: ControlsService,
+    provider: Provider,
+    protected readonly walletRange: { startId: number; endId: number },
+    protected readonly tradeConfig: TradeConfigV3,
+    protected readonly randomService: RandomService,
+    protected readonly uniswapService: UniswapService,
+    protected readonly contractsService: ContractsService,
     protected readonly telegramService: TelegramService,
   ) {
+    super(id, controlsService, provider);
     this.listen();
     // this.controlsService.isRunning = true;
   }
 
-  private getManager() {
-    return getWalletById(this.storage.managerId).connect(this.provider);
-  }
-
-  private getExecuter() {
-    return getWalletById(this.storage.walletId).connect(this.provider);
-  }
-
   private async listen() {
-    this.telegramService.notifyAdmin('Farm is starting', this.id);
-    while (true) {
-      await wait(10);
+    this.storage.eventEmitter.on(Events.NextIteration, async () => {
       this.logger.log('Next iteration');
-
-      if (!this.storage.isRunning) {
-        continue;
-      }
-
       try {
         await this.process();
       } catch (e) {
         console.log(e);
-        this.storage.isRunning = false;
 
         const errorMessage = e.toString();
         await this.telegramService.notifyAdmin(
@@ -70,9 +42,9 @@ export class VolumeV3 implements VolumeBase {
         );
 
         await wait(300);
-        this.storage.isRunning = true;
+        this.storage.eventEmitter.emit(Events.NextIteration);
       }
-    }
+    });
   }
 
   private async process() {
@@ -80,43 +52,11 @@ export class VolumeV3 implements VolumeBase {
     this.logger.log(
       `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
     );
-
     await this.increaseBalance();
-
     await this.runTrade();
-
     await this.waitRandomTime();
-
     this.storage.incrementWalletId();
-  }
-
-  private async increaseBalance() {
-    const manager = this.getManager();
-    const executer = this.getExecuter();
-
-    const managerBalance = await this.provider.getBalance(manager.address);
-    const executerBalance = await this.provider.getBalance(executer.address);
-
-    if (managerBalance < transferAmount) {
-      this.storage.isRunning = false;
-      throw new Error('Manager balance is so low');
-    }
-
-    if (executerBalance < minBalance) {
-      const { gasPrice } = await this.provider.getFeeData();
-      const nonce = await manager.getNonce();
-      const txParams = {
-        from: manager.address, // sender wallet address
-        to: executer.address, // receiver address
-        data: '0x',
-        value: transferAmount,
-        gasLimit: 21000,
-        gasPrice,
-        nonce,
-      };
-      const tx = await manager.sendTransaction(txParams);
-      await tx.wait();
-    }
+    this.storage.eventEmitter.emit(Events.NextIteration);
   }
 
   private async runTrade() {

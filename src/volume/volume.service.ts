@@ -8,6 +8,7 @@ import { VolumeBase } from './volume.base';
 import { Dex, DexVersion, projects } from './dto/volume.projects';
 import { VolumeV3 } from './volume.v3';
 import { ContractsService } from 'src/contracts/contracts.service';
+import { VolumeV2 } from './volume.v2';
 
 @Injectable()
 export class VolumeService {
@@ -32,17 +33,27 @@ export class VolumeService {
       if (tradeConfig.dexVersion === DexVersion.V3) {
         this.slots[project.id] = new VolumeV3(
           id,
+          this.controlsService,
+          provider,
           walletRange,
           tradeConfig,
-          provider,
           this.randomService,
           this.uniswapService,
-          this.controlsService,
           this.contractsService,
           this.telegramService,
         );
       } else if (project.tradeConfig.dexVersion === DexVersion.V2) {
-        //       // TODO: add v2 support
+        this.slots[project.id] = new VolumeV2(
+          id,
+          this.controlsService,
+          provider,
+          walletRange,
+          tradeConfig,
+          this.randomService,
+          this.uniswapService,
+          this.contractsService,
+          this.telegramService,
+        );
       }
     }
   }

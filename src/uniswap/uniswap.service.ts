@@ -12,26 +12,6 @@ import { DexVersion } from 'src/volume/dto/volume.projects';
 @Injectable()
 export class UniswapService {
   BadRequest = new Error('UniswapV3: Wrong arguments, unsupported TradeConfig');
-  // token0: Contract = new Contract(
-  //   TRADE_CONFIG.USDT_ADDRESS,
-  //   ERC20__factory.abi,
-  //   provider,
-  // );
-  // token1: Contract = new Contract(
-  //   TRADE_CONFIG.TOKEN_ADDRESS,
-  //   ERC20__factory.abi,
-  //   provider,
-  // );
-  // pool: Contract = new Contract(
-  //   TRADE_CONFIG.POOL_ADDRESS,
-  //   uniswapV3PoolInterface,
-  //   provider,
-  // );
-  // botManager: Contract = new Contract(
-  //   TRADE_CONFIG.BOT_MANAGER,
-  //   BotManager__factory.abi,
-  //   provider,
-  // );
 
   constructor() {}
 

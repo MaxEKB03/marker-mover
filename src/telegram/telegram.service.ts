@@ -3,7 +3,6 @@ import config from 'src/config/base.config';
 import { ControlsService } from 'src/volume/controls/controls.service';
 import { Context, Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
-import { forceReply } from 'telegraf/typings/markup';
 
 @Injectable()
 export class TelegramService {
@@ -11,6 +10,7 @@ export class TelegramService {
 
   constructor(private readonly volumeControlService: ControlsService) {
     this.longPolling();
+    this.notifyAdmin('Farm is starting');
   }
 
   async longPolling() {
@@ -19,11 +19,45 @@ export class TelegramService {
     this.bot.command('run', (ctx) => this.run(ctx));
     this.bot.command('stop', (ctx) => this.stop(ctx));
     this.bot.command('nextWallet', (ctx) => this.nextWallet(ctx));
+    this.bot.command('getIds', (ctx) => this.getIds(ctx));
     this.bot.on(message('text'), (ctx) => this.start(ctx));
     this.bot.launch();
   }
 
-  async start(ctx: Context) {
+  private parseArg(ctx: Context, argId: number) {
+    const arg = ctx.text.split(' ')[argId];
+    return arg;
+  }
+
+  private async parseProject(ctx: Context, id = 1) {
+    const chatId = ctx.chat.id;
+
+    const projectId = this.parseArg(ctx, id);
+    const projectSlot = this.volumeControlService.slots[projectId];
+    if (!projectSlot) {
+      await this.bot.telegram.sendMessage(
+        chatId,
+        `project was not found by id: ${projectId}`,
+      );
+    }
+    return projectSlot;
+  }
+
+  private async parseNumber(ctx: Context, id = 1) {
+    const chatId = ctx.chat.id;
+
+    const number = Number(this.parseArg(ctx, id));
+    if (!number) {
+      await this.bot.telegram.sendMessage(chatId, `Number was not found`);
+    }
+    return number;
+  }
+
+  private ownerOrAdmin(ctx: Context) {}
+
+  private onlyAdmin(ctx: Context) {}
+
+  private async start(ctx: Context) {
     if (!(ctx.chat.id === config.OWNER_ID || ctx.chat.id === config.ADMIN_ID)) {
       // console.log(`Ваш id: ${ctx.chat.id}`);
       // await ctx.reply(`Ваш id: ${ctx.chat.id}`);
@@ -38,7 +72,13 @@ export class TelegramService {
       return;
     }
 
-    this.volumeControlService.slots['SNK'].isRunning = true;
+    const projectSlot = await this.parseProject(ctx);
+
+    if (!projectSlot) {
+      return;
+    }
+
+    projectSlot.run();
     await this.bot.telegram.sendMessage(
       config.ADMIN_ID,
       'botManager is running now',
@@ -50,28 +90,54 @@ export class TelegramService {
       return;
     }
 
-    this.volumeControlService.slots['SNK'].isRunning = false;
+    const projectSlot = await this.parseProject(ctx);
+
+    if (!projectSlot) {
+      return;
+    }
+
+    projectSlot.stop();
     await this.bot.telegram.sendMessage(
       config.ADMIN_ID,
-      'botManager was stopped',
+      `botManager was stopped}`,
     );
   }
 
   private async nextWallet(ctx: Context) {
-    if (!(ctx.chat.id === config.ADMIN_ID)) {
+    const chatId = ctx.chat.id;
+    if (!(chatId === config.ADMIN_ID)) {
       return;
     }
 
     try {
-      const nextId = Number(ctx.text.split(' ')[1]);
-      this.volumeControlService.slots['SNK'].incrementWalletId(nextId);
+      const projectSlot = await this.parseProject(ctx);
+      const nextId = await this.parseNumber(ctx, 2);
+
+      if (!projectSlot || !nextId) {
+        return;
+      }
+
+      projectSlot.incrementWalletId(nextId);
+
       await this.bot.telegram.sendMessage(
-        config.ADMIN_ID,
-        `Next wallet id is ${this.volumeControlService.slots['SNK'].walletId}`,
+        chatId,
+        `Next wallet id is ${projectSlot.walletId}`,
       );
     } catch (e) {
       await this.notifyAdmin(e.toString().slice(0, 250));
     }
+  }
+
+  private async getIds(ctx: Context) {
+    const chatId = ctx.chat.id;
+    if (!(chatId === config.ADMIN_ID)) {
+      return;
+    }
+
+    await this.bot.telegram.sendMessage(
+      chatId,
+      Object.keys(this.volumeControlService.slots).join('\n'),
+    );
   }
 
   async notify(text: string, id?: string) {

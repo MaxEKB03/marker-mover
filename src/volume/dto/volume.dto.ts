@@ -50,3 +50,9 @@ export const AmountTypes: RandomConfigure = config.PROD
         data: [2, 2],
       },
     };
+
+export enum Events {
+  NextIteration = 'NextIteration',
+  Start = 'Start',
+  Stop = 'Stop',
+}

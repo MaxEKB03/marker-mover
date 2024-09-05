@@ -21,6 +21,8 @@ export interface TradeConfigBase extends DexConfig {
 
 export interface DexV2 extends DexConfig {
   dexVersion: DexVersion.V2;
+  FACTORY_ADDRESS: string;
+  PAIR_ADDRESS: string;
 }
 
 export interface DexV3 extends DexConfig {

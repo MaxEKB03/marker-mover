@@ -10,7 +10,7 @@ export class TelegramService {
 
   constructor(private readonly volumeControlService: ControlsService) {
     this.longPolling();
-    this.notifyAdmin('Farm is starting');
+    this.notifyAdmin('BotManager is starting');
   }
 
   async longPolling() {
@@ -79,10 +79,6 @@ export class TelegramService {
     }
 
     projectSlot.run();
-    await this.bot.telegram.sendMessage(
-      config.ADMIN_ID,
-      'botManager is running now',
-    );
   }
 
   private async stop(ctx: Context) {
@@ -97,10 +93,6 @@ export class TelegramService {
     }
 
     projectSlot.stop();
-    await this.bot.telegram.sendMessage(
-      config.ADMIN_ID,
-      `botManager was stopped}`,
-    );
   }
 
   private async nextWallet(ctx: Context) {

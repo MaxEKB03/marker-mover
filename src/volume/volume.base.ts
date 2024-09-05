@@ -1,10 +1,9 @@
 import { Logger } from '@nestjs/common';
-import { ControlsSlot } from './controls/controls.slot';
 import { ControlsService } from './controls/controls.service';
 import { getWalletById } from 'scripts/addressFactory';
 import { Provider } from 'ethers';
-import { minBalance, transferAmount } from './dto/volume.dto';
-import { EventEmitter } from 'stream';
+import { Events, minBalance, transferAmount } from './dto/volume.dto';
+import { TelegramService } from 'src/telegram/telegram.service';
 
 export abstract class VolumeBase {
   storage = this.controlsService.slots[this.id];
@@ -14,7 +13,26 @@ export abstract class VolumeBase {
     protected readonly id: string,
     protected readonly controlsService: ControlsService,
     protected readonly provider: Provider,
-  ) {}
+    protected readonly telegramService: TelegramService,
+  ) {
+    this.storage.eventEmitter.addListener(Events.Start, () => {
+      this.start();
+    });
+    this.storage.eventEmitter.addListener(Events.Stop, () => {
+      this.stop();
+    });
+  }
+
+  protected start() {
+    this.logger.log('start');
+    this.storage.eventEmitter.emit(Events.NextIteration);
+    this.telegramService.notifyAdmin('Farm was started', this.id);
+  }
+
+  protected stop() {
+    this.logger.log('stop');
+    this.telegramService.notifyAdmin('Farm was stopped', this.id);
+  }
 
   protected getManager() {
     return getWalletById(this.storage.managerId).connect(this.provider);

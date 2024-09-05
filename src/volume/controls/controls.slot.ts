@@ -16,7 +16,6 @@ export class ControlsSlot {
   run() {
     this.isRunning = true;
     this.eventEmitter.emit(Events.Start);
-    this.eventEmitter.emit(Events.NextIteration);
   }
 
   stop() {

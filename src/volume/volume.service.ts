@@ -35,24 +35,24 @@ export class VolumeService {
           id,
           this.controlsService,
           provider,
+          this.telegramService,
           walletRange,
           tradeConfig,
           this.randomService,
           this.uniswapService,
           this.contractsService,
-          this.telegramService,
         );
       } else if (project.tradeConfig.dexVersion === DexVersion.V2) {
         this.slots[project.id] = new VolumeV2(
           id,
           this.controlsService,
           provider,
+          this.telegramService,
           walletRange,
           tradeConfig,
           this.randomService,
           this.uniswapService,
           this.contractsService,
-          this.telegramService,
         );
       }
     }

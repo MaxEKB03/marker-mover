@@ -15,14 +15,14 @@ export class VolumeV3 extends VolumeBase {
     id: string,
     controlsService: ControlsService,
     provider: Provider,
+    telegramService: TelegramService,
     protected readonly walletRange: { startId: number; endId: number },
     protected readonly tradeConfig: TradeConfigV3,
     protected readonly randomService: RandomService,
     protected readonly uniswapService: UniswapService,
     protected readonly contractsService: ContractsService,
-    protected readonly telegramService: TelegramService,
   ) {
-    super(id, controlsService, provider);
+    super(id, controlsService, provider, telegramService);
     this.listen();
     // this.controlsService.isRunning = true;
   }

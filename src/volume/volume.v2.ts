@@ -1,5 +1,4 @@
 import { RandomService } from 'src/random/random.service';
-import { UniswapService } from 'src/uniswap/uniswap.service';
 import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
 import { Provider, TransactionResponse } from 'ethers';
@@ -9,6 +8,7 @@ import { ethers } from 'ethers';
 import { VolumeBase } from './volume.base';
 import { ContractsService } from 'src/contracts/contracts.service';
 import { TradeConfigV2 } from 'src/config/trade.config';
+import { UniswapServiceV2 } from 'src/uniswap/uniswap.serviceV2';
 
 export class VolumeV2 extends VolumeBase {
   constructor(
@@ -19,12 +19,12 @@ export class VolumeV2 extends VolumeBase {
     protected readonly walletRange: { startId: number; endId: number },
     protected readonly tradeConfig: TradeConfigV2,
     protected readonly randomService: RandomService,
-    protected readonly uniswapService: UniswapService,
+    protected readonly uniswapServiceV2: UniswapServiceV2,
     protected readonly contractsService: ContractsService,
   ) {
     super(id, controlsService, provider, telegramService);
     this.listen();
-    // this.controlsService.isRunning = true;
+    this.storage.run();
   }
 
   private async listen() {
@@ -60,18 +60,20 @@ export class VolumeV2 extends VolumeBase {
   }
 
   private async runTrade() {
-    // const executer = this.getExecuter();
-    // const botManager = this.contractsService.botManager(
-    //   this.tradeConfig.BOT_MANAGER,
-    //   this.provider,
-    //   executer,
-    // );
-    // const txType = this.randomService.ofConfigured(TxTypes);
-    // const amountType = this.randomService.ofConfigured(AmountTypes);
-    // const [min, max] = amountType.data;
-    // const isSellingByRandom = txType.id != 0;
-    // const usdAmount = this.randomService.general(min, max);
-    // const bankBalances = await this.getBankBalance();
+    const executer = this.getExecuter();
+    const botManager = this.contractsService.botManager(
+      this.tradeConfig.BOT_MANAGER,
+      this.provider,
+      executer,
+    );
+    const txType = this.randomService.ofConfigured(TxTypes);
+    const amountType = this.randomService.ofConfigured(AmountTypes);
+    const [min, max] = amountType.data;
+    const isSellingByRandom = txType.id != 0;
+    const usdAmount = this.randomService.general(min, max);
+    const bankBalances = await this.getBankBalance();
+    console.log(bankBalances);
+
     // const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
     //   Math.round(Number(ethers.formatEther(bigValue))),
     // );
@@ -167,34 +169,38 @@ export class VolumeV2 extends VolumeBase {
   }
 
   async tokenToUSD(tokenBalance: number) {
-    // const token0: string = await this.contractsService
-    //   .pool(this.tradeConfig.POOL_ADDRESS, this.provider)
-    //   .token0();
-    // const isFirst =
-    //   token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
-    // const promise = isFirst
-    //   ? this.uniswapService.getOutputAmount(this.tradeConfig, tokenBalance)
-    //   : this.uniswapService.getOutputAmountReversed(
-    //       this.tradeConfig,
-    //       tokenBalance,
-    //     );
-    // const { quoteAmount: inUsd } = await promise;
-    // return BigInt(inUsd);
+    const token0: string = await this.contractsService
+      .pair(this.tradeConfig.PAIR_ADDRESS, this.provider)
+      .token0();
+    const isFirst =
+      token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
+    const promise = isFirst
+      ? this.uniswapServiceV2.getOutputAmount(this.tradeConfig, tokenBalance)
+      : this.uniswapServiceV2.getOutputAmountReversed(
+          this.tradeConfig,
+          tokenBalance,
+        );
+    const { quoteAmount: inUsd } = await promise;
+    return BigInt(inUsd);
   }
 
   async getBankBalance() {
-    // const bankAddress = '0x7D89F5A712Fcc3968DbBAAF7a0c92e426e170C77';
-    // const usdtContract = this.contractsService.token(
-    //   this.tradeConfig.USDT_ADDRESS,
-    //   this.provider,
-    // );
-    // const tokenContract = this.contractsService.token(
-    //   this.tradeConfig.USDT_ADDRESS,
-    //   this.provider,
-    // );
-    // const usdtBalance: bigint = await usdtContract.balanceOf(bankAddress);
-    // const tokenBalance: bigint = await tokenContract.balanceOf(bankAddress);
-    // const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
-    // return [usdtBalance, tokenBalance, tokenInUSD];
+    const usdtContract = this.contractsService.token(
+      this.tradeConfig.USDT_ADDRESS,
+      this.provider,
+    );
+    const tokenContract = this.contractsService.token(
+      this.tradeConfig.TOKEN_ADDRESS,
+      this.provider,
+    );
+    const usdtBalance: bigint = await usdtContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
+    const tokenBalance: bigint = await tokenContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
+    const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
+
+    return [usdtBalance, tokenBalance, tokenInUSD];
   }
 }

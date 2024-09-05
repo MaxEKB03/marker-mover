@@ -9,6 +9,7 @@ import { Dex, DexVersion, projects } from './dto/volume.projects';
 import { VolumeV3 } from './volume.v3';
 import { ContractsService } from 'src/contracts/contracts.service';
 import { VolumeV2 } from './volume.v2';
+import { UniswapServiceV2 } from 'src/uniswap/uniswap.serviceV2';
 
 @Injectable()
 export class VolumeService {
@@ -18,6 +19,7 @@ export class VolumeService {
   constructor(
     private readonly randomService: RandomService,
     private readonly uniswapService: UniswapService,
+    private readonly uniswapServiceV2: UniswapServiceV2,
     private readonly controlsService: ControlsService,
     private readonly contractsService: ContractsService,
     protected readonly telegramService: TelegramService,
@@ -51,7 +53,7 @@ export class VolumeService {
           walletRange,
           tradeConfig,
           this.randomService,
-          this.uniswapService,
+          this.uniswapServiceV2,
           this.contractsService,
         );
       }

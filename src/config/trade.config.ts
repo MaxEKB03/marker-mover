@@ -16,6 +16,7 @@ export interface TradeConfigBase extends DexConfig {
   TOKEN_ADDRESS: string;
   TOKEN_DECIMALS: number;
 
+  BANK_ADDRESS: string;
   BOT_MANAGER: string;
 }
 
@@ -63,6 +64,7 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
       TOKEN_ADDRESS: deployed['TestTokens#BuyToken'],
       TOKEN_DECIMALS: 18,
 
+      BANK_ADDRESS: '0x7D89F5A712Fcc3968DbBAAF7a0c92e426e170C77',
       BOT_MANAGER: deployed['BotManager#BotManager'],
 
       dex: Dex.Uniswap,
@@ -81,6 +83,7 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
       TOKEN_ADDRESS: deployed['TestTokens#BuyToken'],
       TOKEN_DECIMALS: 18,
 
+      BANK_ADDRESS: '0x7D89F5A712Fcc3968DbBAAF7a0c92e426e170C77',
       BOT_MANAGER: deployed['BotManager#BotManager'],
 
       dex: Dex.Uniswap,

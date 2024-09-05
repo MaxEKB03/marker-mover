@@ -24,7 +24,6 @@ export class VolumeV3 extends VolumeBase {
   ) {
     super(id, controlsService, provider, telegramService);
     this.listen();
-    // this.controlsService.isRunning = true;
   }
 
   private async listen() {
@@ -209,19 +208,21 @@ export class VolumeV3 extends VolumeBase {
   }
 
   async getBankBalance() {
-    const bankAddress = '0x7D89F5A712Fcc3968DbBAAF7a0c92e426e170C77';
-
     const usdtContract = this.contractsService.token(
       this.tradeConfig.USDT_ADDRESS,
       this.provider,
     );
     const tokenContract = this.contractsService.token(
-      this.tradeConfig.USDT_ADDRESS,
+      this.tradeConfig.TOKEN_ADDRESS,
       this.provider,
     );
 
-    const usdtBalance: bigint = await usdtContract.balanceOf(bankAddress);
-    const tokenBalance: bigint = await tokenContract.balanceOf(bankAddress);
+    const usdtBalance: bigint = await usdtContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
+    const tokenBalance: bigint = await tokenContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
     const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
     return [usdtBalance, tokenBalance, tokenInUSD];

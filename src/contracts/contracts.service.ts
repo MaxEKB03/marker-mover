@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { uniswapV2PairInterface } from 'abi/uniswapv2.pair.interface';
 import { uniswapV3PoolInterface } from 'abi/uniswapv3.pool.interface';
 import {
-  BaseContract,
   Contract,
   HDNodeWallet,
   Interface,
@@ -30,6 +30,19 @@ export class ContractsService {
     return this.createContract(
       poolAddress,
       uniswapV3PoolInterface,
+      provider,
+      wallet,
+    );
+  }
+
+  pair(
+    pairAddress: string,
+    provider: Provider,
+    wallet?: HDNodeWallet,
+  ): Contract {
+    return this.createContract(
+      pairAddress,
+      uniswapV2PairInterface,
       provider,
       wallet,
     );

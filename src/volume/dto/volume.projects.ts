@@ -36,6 +36,7 @@ export const projects: Project[] = [
       TOKEN_ADDRESS: '0x34980c35353A8D7B1A1BA02e02E387a8383e004A',
       TOKEN_DECIMALS: 18,
 
+      BANK_ADDRESS: '0x7D89F5A712Fcc3968DbBAAF7a0c92e426e170C77',
       BOT_MANAGER: '0x9e2987ddC843760985bc5157121feF8c34dAEF99',
 
       dex: Dex.Uniswap,
@@ -60,6 +61,7 @@ export const projects: Project[] = [
       TOKEN_ADDRESS: '0x8b0ce9c8797c393efeef48791960ee3d7297bac6',
       TOKEN_DECIMALS: 18,
 
+      BANK_ADDRESS: '0x1b6d67Daf777eb0E0905B33B24685bc9895229d4',
       BOT_MANAGER: '0xcA4C9548e7E8e0043E992d4B00965e07BCcd8B69',
 
       dex: Dex.Pancake,

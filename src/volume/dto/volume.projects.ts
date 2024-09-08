@@ -58,7 +58,7 @@ export const projects: Project[] = [
 
       USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
       USDT_DECIMALS: 18,
-      TOKEN_ADDRESS: '0x8b0ce9c8797c393efeef48791960ee3d7297bac6',
+      TOKEN_ADDRESS: '0x8B0Ce9C8797c393eFEef48791960EE3D7297bAc6',
       TOKEN_DECIMALS: 18,
 
       BANK_ADDRESS: '0x1b6d67Daf777eb0E0905B33B24685bc9895229d4',
@@ -71,4 +71,29 @@ export const projects: Project[] = [
       PAIR_ADDRESS: '0xA921804330947ac2F574A08E202d3CfD29ff369e',
     },
   },
+  // {
+  //   // TEST PRICE ONLY
+  //   id: '1INCH',
+  //   managerId: 505,
+  //   walletRange: { startId: 510, endId: 1010 },
+
+  //   provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
+  //   tradeConfig: {
+  //     CHAIN_ID: 56,
+
+  //     USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+  //     USDT_DECIMALS: 18,
+  //     TOKEN_ADDRESS: '0x111111111117dC0aa78b770fA6A738034120C302',
+  //     TOKEN_DECIMALS: 18,
+
+  //     BANK_ADDRESS: '0x1b6d67Daf777eb0E0905B33B24685bc9895229d4',
+  //     BOT_MANAGER: '0xcA4C9548e7E8e0043E992d4B00965e07BCcd8B69',
+
+  //     dex: Dex.Uniswap,
+  //     dexVersion: DexVersion.V2,
+
+  //     FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+  //     PAIR_ADDRESS: '0x9AB6dD8D91e5F518aF51c83494F21d8A127fc081',
+  //   },
+  // },
 ];

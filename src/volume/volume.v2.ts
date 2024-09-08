@@ -1,7 +1,7 @@
 import { RandomService } from 'src/random/random.service';
 import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
-import { Provider, TransactionResponse } from 'ethers';
+import { Provider } from 'ethers';
 import { wait } from 'src/helpers/time';
 import { AmountTypes, Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
 import { ethers } from 'ethers';
@@ -9,6 +9,8 @@ import { VolumeBase } from './volume.base';
 import { ContractsService } from 'src/contracts/contracts.service';
 import { TradeConfigV2 } from 'src/config/trade.config';
 import { UniswapServiceV2 } from 'src/uniswap/uniswap.serviceV2';
+import { PancakeServiceV2 } from 'src/uniswap/pancake.serviceV2';
+import { Dex } from './dto/volume.projects';
 
 export class VolumeV2 extends VolumeBase {
   constructor(
@@ -19,8 +21,9 @@ export class VolumeV2 extends VolumeBase {
     protected readonly walletRange: { startId: number; endId: number },
     protected readonly tradeConfig: TradeConfigV2,
     protected readonly randomService: RandomService,
-    protected readonly uniswapServiceV2: UniswapServiceV2,
     protected readonly contractsService: ContractsService,
+    protected readonly uniswapServiceV2: UniswapServiceV2,
+    protected readonly pancakeServiceV2: PancakeServiceV2,
   ) {
     super(id, controlsService, provider, telegramService);
     this.listen();
@@ -155,32 +158,29 @@ export class VolumeV2 extends VolumeBase {
   }
 
   async usdToToken(usdInDecimal: string) {
-    // const usdAmount = Number(ethers.parseEther(usdInDecimal));
-    // const token0: string = await this.contractsService
-    //   .pool(this.tradeConfig.POOL_ADDRESS, this.provider)
-    //   .token0();
-    // const isFirst =
-    //   token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
-    // const promise = isFirst
-    //   ? this.uniswapService.getOutputAmountReversed(this.tradeConfig, usdAmount)
-    //   : this.uniswapService.getOutputAmount(this.tradeConfig, usdAmount);
-    // const { quoteAmount: inToken } = await promise;
-    // return BigInt(inToken);
+    const usdAmount = Number(ethers.parseEther(usdInDecimal));
+    const promiseGetOutputAmountReversed =
+      this.tradeConfig.dex === Dex.Uniswap
+        ? this.uniswapServiceV2.getOutputAmountReversed(
+            this.tradeConfig,
+            usdAmount,
+          )
+        : this.pancakeServiceV2.getOutputAmountReversed(
+            this.tradeConfig,
+            usdAmount,
+          );
+
+    const { quoteAmount: inUsd } = await promiseGetOutputAmountReversed;
+    return BigInt(inUsd);
   }
 
   async tokenToUSD(tokenBalance: number) {
-    const token0: string = await this.contractsService
-      .pair(this.tradeConfig.PAIR_ADDRESS, this.provider)
-      .token0();
-    const isFirst =
-      token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
-    const promise = isFirst
-      ? this.uniswapServiceV2.getOutputAmount(this.tradeConfig, tokenBalance)
-      : this.uniswapServiceV2.getOutputAmountReversed(
-          this.tradeConfig,
-          tokenBalance,
-        );
-    const { quoteAmount: inUsd } = await promise;
+    const promiseGetOutputAmount =
+      this.tradeConfig.dex === Dex.Uniswap
+        ? this.uniswapServiceV2.getOutputAmount(this.tradeConfig, tokenBalance)
+        : this.pancakeServiceV2.getOutputAmount(this.tradeConfig, tokenBalance);
+
+    const { quoteAmount: inUsd } = await promiseGetOutputAmount;
     return BigInt(inUsd);
   }
 
@@ -193,12 +193,14 @@ export class VolumeV2 extends VolumeBase {
       this.tradeConfig.TOKEN_ADDRESS,
       this.provider,
     );
-    const usdtBalance: bigint = await usdtContract.balanceOf(
-      this.tradeConfig.BANK_ADDRESS,
-    );
-    const tokenBalance: bigint = await tokenContract.balanceOf(
-      this.tradeConfig.BANK_ADDRESS,
-    );
+    // const usdtBalance: bigint = await usdtContract.balanceOf(
+    //   this.tradeConfig.BANK_ADDRESS,
+    // );
+    // const tokenBalance: bigint = await tokenContract.balanceOf(
+    //   this.tradeConfig.BANK_ADDRESS,
+    // );
+    const usdtBalance = ethers.parseEther('100');
+    const tokenBalance = ethers.parseEther('100');
     const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
     return [usdtBalance, tokenBalance, tokenInUSD];

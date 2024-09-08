@@ -2,23 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { Contract, ethers } from 'ethers';
 import { provider } from 'scripts/provider';
 import { ERC20__factory } from 'typechain-types';
-import {
-  TradeConfig,
-  TradeConfigV2,
-  TradeConfigV3,
-} from 'src/config/trade.config';
-import { DexVersion } from 'src/volume/dto/volume.projects';
-import { Pair, TokenAmount, Token } from '@uniswap/sdk';
+import { TradeConfig, TradeConfigV2 } from 'src/config/trade.config';
+import { Pair, TokenAmount, Token } from '../../pancake-swap-sdk/src/';
 import { uniswapV2PairInterface } from 'abi/uniswapv2.pair.interface';
 
 @Injectable()
-export class UniswapServiceV2 {
+export class PancakeServiceV2 {
   BadRequest = new Error('UniswapV3: Wrong arguments, unsupported TradeConfig');
 
   constructor() {}
 
   // async smth1() {
-  //   const formattedIn = '1';
+  //   const formattedIn = '1';np
   //   const amountIn = Number(ethers.parseEther(formattedIn));
 
   //   const price = await this.getOutputAmount(amountIn);
@@ -46,13 +41,6 @@ export class UniswapServiceV2 {
   //   // console.log(`${amountOut} > ${amountIn}`);
   //   console.log(`${formattedOut} > ${formattedIn}`);
   // }
-
-  checkSupportV3(tradeConfig: TradeConfig): TradeConfigV3 {
-    if (tradeConfig.dexVersion != DexVersion.V3) {
-      throw this.BadRequest;
-    }
-    return tradeConfig;
-  }
 
   async createToken(
     chainId: number,
@@ -103,8 +91,8 @@ export class UniswapServiceV2 {
 
     const reserves = await pairContract.getReserves();
 
-    const tokenAmount0 = new TokenAmount(token0, reserves[0]);
-    const tokenAmount1 = new TokenAmount(token1, reserves[1]);
+    const tokenAmount0 = new TokenAmount(token0, Number(reserves[0]));
+    const tokenAmount1 = new TokenAmount(token1, Number(reserves[1]));
 
     const pair = new Pair(tokenAmount0, tokenAmount1);
 
@@ -117,7 +105,7 @@ export class UniswapServiceV2 {
     const [token0, token1, isFirst] = await this.createTokens(tradeConfig);
     const inputAmount = new TokenAmount(
       isFirst ? token0 : token1,
-      BigInt(rawInputAmount),
+      rawInputAmount,
     );
 
     const pair = await this.createPair(
@@ -142,12 +130,14 @@ export class UniswapServiceV2 {
     tradeConfig: TradeConfigV2,
     rawInputAmount: number,
   ) {
-    console.log('getOutputAmountReversed');
+    console.log('PANCAKE getOutputAmountReversed');
+
+    console.log(rawInputAmount);
 
     const [token0, token1, isFirst] = await this.createTokens(tradeConfig);
     const inputAmount = new TokenAmount(
       !isFirst ? token0 : token1,
-      BigInt(rawInputAmount),
+      rawInputAmount,
     );
 
     const pair = await this.createPair(

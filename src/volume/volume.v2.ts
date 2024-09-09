@@ -1,7 +1,7 @@
 import { RandomService } from 'src/random/random.service';
 import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
-import { Provider } from 'ethers';
+import { Provider, TransactionResponse } from 'ethers';
 import { wait } from 'src/helpers/time';
 import { AmountTypes, Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
 import { ethers } from 'ethers';
@@ -27,7 +27,6 @@ export class VolumeV2 extends VolumeBase {
   ) {
     super(id, controlsService, provider, telegramService);
     this.listen();
-    this.storage.run();
   }
 
   private async listen() {
@@ -75,74 +74,71 @@ export class VolumeV2 extends VolumeBase {
     const isSellingByRandom = txType.id != 0;
     const usdAmount = this.randomService.general(min, max);
     const bankBalances = await this.getBankBalance();
-    console.log(bankBalances);
 
-    // const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
-    //   Math.round(Number(ethers.formatEther(bigValue))),
-    // );
-    // const tokenAmount = await this.usdToToken(usdAmount.toString());
-    // const tokenAmountFormatted = Math.round(
-    //   Number(ethers.formatEther(tokenAmount)),
-    // );
-    // let tradeAmountUnited = isSellingByRandom
-    //   ? usdAmount
-    //   : Math.round(Number(ethers.formatEther(tokenAmount)));
-    // const compareValue = isSellingByRandom ? bankUsdAmount : bankTokenAmount;
-    // const isPossible = tradeAmountUnited * 1.2 < compareValue;
-    // tradeAmountUnited = !isPossible
-    //   ? !isSellingByRandom
-    //     ? usdAmount
-    //     : tokenAmountFormatted
-    //   : tradeAmountUnited;
-    // let message = `\n${this.storage.walletId}/${this.walletRange.endId}|${executer.address}\n`;
-    // const isSelling = isPossible ? isSellingByRandom : !isSellingByRandom; // Check balance to trade, else change direction
-    // if (!isPossible) {
-    //   message += 'Direction was changed, cause balance of bank is low\n';
-    // }
-    // const decimalsOut = isSelling
-    //   ? this.tradeConfig.USDT_DECIMALS
-    //   : this.tradeConfig.TOKEN_DECIMALS;
-    // const decimalsIn = isSelling
-    //   ? this.tradeConfig.TOKEN_DECIMALS
-    //   : this.tradeConfig.USDT_DECIMALS;
-    // const methodName = isSelling ? 'sell' : 'buy';
-    // const tradeAmount = ethers.parseUnits(
-    //   tradeAmountUnited.toString(),
-    //   decimalsIn,
-    // );
-    // const getExactAmount = isSelling
-    //   ? this.uniswapService.getOutputAmountReversed(
-    //       this.tradeConfig,
-    //       Number(tradeAmount),
-    //     )
-    //   : this.uniswapService.getOutputAmount(
-    //       this.tradeConfig,
-    //       Number(tradeAmount),
-    //     );
-    // const exactAmount = await getExactAmount;
-    // const slippageAmount = isSelling
-    //   ? BigInt(exactAmount.quoteAmount)
-    //   : BigInt(exactAmount.subAmount);
-    // const slippageAmountUnited = ethers.formatUnits(
-    //   slippageAmount.toString(),
-    //   decimalsOut,
-    // );
-    // message += `Executing ${methodName}: ${tradeAmountUnited} > ${slippageAmountUnited}`;
-    // this.logger.log(message);
-    // this.logger.log(
-    //   `tradeAmount: ${tradeAmount}, slippageAmount: ${slippageAmount}`,
-    // );
-    // if (tradeAmount === 0n || slippageAmount === 0n) {
-    //   return;
-    // }
-    // const txMethod = isSelling
-    //   ? botManager['sell'](slippageAmount, tradeAmount)
-    //   : botManager['buy'](tradeAmount, slippageAmount);
-    // const tx: TransactionResponse = await txMethod;
-    // const response = await tx.wait();
-    // this.logger.log(`response.hash: ${response.hash}`);
-    // message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
-    // this.telegramService.notify(message, this.id);
+    const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
+      Math.round(Number(ethers.formatEther(bigValue))),
+    );
+    const tokenAmount = await this.usdToToken(usdAmount.toString());
+    const tokenAmountFormatted = Math.round(
+      Number(ethers.formatEther(tokenAmount)),
+    );
+    let tradeAmountUnited = isSellingByRandom
+      ? usdAmount
+      : Math.round(Number(ethers.formatEther(tokenAmount)));
+    const compareValue = isSellingByRandom ? bankUsdAmount : bankTokenAmount;
+    const isPossible = tradeAmountUnited * 1.2 < compareValue;
+    tradeAmountUnited = !isPossible
+      ? !isSellingByRandom
+        ? usdAmount
+        : tokenAmountFormatted
+      : tradeAmountUnited;
+    let message = `\n${this.storage.walletId}/${this.walletRange.endId}|${executer.address}\n`;
+    const isSelling = isPossible ? isSellingByRandom : !isSellingByRandom; // Check balance to trade, else change direction
+    if (!isPossible) {
+      message += 'Direction was changed, cause balance of bank is low\n';
+    }
+    const decimalsOut = isSelling
+      ? this.tradeConfig.USDT_DECIMALS
+      : this.tradeConfig.TOKEN_DECIMALS;
+    const decimalsIn = isSelling
+      ? this.tradeConfig.TOKEN_DECIMALS
+      : this.tradeConfig.USDT_DECIMALS;
+    const methodName = isSelling ? 'sell' : 'buy';
+    const tradeAmount = Number(
+      ethers.parseUnits(tradeAmountUnited.toString(), decimalsIn),
+    );
+    const dexService =
+      this.tradeConfig.dex === Dex.Uniswap
+        ? 'uniswapServiceV2'
+        : 'pancakeServiceV2';
+
+    const getExactAmount = isSelling
+      ? this[dexService].getOutputAmountReversed(this.tradeConfig, tradeAmount)
+      : this[dexService].getOutputAmount(this.tradeConfig, tradeAmount);
+
+    const { quoteAmount: slippageAmount } = await getExactAmount;
+    const slippageAmountUnited = ethers.formatUnits(
+      slippageAmount.toString(),
+      decimalsOut,
+    );
+    message += `Executing ${methodName}: ${tradeAmountUnited} > ${slippageAmountUnited}`;
+    this.logger.log(message);
+    this.logger.log(
+      `tradeAmount: ${tradeAmount}, slippageAmount: ${slippageAmount}`,
+    );
+    if (tradeAmount === 0 || slippageAmount === 0) {
+      return;
+    }
+
+    const txMethod = isSelling
+      ? botManager['buyV2'](BigInt(tradeAmount), BigInt(slippageAmount))
+      : botManager['sellV2'](BigInt(tradeAmount), BigInt(slippageAmount));
+
+    const tx: TransactionResponse = await txMethod;
+    const response = await tx.wait();
+    this.logger.log(`response.hash: ${response.hash}`);
+    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
+    this.telegramService.notify(message, this.id);
   }
 
   private async waitRandomTime() {
@@ -193,14 +189,14 @@ export class VolumeV2 extends VolumeBase {
       this.tradeConfig.TOKEN_ADDRESS,
       this.provider,
     );
-    // const usdtBalance: bigint = await usdtContract.balanceOf(
-    //   this.tradeConfig.BANK_ADDRESS,
-    // );
-    // const tokenBalance: bigint = await tokenContract.balanceOf(
-    //   this.tradeConfig.BANK_ADDRESS,
-    // );
-    const usdtBalance = ethers.parseEther('100');
-    const tokenBalance = ethers.parseEther('100');
+    const usdtBalance: bigint = await usdtContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
+    const tokenBalance: bigint = await tokenContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
+    // const usdtBalance = ethers.parseEther('100');
+    // const tokenBalance = ethers.parseEther('100');
     const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
     return [usdtBalance, tokenBalance, tokenInUSD];

@@ -69,11 +69,15 @@ export class VolumeV2 extends VolumeBase {
       executer,
     );
     const txType = this.randomService.ofConfigured(TxTypes);
-    const amountType = this.randomService.ofConfigured(AmountTypes);
+    const amountType = this.randomService.ofConfigured(
+      this.tradeConfig.amountTypes,
+    );
     const [min, max] = amountType.data;
     const isSellingByRandom = txType.id != 0;
     const usdAmount = this.randomService.general(min, max);
     const bankBalances = await this.getBankBalance();
+
+    console.log(min, max);
 
     const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
       Math.round(Number(ethers.formatEther(bigValue))),
@@ -104,8 +108,9 @@ export class VolumeV2 extends VolumeBase {
       ? this.tradeConfig.TOKEN_DECIMALS
       : this.tradeConfig.USDT_DECIMALS;
     const methodName = isSelling ? 'sell' : 'buy';
-    const tradeAmount = Number(
-      ethers.parseUnits(tradeAmountUnited.toString(), decimalsIn),
+    const tradeAmount = ethers.parseUnits(
+      tradeAmountUnited.toString(),
+      decimalsIn,
     );
     const dexService =
       this.tradeConfig.dex === Dex.Uniswap
@@ -113,10 +118,14 @@ export class VolumeV2 extends VolumeBase {
         : 'pancakeServiceV2';
 
     const getExactAmount = isSelling
-      ? this[dexService].getOutputAmountReversed(this.tradeConfig, tradeAmount)
-      : this[dexService].getOutputAmount(this.tradeConfig, tradeAmount);
+      ? this[dexService].getOutputAmountReversed(
+          this.tradeConfig,
+          Number(tradeAmount),
+        )
+      : this[dexService].getOutputAmount(this.tradeConfig, Number(tradeAmount));
 
-    const { quoteAmount: slippageAmount } = await getExactAmount;
+    const { quoteAmount } = await getExactAmount;
+    const slippageAmount = BigInt(quoteAmount);
     const slippageAmountUnited = ethers.formatUnits(
       slippageAmount.toString(),
       decimalsOut,
@@ -126,7 +135,7 @@ export class VolumeV2 extends VolumeBase {
     this.logger.log(
       `tradeAmount: ${tradeAmount}, slippageAmount: ${slippageAmount}`,
     );
-    if (tradeAmount === 0 || slippageAmount === 0) {
+    if (tradeAmount === 0n || slippageAmount === 0n) {
       return;
     }
 

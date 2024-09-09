@@ -2,6 +2,7 @@ import { FeeAmount } from '@uniswap/v3-sdk';
 import config from './base.config';
 import { getDeployed } from '../../scripts/getDeployed';
 import { Dex, DexVersion } from '../volume/dto/volume.projects';
+import { RandomConfigure } from 'src/volume/dto/volume.dto';
 
 export interface DexConfig {
   dex: Dex;
@@ -18,6 +19,8 @@ export interface TradeConfigBase extends DexConfig {
 
   BANK_ADDRESS: string;
   BOT_MANAGER: string;
+
+  amountTypes: RandomConfigure;
 }
 
 export interface DexV2 extends DexConfig {
@@ -73,6 +76,22 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
       POOL_ADDRESS: deployed['Pool#Pancake'],
       POOL_FEE: FeeAmount.LOWEST,
+
+      amountTypes: config.PROD
+        ? {
+            big: {
+              id: 0,
+              percent: 100,
+              data: [10, 50],
+            },
+          }
+        : {
+            small: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          },
     }
   : // testnet
     {
@@ -92,4 +111,20 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
       POOL_ADDRESS: deployed['Pool#Pancake'],
       POOL_FEE: FeeAmount.LOWEST,
+
+      amountTypes: config.PROD
+        ? {
+            big: {
+              id: 0,
+              percent: 100,
+              data: [10, 50],
+            },
+          }
+        : {
+            small: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          },
     };

@@ -20,7 +20,6 @@ export type Project = {
   walletRange: WalletRange;
   provider: Provider;
   tradeConfig: TradeConfig;
-  AmountTypes: RandomConfigure;
 };
 
 export const projects: Project[] = [
@@ -46,22 +45,23 @@ export const projects: Project[] = [
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
       POOL_ADDRESS: '0x6948D6C8532C6B0006CB67c6fB9c399792c8AC91',
       POOL_FEE: FeeAmount.LOWEST,
+
+      amountTypes: config.PROD
+        ? {
+            big: {
+              id: 0,
+              percent: 100,
+              data: [300, 1000],
+            },
+          }
+        : {
+            small: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          },
     },
-    AmountTypes: config.PROD
-      ? {
-          big: {
-            id: 0,
-            percent: 100,
-            data: [300, 1000],
-          },
-        }
-      : {
-          small: {
-            id: 0,
-            percent: 100,
-            data: [2, 2],
-          },
-        },
   },
   {
     id: 'LION',
@@ -85,22 +85,23 @@ export const projects: Project[] = [
 
       FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
       PAIR_ADDRESS: '0xA921804330947ac2F574A08E202d3CfD29ff369e',
+
+      amountTypes: config.PROD
+        ? {
+            big: {
+              id: 0,
+              percent: 100,
+              data: [10, 50],
+            },
+          }
+        : {
+            small: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          },
     },
-    AmountTypes: config.PROD
-      ? {
-          big: {
-            id: 0,
-            percent: 100,
-            data: [10, 50],
-          },
-        }
-      : {
-          small: {
-            id: 0,
-            percent: 100,
-            data: [2, 2],
-          },
-        },
   },
   // {
   //   // TEST PRICE ONLY

@@ -25,6 +25,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nomicfoundation/ignition-core": "^0.15.5",
+    "@nomicfoundation/solidity-analyzer-win32-arm64-msvc": "^0.1.1",
     "@openzeppelin/contracts": "^5.0.2",
     "@uniswap/sdk": "^3.0.3",
     "@uniswap/sdk-core": "^5.3.1",

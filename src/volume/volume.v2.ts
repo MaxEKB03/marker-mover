@@ -12,6 +12,8 @@ import { UniswapServiceV2 } from 'src/uniswap/uniswap.serviceV2';
 import { PancakeServiceV2 } from 'src/uniswap/pancake.serviceV2';
 import { Dex } from './dto/volume.projects';
 
+type Void = () => void
+
 export class VolumeV2 extends VolumeBase {
   constructor(
     id: string,
@@ -30,10 +32,20 @@ export class VolumeV2 extends VolumeBase {
   }
 
   private async listen() {
+    let idCounter = 0
+    this.storage.eventEmitter.on(Events.Stop, () => {
+      const cancelFunctions = Object.values(this.cancelFunctions)
+      for (let id = 0; id < cancelFunctions.length; id++) {
+        const cancelFn = cancelFunctions[id];
+        cancelFn();
+      }
+    })
+
     this.storage.eventEmitter.on(Events.NextIteration, async () => {
       this.logger.log('Next iteration');
       try {
-        await this.process();
+        await this.process(idCounter);
+        idCounter++
       } catch (e) {
         console.log(e);
 
@@ -49,16 +61,28 @@ export class VolumeV2 extends VolumeBase {
     });
   }
 
-  private async process() {
-    const executer = this.getExecuter();
-    this.logger.log(
-      `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
-    );
-    await this.increaseBalance();
-    await this.runTrade();
-    await this.waitRandomTime();
-    this.storage.incrementWalletId();
-    this.storage.eventEmitter.emit(Events.NextIteration);
+  cancelFunctions: { [id: number]: () => void } = [];
+  private async process(id: number) {
+    return new Promise<void>(async (resolve, reject) => {
+      const cancelFn = () => {
+        reject(new Error(`Task was cancelled`));
+      };
+
+      // todo: увеличить работу программы для тестирования
+      // await new Promise() 
+
+      this.cancelFunctions[id] = cancelFn
+
+      const executer = this.getExecuter();
+      this.logger.log(
+        `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
+      );
+      await this.increaseBalance();
+      await this.runTrade();
+      await this.waitRandomTime();
+      this.storage.incrementWalletId();
+      this.storage.eventEmitter.emit(Events.NextIteration);
+    })
   }
 
   private async runTrade() {
@@ -119,9 +143,9 @@ export class VolumeV2 extends VolumeBase {
 
     const getExactAmount = isSelling
       ? this[dexService].getOutputAmountReversed(
-          this.tradeConfig,
-          Number(tradeAmount),
-        )
+        this.tradeConfig,
+        Number(tradeAmount),
+      )
       : this[dexService].getOutputAmount(this.tradeConfig, Number(tradeAmount));
 
     const { quoteAmount } = await getExactAmount;
@@ -167,13 +191,13 @@ export class VolumeV2 extends VolumeBase {
     const promiseGetOutputAmountReversed =
       this.tradeConfig.dex === Dex.Uniswap
         ? this.uniswapServiceV2.getOutputAmountReversed(
-            this.tradeConfig,
-            usdAmount,
-          )
+          this.tradeConfig,
+          usdAmount,
+        )
         : this.pancakeServiceV2.getOutputAmountReversed(
-            this.tradeConfig,
-            usdAmount,
-          );
+          this.tradeConfig,
+          usdAmount,
+        );
 
     const { quoteAmount: inUsd } = await promiseGetOutputAmountReversed;
     return BigInt(inUsd);

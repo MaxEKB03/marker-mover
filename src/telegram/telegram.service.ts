@@ -91,8 +91,7 @@ export class TelegramService {
     if (!projectSlot) {
       return;
     }
-
-    projectSlot.stop();
+      projectSlot.stop();
   }
 
   private async nextWallet(ctx: Context) {

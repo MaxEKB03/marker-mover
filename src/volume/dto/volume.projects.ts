@@ -1,4 +1,4 @@
-import { RandomConfigure, WalletRange } from './volume.dto';
+import { WalletRange } from './volume.dto';
 import { JsonRpcProvider, Provider } from 'ethers';
 import { TradeConfig } from '../../config/trade.config';
 import { FeeAmount } from '@uniswap/v3-sdk';
@@ -42,7 +42,7 @@ export const projects: Project[] = [
       dex: Dex.Uniswap,
       dexVersion: DexVersion.V3,
 
-      FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
+      FACTORY_ADDRESS: '0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7',
       POOL_ADDRESS: '0x6948D6C8532C6B0006CB67c6fB9c399792c8AC91',
       POOL_FEE: FeeAmount.LOWEST,
 
@@ -105,7 +105,7 @@ export const projects: Project[] = [
   },
   // {
   //   // TEST PRICE ONLY
-  //   id: '1INCH',
+  //   id: 'TEST',
   //   managerId: 505,
   //   walletRange: { startId: 510, endId: 1010 },
 
@@ -115,17 +115,34 @@ export const projects: Project[] = [
 
   //     USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
   //     USDT_DECIMALS: 18,
-  //     TOKEN_ADDRESS: '0x111111111117dC0aa78b770fA6A738034120C302',
+  //     TOKEN_ADDRESS: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
   //     TOKEN_DECIMALS: 18,
 
   //     BANK_ADDRESS: '0x1b6d67Daf777eb0E0905B33B24685bc9895229d4',
   //     BOT_MANAGER: '0xcA4C9548e7E8e0043E992d4B00965e07BCcd8B69',
 
-  //     dex: Dex.Uniswap,
-  //     dexVersion: DexVersion.V2,
+  //     dex: Dex.Pancake,
+  //     dexVersion: DexVersion.V3,
 
   //     FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
-  //     PAIR_ADDRESS: '0x9AB6dD8D91e5F518aF51c83494F21d8A127fc081',
+  //     POOL_ADDRESS: '0x46Cf1cF8c69595804ba91dFdd8d6b960c9B0a7C4',
+  //     POOL_FEE: FeeAmount.LOWEST,
+
+  //     amountTypes: config.PROD
+  //       ? {
+  //           big: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [100, 400],
+  //           },
+  //         }
+  //       : {
+  //           small: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [2, 2],
+  //           },
+  //         },
   //   },
   // },
 ];

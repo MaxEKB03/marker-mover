@@ -11,6 +11,7 @@ import { ContractsService } from 'src/contracts/contracts.service';
 import { VolumeV2 } from './volume.v2';
 import { UniswapServiceV2 } from 'src/uniswap/uniswap.serviceV2';
 import { PancakeServiceV2 } from 'src/uniswap/pancake.serviceV2';
+import { PancakeService } from 'src/uniswap/pancake.service';
 
 @Injectable()
 export class VolumeService {
@@ -20,6 +21,7 @@ export class VolumeService {
   constructor(
     private readonly randomService: RandomService,
     private readonly uniswapService: UniswapService,
+    private readonly pancakeService: PancakeService,
     private readonly uniswapServiceV2: UniswapServiceV2,
     private readonly pancakeServiceV2: PancakeServiceV2,
     private readonly controlsService: ControlsService,
@@ -43,8 +45,9 @@ export class VolumeService {
           walletRange,
           tradeConfig,
           this.randomService,
-          this.uniswapService,
           this.contractsService,
+          this.uniswapService,
+          this.pancakeService,
         );
       } else if (project.tradeConfig.dexVersion === DexVersion.V2) {
         this.slots[project.id] = new VolumeV2(

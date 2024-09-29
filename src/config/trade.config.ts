@@ -12,9 +12,9 @@ export interface DexConfig {
 export interface TradeConfigBase extends DexConfig {
   CHAIN_ID: number;
 
-  USDT_ADDRESS: string; // USDT || another liquid token
+  USDT_ADDRESS: `0x${string}`; // USDT || another liquid token
   USDT_DECIMALS: number;
-  TOKEN_ADDRESS: string;
+  TOKEN_ADDRESS: `0x${string}`;
   TOKEN_DECIMALS: number;
 
   BANK_ADDRESS: string;

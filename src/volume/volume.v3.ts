@@ -9,6 +9,8 @@ import { ethers } from 'ethers';
 import { TradeConfigV3 } from 'src/config/trade.config';
 import { VolumeBase } from './volume.base';
 import { ContractsService } from 'src/contracts/contracts.service';
+import { PancakeService } from 'src/uniswap/pancake.service';
+import { Dex } from './dto/volume.projects';
 
 export class VolumeV3 extends VolumeBase {
   constructor(
@@ -19,8 +21,9 @@ export class VolumeV3 extends VolumeBase {
     protected readonly walletRange: { startId: number; endId: number },
     protected readonly tradeConfig: TradeConfigV3,
     protected readonly randomService: RandomService,
-    protected readonly uniswapService: UniswapService,
     protected readonly contractsService: ContractsService,
+    protected readonly uniswapService: UniswapService,
+    protected readonly pancakeService: PancakeService,
   ) {
     super(id, controlsService, provider, telegramService);
     this.listen();
@@ -76,7 +79,6 @@ export class VolumeV3 extends VolumeBase {
     const usdAmount = this.randomService.general(min, max);
 
     const bankBalances = await this.getBankBalance();
-
     const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
       Math.round(Number(ethers.formatEther(bigValue))),
     );
@@ -118,15 +120,18 @@ export class VolumeV3 extends VolumeBase {
       decimalsIn,
     );
 
+    const dexService =
+      this.tradeConfig.dex === Dex.Uniswap
+        ? 'uniswapService'
+        : 'pancakeService';
+
     const getExactAmount = isSelling
-      ? this.uniswapService.getOutputAmountReversed(
+      ? this[dexService].getOutputAmountReversed(
           this.tradeConfig,
           Number(tradeAmount),
         )
-      : this.uniswapService.getOutputAmount(
-          this.tradeConfig,
-          Number(tradeAmount),
-        );
+      : this[dexService].getOutputAmount(this.tradeConfig, Number(tradeAmount));
+
     const exactAmount = await getExactAmount;
 
     const slippageAmount = isSelling
@@ -148,13 +153,13 @@ export class VolumeV3 extends VolumeBase {
       return;
     }
 
-    const txMethod = isSelling
-      ? botManager['sell'](slippageAmount, tradeAmount)
-      : botManager['buy'](tradeAmount, slippageAmount);
-    const tx: TransactionResponse = await txMethod;
-    const response = await tx.wait();
-    this.logger.log(`response.hash: ${response.hash}`);
-    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
+    // const txMethod = isSelling
+    //   ? botManager['sell'](slippageAmount, tradeAmount)
+    //   : botManager['buy'](tradeAmount, slippageAmount);
+    // const tx: TransactionResponse = await txMethod;
+    // const response = await tx.wait();
+    // this.logger.log(`response.hash: ${response.hash}`);
+    // message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
 
     this.telegramService.notify(message, this.id);
   }
@@ -179,9 +184,14 @@ export class VolumeV3 extends VolumeBase {
     const isFirst =
       token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
 
+    const dexService =
+      this.tradeConfig.dex === Dex.Uniswap
+        ? 'uniswapService'
+        : 'pancakeService';
+
     const promise = isFirst
-      ? this.uniswapService.getOutputAmountReversed(this.tradeConfig, usdAmount)
-      : this.uniswapService.getOutputAmount(this.tradeConfig, usdAmount);
+      ? this[dexService].getOutputAmountReversed(this.tradeConfig, usdAmount)
+      : this[dexService].getOutputAmount(this.tradeConfig, usdAmount);
 
     const { quoteAmount: inToken } = await promise;
 
@@ -195,9 +205,14 @@ export class VolumeV3 extends VolumeBase {
     const isFirst =
       token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
 
+    const dexService =
+      this.tradeConfig.dex === Dex.Uniswap
+        ? 'uniswapService'
+        : 'pancakeService';
+
     const promise = isFirst
-      ? this.uniswapService.getOutputAmount(this.tradeConfig, tokenBalance)
-      : this.uniswapService.getOutputAmountReversed(
+      ? this[dexService].getOutputAmount(this.tradeConfig, tokenBalance)
+      : this[dexService].getOutputAmountReversed(
           this.tradeConfig,
           tokenBalance,
         );
@@ -217,12 +232,16 @@ export class VolumeV3 extends VolumeBase {
       this.provider,
     );
 
-    const usdtBalance: bigint = await usdtContract.balanceOf(
-      this.tradeConfig.BANK_ADDRESS,
-    );
-    const tokenBalance: bigint = await tokenContract.balanceOf(
-      this.tradeConfig.BANK_ADDRESS,
-    );
+    // const usdtBalance: bigint = await usdtContract.balanceOf(
+    //   this.tradeConfig.BANK_ADDRESS,
+    // );
+    // const tokenBalance: bigint = await tokenContract.balanceOf(
+    //   this.tradeConfig.BANK_ADDRESS,
+    // );
+
+    const usdtBalance: bigint = 1000000000000000000000n;
+    const tokenBalance: bigint = 1000000000000000000000n;
+
     const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
     return [usdtBalance, tokenBalance, tokenInUSD];

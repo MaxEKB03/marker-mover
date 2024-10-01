@@ -61,6 +61,9 @@ export const projects: Project[] = [
               data: [2, 2],
             },
           },
+
+      sellMethod: 'sell',
+      buyMethod: 'buy',
     },
   },
   {
@@ -101,6 +104,53 @@ export const projects: Project[] = [
               data: [2, 2],
             },
           },
+
+      sellMethod: 'sellV2',
+      buyMethod: 'buyV2',
+    },
+  },
+  {
+    id: 'TIF',
+    managerId: 1015,
+    walletRange: { startId: 1020, endId: 1520 },
+
+    provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
+    tradeConfig: {
+      CHAIN_ID: 56,
+
+      USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+      USDT_DECIMALS: 18,
+      TOKEN_ADDRESS: '0xFd435840Ed3A4ea061eA3a4cB3C8617823ee2049',
+      TOKEN_DECIMALS: 18,
+
+      BANK_ADDRESS: '0x61dbD83E4189587c6e4bef6057fa8Ac1ED77921A',
+      BOT_MANAGER: '0x9E01ee02182EF7b2698A59879967c94558C3F6da',
+
+      dex: Dex.Pancake,
+      dexVersion: DexVersion.V3,
+
+      FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+      POOL_ADDRESS: '0x7B4373293620547e41e0E48711CF9318A8bDe142',
+      POOL_FEE: FeeAmount.LOWEST,
+
+      amountTypes: config.PROD
+        ? {
+            big: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          }
+        : {
+            small: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          },
+
+      sellMethod: 'sellV3',
+      buyMethod: 'buyV3',
     },
   },
   // {

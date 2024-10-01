@@ -153,13 +153,15 @@ export class VolumeV3 extends VolumeBase {
       return;
     }
 
-    // const txMethod = isSelling
-    //   ? botManager['sell'](slippageAmount, tradeAmount)
-    //   : botManager['buy'](tradeAmount, slippageAmount);
-    // const tx: TransactionResponse = await txMethod;
-    // const response = await tx.wait();
-    // this.logger.log(`response.hash: ${response.hash}`);
-    // message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
+    console.log(slippageAmount, tradeAmount);
+
+    const txMethod = isSelling
+      ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
+      : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
+    const tx: TransactionResponse = await txMethod;
+    const response = await tx.wait();
+    this.logger.log(`response.hash: ${response.hash}`);
+    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
 
     this.telegramService.notify(message, this.id);
   }
@@ -178,6 +180,7 @@ export class VolumeV3 extends VolumeBase {
 
   async usdToToken(usdInDecimal: string) {
     const usdAmount = Number(ethers.parseEther(usdInDecimal));
+
     const token0: string = await this.contractsService
       .pool(this.tradeConfig.POOL_ADDRESS, this.provider)
       .token0();
@@ -232,15 +235,12 @@ export class VolumeV3 extends VolumeBase {
       this.provider,
     );
 
-    // const usdtBalance: bigint = await usdtContract.balanceOf(
-    //   this.tradeConfig.BANK_ADDRESS,
-    // );
-    // const tokenBalance: bigint = await tokenContract.balanceOf(
-    //   this.tradeConfig.BANK_ADDRESS,
-    // );
-
-    const usdtBalance: bigint = 1000000000000000000000n;
-    const tokenBalance: bigint = 1000000000000000000000n;
+    const usdtBalance: bigint = await usdtContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
+    const tokenBalance: bigint = await tokenContract.balanceOf(
+      this.tradeConfig.BANK_ADDRESS,
+    );
 
     const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 

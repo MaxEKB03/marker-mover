@@ -21,6 +21,9 @@ export interface TradeConfigBase extends DexConfig {
   BOT_MANAGER: string;
 
   amountTypes: RandomConfigure;
+
+  sellMethod: string;
+  buyMethod: string;
 }
 
 export interface DexV2 extends DexConfig {
@@ -92,6 +95,9 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
               data: [2, 2],
             },
           },
+
+      sellMethod: 'sellV3',
+      buyMethod: 'buyV3',
     }
   : // testnet
     {
@@ -127,4 +133,7 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
               data: [2, 2],
             },
           },
+
+      sellMethod: 'sellV3',
+      buyMethod: 'buyV3',
     };

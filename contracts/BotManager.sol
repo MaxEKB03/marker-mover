@@ -40,7 +40,7 @@ contract BotManagerV2 is AccessControl {
     uint256 private constant DEFAULT_MAX_AMOUNT_IN = type(uint256).max;
     uint256 private maxAmountInCached = DEFAULT_MAX_AMOUNT_IN;
 
-    bool private IS_V3;
+    bool private IS_V3 = true;
 
     constructor(address _whitelist, address _pool, address _manager) {
         bank = msg.sender;

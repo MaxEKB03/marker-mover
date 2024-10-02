@@ -29,11 +29,24 @@ export class VolumeV3 extends VolumeBase {
     this.listen();
   }
 
+  cancelFunctions: { [id: number]: () => void } = {};
+
   private async listen() {
+    let idCounter = 0;
+    this.storage.eventEmitter.on(Events.Stop, () => {
+      const cancelFunctions = Object.values(this.cancelFunctions);
+      for (let id = 0; id < cancelFunctions.length; id++) {
+        const cancelFn = cancelFunctions[id];
+        cancelFn();
+        delete cancelFunctions[id];
+      }
+    });
+
     this.storage.eventEmitter.on(Events.NextIteration, async () => {
       this.logger.log('Next iteration');
       try {
-        await this.process();
+        idCounter++;
+        await this.process(idCounter);
       } catch (e) {
         console.log(e);
 
@@ -49,16 +62,26 @@ export class VolumeV3 extends VolumeBase {
     });
   }
 
-  private async process() {
-    const executer = this.getExecuter();
-    this.logger.log(
-      `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
-    );
-    await this.increaseBalance();
-    await this.runTrade();
-    await this.waitRandomTime();
-    this.storage.incrementWalletId();
-    this.storage.eventEmitter.emit(Events.NextIteration);
+  private async process(id: number) {
+    new Promise<void>(async (resolve, reject) => {
+      const cancelFn = () => {
+        reject(new Error(`Task ${id} was cancelled`));
+      };
+
+      this.cancelFunctions[id] = cancelFn;
+
+      const executer = this.getExecuter();
+      this.logger.log(
+        `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
+      );
+      await this.increaseBalance();
+      await this.runTrade();
+      await this.waitRandomTime();
+      this.storage.incrementWalletId();
+      this.storage.eventEmitter.emit(Events.NextIteration);
+
+      delete this.cancelFunctions[id];
+    });
   }
 
   private async runTrade() {
@@ -74,7 +97,11 @@ export class VolumeV3 extends VolumeBase {
     const amountType = this.randomService.ofConfigured(AmountTypes);
     const [min, max] = amountType.data;
 
+    const isFirst =
+      this.tradeConfig.USDT_ADDRESS > this.tradeConfig.TOKEN_ADDRESS;
+
     const isSellingByRandom = txType.id != 0;
+    const tradeDirection = isFirst ? isSellingByRandom : !isSellingByRandom;
 
     const usdAmount = this.randomService.general(min, max);
 
@@ -101,7 +128,7 @@ export class VolumeV3 extends VolumeBase {
       : tradeAmountUnited;
 
     let message = `\n${this.storage.walletId}/${this.walletRange.endId}|${executer.address}\n`;
-    const isSelling = isPossible ? isSellingByRandom : !isSellingByRandom; // Check balance to trade, else change direction
+    const isSelling = isPossible ? tradeDirection : !tradeDirection; // Check balance to trade, else change direction
     if (!isPossible) {
       message += 'Direction was changed, cause balance of bank is low\n';
     }
@@ -153,7 +180,11 @@ export class VolumeV3 extends VolumeBase {
       return;
     }
 
-    console.log(slippageAmount, tradeAmount);
+    console.log(
+      isSelling ? this.tradeConfig.sellMethod : this.tradeConfig.buyMethod,
+      slippageAmount,
+      tradeAmount,
+    );
 
     const txMethod = isSelling
       ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
@@ -181,11 +212,8 @@ export class VolumeV3 extends VolumeBase {
   async usdToToken(usdInDecimal: string) {
     const usdAmount = Number(ethers.parseEther(usdInDecimal));
 
-    const token0: string = await this.contractsService
-      .pool(this.tradeConfig.POOL_ADDRESS, this.provider)
-      .token0();
     const isFirst =
-      token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
+      this.tradeConfig.USDT_ADDRESS > this.tradeConfig.TOKEN_ADDRESS;
 
     const dexService =
       this.tradeConfig.dex === Dex.Uniswap
@@ -202,11 +230,8 @@ export class VolumeV3 extends VolumeBase {
   }
 
   async tokenToUSD(tokenBalance: number) {
-    const token0: string = await this.contractsService
-      .pool(this.tradeConfig.POOL_ADDRESS, this.provider)
-      .token0();
     const isFirst =
-      token0.toLowerCase() === this.tradeConfig.TOKEN_ADDRESS.toLowerCase();
+      this.tradeConfig.USDT_ADDRESS > this.tradeConfig.TOKEN_ADDRESS;
 
     const dexService =
       this.tradeConfig.dex === Dex.Uniswap

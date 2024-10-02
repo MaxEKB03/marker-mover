@@ -115,6 +115,8 @@ export class UniswapService {
   async getOutputAmount(tradeConfig: TradeConfig, rawInputAmount: number) {
     tradeConfig = this.checkSupportV3(tradeConfig);
 
+    const isFirst = tradeConfig.USDT_ADDRESS > tradeConfig.TOKEN_ADDRESS;
+
     const usdToken = await this.createToken(
       tradeConfig.CHAIN_ID,
       tradeConfig.USDT_ADDRESS,
@@ -134,7 +136,7 @@ export class UniswapService {
     );
 
     const inputAmount = CurrencyAmount.fromRawAmount(
-      tradeToken,
+      isFirst ? tradeToken : usdToken,
       rawInputAmount,
     );
 
@@ -156,6 +158,8 @@ export class UniswapService {
   ) {
     tradeConfig = this.checkSupportV3(tradeConfig);
 
+    const isFirst = tradeConfig.USDT_ADDRESS > tradeConfig.TOKEN_ADDRESS;
+
     const usdToken = await this.createToken(
       tradeConfig.CHAIN_ID,
       tradeConfig.USDT_ADDRESS,
@@ -174,7 +178,10 @@ export class UniswapService {
       tradeConfig.POOL_FEE,
     );
 
-    const inputAmount = CurrencyAmount.fromRawAmount(usdToken, rawInputAmount);
+    const inputAmount = CurrencyAmount.fromRawAmount(
+      isFirst ? usdToken : tradeToken,
+      rawInputAmount,
+    );
 
     const currencyAmount = await pool.getOutputAmount(inputAmount);
     const quoteAmount = Number(

@@ -63,7 +63,7 @@ export class VolumeV3 extends VolumeBase {
   }
 
   private async process(id: number) {
-    new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
       const cancelFn = () => {
         reject(new Error(`Task ${id} was cancelled`));
       };
@@ -94,7 +94,9 @@ export class VolumeV3 extends VolumeBase {
     );
 
     const txType = this.randomService.ofConfigured(TxTypes);
-    const amountType = this.randomService.ofConfigured(AmountTypes);
+    const amountType = this.randomService.ofConfigured(
+      this.tradeConfig.amountTypes,
+    );
     const [min, max] = amountType.data;
 
     const isFirst =
@@ -186,13 +188,13 @@ export class VolumeV3 extends VolumeBase {
       tradeAmount,
     );
 
-    const txMethod = isSelling
-      ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
-      : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
-    const tx: TransactionResponse = await txMethod;
-    const response = await tx.wait();
-    this.logger.log(`response.hash: ${response.hash}`);
-    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
+    // const txMethod = isSelling
+    //   ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
+    //   : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
+    // const tx: TransactionResponse = await txMethod;
+    // const response = await tx.wait();
+    // this.logger.log(`response.hash: ${response.hash}`);
+    // message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
 
     this.telegramService.notify(message, this.id);
   }

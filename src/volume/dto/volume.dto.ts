@@ -40,7 +40,7 @@ export const AmountTypes: RandomConfigure = config.PROD
       big: {
         id: 0,
         percent: 100,
-        data: [300, 1000],
+        data: [2, 2],
       },
     }
   : {

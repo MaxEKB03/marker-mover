@@ -65,7 +65,7 @@ export class VolumeV2 extends VolumeBase {
   }
 
   private async process(id: number) {
-    new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
       const cancelFn = () => {
         reject(new Error(`Task was cancelled`));
       };

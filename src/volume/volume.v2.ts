@@ -36,12 +36,13 @@ export class VolumeV2 extends VolumeBase {
   private async listen() {
     let idCounter = 0;
     this.storage.eventEmitter.on(Events.Stop, () => {
-      const cancelFunctions = Object.values(this.cancelFunctions);
-      for (let id = 0; id < cancelFunctions.length; id++) {
-        const cancelFn = cancelFunctions[id];
-        cancelFn();
-        delete cancelFunctions[id];
-      }
+      // const cancelFunctions = Object.values(this.cancelFunctions);
+      // for (let id = 0; id < cancelFunctions.length; id++) {
+      //   const cancelFn = cancelFunctions[id];
+      //   cancelFn();
+      //   delete cancelFunctions[id];
+      // }
+      throw new Error('stoped');
     });
 
     this.storage.eventEmitter.on(Events.NextIteration, async () => {
@@ -65,25 +66,24 @@ export class VolumeV2 extends VolumeBase {
   }
 
   private async process(id: number) {
-    return new Promise<void>(async (resolve, reject) => {
-      const cancelFn = () => {
-        reject(new Error(`Task was cancelled`));
-      };
+    // return new Promise<void>(async (resolve, reject) => {
+    //   const cancelFn = () => {
+    //     reject(new Error(`Task was cancelled`));
+    //   };
 
-      this.cancelFunctions[id] = cancelFn;
+    //   this.cancelFunctions[id] = cancelFn;
+    // delete this.cancelFunctions[id];
 
-      const executer = this.getExecuter();
-      this.logger.log(
-        `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
-      );
-      await this.increaseBalance();
-      await this.runTrade();
-      await this.waitRandomTime();
-      this.storage.incrementWalletId();
-      this.storage.eventEmitter.emit(Events.NextIteration);
-
-      delete this.cancelFunctions[id];
-    });
+    // });
+    const executer = this.getExecuter();
+    this.logger.log(
+      `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
+    );
+    await this.increaseBalance();
+    await this.runTrade();
+    await this.waitRandomTime();
+    this.storage.incrementWalletId();
+    this.storage.eventEmitter.emit(Events.NextIteration);
   }
 
   private async runTrade() {
@@ -101,8 +101,6 @@ export class VolumeV2 extends VolumeBase {
     const isSellingByRandom = txType.id != 0;
     const usdAmount = this.randomService.general(min, max);
     const bankBalances = await this.getBankBalance();
-
-    console.log(min, max);
 
     const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
       Math.round(Number(ethers.formatEther(bigValue))),
@@ -172,7 +170,7 @@ export class VolumeV2 extends VolumeBase {
     const response = await tx.wait();
     this.logger.log(`response.hash: ${response.hash}`);
     message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
-    this.telegramService.notify(message, this.id);
+    await this.telegramService.notify(message, this.id);
   }
 
   private async waitRandomTime() {

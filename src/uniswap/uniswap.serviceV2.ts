@@ -112,7 +112,7 @@ export class UniswapServiceV2 {
   }
 
   async getOutputAmount(tradeConfig: TradeConfigV2, rawInputAmount: number) {
-    console.log('getOutputAmount');
+    // console.log('getOutputAmount');
 
     const [token0, token1, isFirst] = await this.createTokens(tradeConfig);
     const inputAmount = new TokenAmount(
@@ -133,7 +133,7 @@ export class UniswapServiceV2 {
     const outputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: outputAmount };
-    console.log(res);
+    // console.log(res);
 
     return res;
   }
@@ -142,7 +142,7 @@ export class UniswapServiceV2 {
     tradeConfig: TradeConfigV2,
     rawInputAmount: number,
   ) {
-    console.log('getOutputAmountReversed');
+    // console.log('getOutputAmountReversed');
 
     const [token0, token1, isFirst] = await this.createTokens(tradeConfig);
     const inputAmount = new TokenAmount(
@@ -163,7 +163,7 @@ export class UniswapServiceV2 {
     const outputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: outputAmount };
-    console.log(res);
+    // console.log(res);
 
     return res;
   }

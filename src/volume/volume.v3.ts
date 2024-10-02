@@ -63,25 +63,24 @@ export class VolumeV3 extends VolumeBase {
   }
 
   private async process(id: number) {
-    return new Promise<void>(async (resolve, reject) => {
-      const cancelFn = () => {
-        reject(new Error(`Task ${id} was cancelled`));
-      };
+    // return new Promise<void>(async (resolve, reject) => {
+    //   const cancelFn = () => {
+    //     reject(new Error(`Task ${id} was cancelled`));
+    //   };
 
-      this.cancelFunctions[id] = cancelFn;
+    //   this.cancelFunctions[id] = cancelFn;
 
-      const executer = this.getExecuter();
-      this.logger.log(
-        `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
-      );
-      await this.increaseBalance();
-      await this.runTrade();
-      await this.waitRandomTime();
-      this.storage.incrementWalletId();
-      this.storage.eventEmitter.emit(Events.NextIteration);
-
-      delete this.cancelFunctions[id];
-    });
+    //   delete this.cancelFunctions[id];
+    // });
+    const executer = this.getExecuter();
+    this.logger.log(
+      `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
+    );
+    await this.increaseBalance();
+    await this.runTrade();
+    await this.waitRandomTime();
+    this.storage.incrementWalletId();
+    this.storage.eventEmitter.emit(Events.NextIteration);
   }
 
   private async runTrade() {
@@ -182,11 +181,11 @@ export class VolumeV3 extends VolumeBase {
       return;
     }
 
-    console.log(
-      isSelling ? this.tradeConfig.sellMethod : this.tradeConfig.buyMethod,
-      slippageAmount,
-      tradeAmount,
-    );
+    // console.log(
+    //   isSelling ? this.tradeConfig.sellMethod : this.tradeConfig.buyMethod,
+    //   slippageAmount,
+    //   tradeAmount,
+    // );
 
     const txMethod = isSelling
       ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
@@ -196,7 +195,7 @@ export class VolumeV3 extends VolumeBase {
     this.logger.log(`response.hash: ${response.hash}`);
     message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
 
-    this.telegramService.notify(message, this.id);
+    await this.telegramService.notify(message, this.id);
   }
 
   private async waitRandomTime() {

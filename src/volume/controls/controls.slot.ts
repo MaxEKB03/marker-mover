@@ -25,7 +25,6 @@ export class ControlsSlot {
 
   incrementWalletId(nextId?: number) {
     const { startId, endId } = this.walletRange;
-    console.log(nextId);
 
     const addOne = nextId ?? this.walletId + 1;
 

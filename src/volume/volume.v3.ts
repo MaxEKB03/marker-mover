@@ -163,8 +163,8 @@ export class VolumeV3 extends VolumeBase {
     const exactAmount = await getExactAmount;
 
     let slippageAmount;
-    let round = (n) => {
-      return Math.round(n / 10 ** 4) * 10 ** 4;
+    const round = (n: number) => {
+      return BigInt(Math.round(n / 10 ** 5) * 10 ** 5);
     };
 
     if (this.tradeConfig.dex === Dex.Uniswap) {

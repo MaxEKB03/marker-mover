@@ -204,13 +204,13 @@ export class VolumeV3 extends VolumeBase {
       tradeAmount,
     );
 
-    // const txMethod = isSelling
-    //   ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
-    //   : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
-    // const tx: TransactionResponse = await txMethod;
-    // const response = await tx.wait();
-    // this.logger.log(`response.hash: ${response.hash}`);
-    // message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
+    const txMethod = isSelling
+      ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
+      : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
+    const tx: TransactionResponse = await txMethod;
+    const response = await tx.wait();
+    this.logger.log(`response.hash: ${response.hash}`);
+    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
 
     await this.telegramService.notify(message, this.id);
   }

@@ -164,7 +164,8 @@ export class VolumeV3 extends VolumeBase {
 
     let slippageAmount;
     const round = (n: number) => {
-      let nStr = n.toString();
+      let nBig = BigInt(n);
+      let nStr = nBig.toString();
       if (nStr.length < 6) {
         throw new Error('input is so low');
       }
@@ -178,6 +179,11 @@ export class VolumeV3 extends VolumeBase {
       slippageAmount = isSelling
         ? round(exactAmount.quoteAmount)
         : round(exactAmount.subAmount);
+      console.log(
+        'rounding',
+        slippageAmount,
+        isSelling ? exactAmount.quoteAmount : exactAmount.subAmount,
+      );
     } else {
       slippageAmount = round(exactAmount.quoteAmount);
       console.log('rounding', slippageAmount, exactAmount.quoteAmount);

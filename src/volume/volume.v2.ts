@@ -150,7 +150,8 @@ export class VolumeV2 extends VolumeBase {
     const exactAmount = await getExactAmount;
     let slippageAmount;
     const round = (n: number) => {
-      let nStr = n.toString();
+      let nBig = BigInt(n);
+      let nStr = nBig.toString();
       if (nStr.length < 6) {
         throw new Error('input is so low');
       }

@@ -190,11 +190,11 @@ export class VolumeV3 extends VolumeBase {
       return;
     }
 
-    // console.log(
-    //   isSelling ? this.tradeConfig.sellMethod : this.tradeConfig.buyMethod,
-    //   slippageAmount,
-    //   tradeAmount,
-    // );
+    console.log(
+      isSelling ? this.tradeConfig.sellMethod : this.tradeConfig.buyMethod,
+      slippageAmount,
+      tradeAmount,
+    );
 
     const txMethod = isSelling
       ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)

@@ -147,8 +147,19 @@ export class VolumeV2 extends VolumeBase {
         )
       : this[dexService].getOutputAmount(this.tradeConfig, Number(tradeAmount));
 
-    const { quoteAmount } = await getExactAmount;
-    const slippageAmount = BigInt(quoteAmount);
+    const exactAmount = await getExactAmount;
+    let slippageAmount;
+    let round = (n) => {
+      return Math.round(n / 10 ** 4) * 10 ** 4;
+    };
+
+    if (this.tradeConfig.dex === Dex.Uniswap) {
+      slippageAmount = isSelling
+        ? round(exactAmount.quoteAmount)
+        : round(exactAmount.subAmount);
+    } else {
+      slippageAmount = round(exactAmount.quoteAmount);
+    }
     const slippageAmountUnited = ethers.formatUnits(
       slippageAmount.toString(),
       decimalsOut,

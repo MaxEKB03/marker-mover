@@ -164,7 +164,14 @@ export class VolumeV3 extends VolumeBase {
 
     let slippageAmount;
     const round = (n: number) => {
-      return BigInt(Math.round(n / 10 ** 5) * 10 ** 5);
+      let nStr = n.toString();
+      if (nStr.length < 6) {
+        throw new Error('input is so low');
+      }
+
+      nStr = nStr.slice(0, nStr.length - 5);
+      nStr = nStr.concat('00000');
+      return BigInt(nStr);
     };
 
     if (this.tradeConfig.dex === Dex.Uniswap) {
@@ -173,6 +180,7 @@ export class VolumeV3 extends VolumeBase {
         : round(exactAmount.subAmount);
     } else {
       slippageAmount = round(exactAmount.quoteAmount);
+      console.log('rounding', slippageAmount, exactAmount.quoteAmount);
     }
 
     const slippageAmountUnited = ethers.formatUnits(
@@ -196,13 +204,13 @@ export class VolumeV3 extends VolumeBase {
       tradeAmount,
     );
 
-    const txMethod = isSelling
-      ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
-      : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
-    const tx: TransactionResponse = await txMethod;
-    const response = await tx.wait();
-    this.logger.log(`response.hash: ${response.hash}`);
-    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
+    // const txMethod = isSelling
+    //   ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
+    //   : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
+    // const tx: TransactionResponse = await txMethod;
+    // const response = await tx.wait();
+    // this.logger.log(`response.hash: ${response.hash}`);
+    // message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
 
     await this.telegramService.notify(message, this.id);
   }

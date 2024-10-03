@@ -150,9 +150,15 @@ export class VolumeV2 extends VolumeBase {
     const exactAmount = await getExactAmount;
     let slippageAmount;
     const round = (n: number) => {
-      return BigInt(Math.round(n / 10 ** 5) * 10 ** 5);
-    };
+      let nStr = n.toString();
+      if (nStr.length < 6) {
+        throw new Error('input is so low');
+      }
 
+      nStr = nStr.slice(0, nStr.length - 5);
+      nStr = nStr.concat('00000');
+      return BigInt(nStr);
+    };
     if (this.tradeConfig.dex === Dex.Uniswap) {
       slippageAmount = isSelling
         ? round(exactAmount.quoteAmount)

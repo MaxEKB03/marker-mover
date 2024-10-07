@@ -164,14 +164,15 @@ export class VolumeV3 extends VolumeBase {
 
     let slippageAmount;
     const round = (n: number) => {
+      const rounBy = 10;
       let nBig = BigInt(n);
       let nStr = nBig.toString();
-      if (nStr.length < 6) {
+      if (nStr.length < rounBy + 1) {
         throw new Error('input is so low');
       }
-
-      nStr = nStr.slice(0, nStr.length - 5);
-      nStr = nStr.concat('00000');
+      nStr = nStr.slice(0, nStr.length - rounBy);
+      nStr = nStr.concat('0'.repeat(rounBy));
+      // console.log('rounding', n, BigInt(nStr));
       return BigInt(nStr);
     };
 
@@ -179,14 +180,8 @@ export class VolumeV3 extends VolumeBase {
       slippageAmount = isSelling
         ? round(exactAmount.quoteAmount)
         : round(exactAmount.subAmount);
-      console.log(
-        'rounding',
-        slippageAmount,
-        isSelling ? exactAmount.quoteAmount : exactAmount.subAmount,
-      );
     } else {
       slippageAmount = round(exactAmount.quoteAmount);
-      console.log('rounding', slippageAmount, exactAmount.quoteAmount);
     }
 
     const slippageAmountUnited = ethers.formatUnits(

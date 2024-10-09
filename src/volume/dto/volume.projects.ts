@@ -110,9 +110,9 @@ export const projects: Project[] = [
     },
   },
   {
-    id: 'TIF',
-    managerId: 1015,
-    walletRange: { startId: 1020, endId: 1520 },
+    id: 'BUB',
+    managerId: 1521,
+    walletRange: { startId: 1530, endId: 2030 },
 
     provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
     tradeConfig: {
@@ -120,17 +120,17 @@ export const projects: Project[] = [
 
       USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
       USDT_DECIMALS: 18,
-      TOKEN_ADDRESS: '0xFd435840Ed3A4ea061eA3a4cB3C8617823ee2049',
+      TOKEN_ADDRESS: '0x2c21B6d44e4f01807e2F9577DDd89F89d72c292c',
       TOKEN_DECIMALS: 18,
 
-      BANK_ADDRESS: '0x61dbD83E4189587c6e4bef6057fa8Ac1ED77921A',
-      BOT_MANAGER: '0x9E01ee02182EF7b2698A59879967c94558C3F6da',
+      BANK_ADDRESS: '0x04505303E573E7baaA4B4d8335429bF2CBF9506f',
+      BOT_MANAGER: '0xF87723bcEB0F7A950fEB4c7d796F6532deE3E444',
 
       dex: Dex.Pancake,
       dexVersion: DexVersion.V3,
 
-      FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
-      POOL_ADDRESS: '0x7B4373293620547e41e0E48711CF9318A8bDe142',
+      FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
+      POOL_ADDRESS: '0x78b0c6982A3C51c6c2b17A24ca92a967b02033a9',
       POOL_FEE: FeeAmount.LOWEST,
 
       amountTypes: config.PROD

@@ -42,6 +42,8 @@ contract BotManagerV2 is AccessControl {
 
     bool private IS_V3 = true;
 
+    string public ID = "BUB";
+
     constructor(address _whitelist, address _pool, address _manager) {
         bank = msg.sender;
 

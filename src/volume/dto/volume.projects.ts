@@ -138,7 +138,7 @@ export const projects: Project[] = [
             big: {
               id: 0,
               percent: 100,
-              data: [700, 2000],
+              data: [500, 1600],
             },
           }
         : {

@@ -153,6 +153,50 @@ export const projects: Project[] = [
       buyMethod: 'buyV3',
     },
   },
+  {
+    id: 'SIR',
+    managerId: 2035,
+    walletRange: { startId: 2045, endId: 2545 },
+
+    provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
+    tradeConfig: {
+      CHAIN_ID: 56,
+
+      USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+      USDT_DECIMALS: 18,
+      TOKEN_ADDRESS: '0x91A483538Deea8ef583b413166a91e709bD2c8f6',
+      TOKEN_DECIMALS: 18,
+
+      BANK_ADDRESS: '0x00bb09E752879f89905729e0B94C1E890F87965F',
+      BOT_MANAGER: '0xDDcbBb05827Ec513b8e843e2588a93B5277C22d5',
+
+      dex: Dex.Pancake,
+      dexVersion: DexVersion.V3,
+
+      FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
+      POOL_ADDRESS: '0x64006335980Ac16Aef1Df412a1a0E2bB5EB6e70C',
+      POOL_FEE: FeeAmount.LOWEST,
+
+      amountTypes: config.PROD
+        ? {
+            big: {
+              id: 0,
+              percent: 100,
+              data: [500, 2500],
+            },
+          }
+        : {
+            small: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          },
+
+      sellMethod: 'sellV3',
+      buyMethod: 'buyV3',
+    },
+  },
   // {
   //   // TEST PRICE ONLY
   //   id: 'TEST',

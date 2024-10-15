@@ -182,7 +182,7 @@ export const projects: Project[] = [
             big: {
               id: 0,
               percent: 100,
-              data: [500, 2500],
+              data: [500, 1800],
             },
           }
         : {

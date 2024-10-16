@@ -42,7 +42,7 @@ export class VolumeV2 extends VolumeBase {
       //   cancelFn();
       //   delete cancelFunctions[id];
       // }
-      throw new Error('stoped');
+      throw new Error(`stoped ${new Date()}`);
     });
 
     this.storage.eventEmitter.on(Events.NextIteration, async () => {

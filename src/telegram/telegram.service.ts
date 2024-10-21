@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import config from 'src/config/base.config';
+import { RandomService } from 'src/random/random.service';
 import { ControlsService } from 'src/volume/controls/controls.service';
 import { Context, Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
@@ -8,7 +9,10 @@ import { message } from 'telegraf/filters';
 export class TelegramService {
   bot: Telegraf;
 
-  constructor(private readonly volumeControlService: ControlsService) {
+  constructor(
+    private readonly volumeControlService: ControlsService,
+    private readonly randomService: RandomService,
+  ) {
     this.longPolling();
     this.notifyAdmin('BotManager is starting');
   }
@@ -20,6 +24,7 @@ export class TelegramService {
     this.bot.command('stop', (ctx) => this.stop(ctx));
     // this.bot.command('nextWallet', (ctx) => this.nextWallet(ctx));
     this.bot.command('getIds', (ctx) => this.getIds(ctx));
+    this.bot.command('random', (ctx) => this.random(ctx));
     this.bot.on(message('text'), (ctx) => this.start(ctx));
     this.bot.launch();
   }
@@ -43,15 +48,15 @@ export class TelegramService {
     return projectSlot;
   }
 
-  // private async parseNumber(ctx: Context, id = 1) {
-  //   const chatId = ctx.chat.id;
+  private async parseNumber(ctx: Context, id = 1) {
+    const chatId = ctx.chat.id;
 
-  //   const number = Number(this.parseArg(ctx, id));
-  //   if (!number) {
-  //     await this.bot.telegram.sendMessage(chatId, `Number was not found`);
-  //   }
-  //   return number;
-  // }
+    const number = Number(this.parseArg(ctx, id));
+    if (!number) {
+      await this.bot.telegram.sendMessage(chatId, `Number was not found`);
+    }
+    return number;
+  }
 
   // private ownerOrAdmin(ctx: Context) {}
 
@@ -129,6 +134,35 @@ export class TelegramService {
       chatId,
       Object.keys(this.volumeControlService.slots).join('\n'),
     );
+  }
+
+  private async random(ctx: Context) {
+    const chatId = ctx.chat.id;
+    if (!(ctx.chat.id === config.OWNER_ID || ctx.chat.id === config.ADMIN_ID)) {
+      return;
+    }
+
+    try {
+      const projectCounts = await this.parseNumber(ctx, 1);
+      const start = await this.parseNumber(ctx, 2);
+      const end = await this.parseNumber(ctx, 3);
+
+      const randomNums = [];
+      for (let i = 0; i < projectCounts; i++) {
+        randomNums.push(this.randomService.general(start, end));
+      }
+
+      console.log(randomNums);
+      const randomStrs = randomNums.map((num: number) =>
+        BigInt(num).toString(),
+      );
+      console.log(randomStrs);
+
+      const result = `"${randomStrs.join(`",\n"`)}"`;
+      await this.bot.telegram.sendMessage(chatId, result);
+    } catch (e) {
+      await this.notifyAdmin(e.toString().slice(0, 250));
+    }
   }
 
   async notify(text: string, id?: string) {

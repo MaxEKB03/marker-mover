@@ -35,16 +35,21 @@ export class VolumeService {
     for (let i = 0; i < projects.length; i++) {
       const project = projects[i];
       const { id, managerId, walletRange, provider, tradeConfig } = project;
-      this.controlsService.createSlot(id, walletRange, managerId);
+      this.controlsService.createSlot(
+        id,
+        walletRange,
+        managerId,
+        this.randomService,
+      );
       if (tradeConfig.dexVersion === DexVersion.V3) {
         this.slots[project.id] = new VolumeV3(
           id,
           this.controlsService,
           provider,
           this.telegramService,
+          this.randomService,
           walletRange,
           tradeConfig,
-          this.randomService,
           this.contractsService,
           this.uniswapService,
           this.pancakeService,
@@ -55,9 +60,9 @@ export class VolumeService {
           this.controlsService,
           provider,
           this.telegramService,
+          this.randomService,
           walletRange,
           tradeConfig,
-          this.randomService,
           this.contractsService,
           this.uniswapServiceV2,
           this.pancakeServiceV2,

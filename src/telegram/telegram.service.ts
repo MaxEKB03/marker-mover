@@ -18,7 +18,7 @@ export class TelegramService {
     this.bot.command('start', (ctx) => this.start(ctx));
     this.bot.command('run', (ctx) => this.run(ctx));
     this.bot.command('stop', (ctx) => this.stop(ctx));
-    this.bot.command('nextWallet', (ctx) => this.nextWallet(ctx));
+    // this.bot.command('nextWallet', (ctx) => this.nextWallet(ctx));
     this.bot.command('getIds', (ctx) => this.getIds(ctx));
     this.bot.on(message('text'), (ctx) => this.start(ctx));
     this.bot.launch();
@@ -43,19 +43,19 @@ export class TelegramService {
     return projectSlot;
   }
 
-  private async parseNumber(ctx: Context, id = 1) {
-    const chatId = ctx.chat.id;
+  // private async parseNumber(ctx: Context, id = 1) {
+  //   const chatId = ctx.chat.id;
 
-    const number = Number(this.parseArg(ctx, id));
-    if (!number) {
-      await this.bot.telegram.sendMessage(chatId, `Number was not found`);
-    }
-    return number;
-  }
+  //   const number = Number(this.parseArg(ctx, id));
+  //   if (!number) {
+  //     await this.bot.telegram.sendMessage(chatId, `Number was not found`);
+  //   }
+  //   return number;
+  // }
 
-  private ownerOrAdmin(ctx: Context) {}
+  // private ownerOrAdmin(ctx: Context) {}
 
-  private onlyAdmin(ctx: Context) {}
+  // private onlyAdmin(ctx: Context) {}
 
   private async start(ctx: Context) {
     if (!(ctx.chat.id === config.OWNER_ID || ctx.chat.id === config.ADMIN_ID)) {
@@ -94,30 +94,30 @@ export class TelegramService {
     projectSlot.stop();
   }
 
-  private async nextWallet(ctx: Context) {
-    const chatId = ctx.chat.id;
-    if (!(chatId === config.ADMIN_ID)) {
-      return;
-    }
+  // private async nextWallet(ctx: Context) {
+  //   const chatId = ctx.chat.id;
+  //   if (!(chatId === config.ADMIN_ID)) {
+  //     return;
+  //   }
 
-    try {
-      const projectSlot = await this.parseProject(ctx);
-      const nextId = await this.parseNumber(ctx, 2);
+  //   try {
+  //     const projectSlot = await this.parseProject(ctx);
+  //     const nextId = await this.parseNumber(ctx, 2);
 
-      if (!projectSlot || !nextId) {
-        return;
-      }
+  //     if (!projectSlot || !nextId) {
+  //       return;
+  //     }
 
-      projectSlot.incrementWalletId(nextId);
+  //     projectSlot.incrementWalletId(nextId);
 
-      await this.bot.telegram.sendMessage(
-        chatId,
-        `Next wallet id is ${projectSlot.walletId}`,
-      );
-    } catch (e) {
-      await this.notifyAdmin(e.toString().slice(0, 250));
-    }
-  }
+  //     await this.bot.telegram.sendMessage(
+  //       chatId,
+  //       `Next wallet id is ${projectSlot.walletId}`,
+  //     );
+  //   } catch (e) {
+  //     await this.notifyAdmin(e.toString().slice(0, 250));
+  //   }
+  // }
 
   private async getIds(ctx: Context) {
     const chatId = ctx.chat.id;

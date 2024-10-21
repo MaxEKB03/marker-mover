@@ -1,5 +1,6 @@
 import { EventEmitter } from 'stream';
 import { Events, WalletRange } from '../dto/volume.dto';
+import { RandomService } from 'src/random/random.service';
 
 export class ControlsSlot {
   isRunning = false;
@@ -9,6 +10,7 @@ export class ControlsSlot {
   constructor(
     private readonly walletRange: WalletRange,
     public readonly managerId: number,
+    private readonly randomService: RandomService,
   ) {
     this.walletId = walletRange.startId;
   }
@@ -23,11 +25,10 @@ export class ControlsSlot {
     this.eventEmitter.emit(Events.Stop);
   }
 
-  incrementWalletId(nextId?: number) {
-    const { startId, endId } = this.walletRange;
-
-    const addOne = nextId ?? this.walletId + 1;
-
-    this.walletId = addOne < endId ? addOne : startId;
+  computeNextWalletId(nextId?: number) {
+    this.walletId = this.randomService.general(
+      this.walletRange.startId,
+      this.walletRange.endId,
+    );
   }
 }

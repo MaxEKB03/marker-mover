@@ -18,9 +18,9 @@ export class VolumeV3 extends VolumeBase {
     controlsService: ControlsService,
     provider: Provider,
     telegramService: TelegramService,
+    protected readonly randomService: RandomService,
     protected readonly walletRange: { startId: number; endId: number },
     protected readonly tradeConfig: TradeConfigV3,
-    protected readonly randomService: RandomService,
     protected readonly contractsService: ContractsService,
     protected readonly uniswapService: UniswapService,
     protected readonly pancakeService: PancakeService,
@@ -72,6 +72,7 @@ export class VolumeV3 extends VolumeBase {
 
     //   delete this.cancelFunctions[id];
     // });
+    this.storage.computeNextWalletId();
     const executer = this.getExecuter();
     this.logger.log(
       `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
@@ -79,7 +80,6 @@ export class VolumeV3 extends VolumeBase {
     await this.increaseBalance();
     await this.runTrade();
     await this.waitRandomTime();
-    this.storage.incrementWalletId();
     this.storage.eventEmitter.emit(Events.NextIteration);
   }
 

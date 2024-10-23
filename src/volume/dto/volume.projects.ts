@@ -241,6 +241,50 @@ export const projects: Project[] = [
       buyMethod: 'buyV3',
     },
   },
+  {
+    id: 'LABRA',
+    managerId: 2036,
+    walletRange: { startId: 4001, endId: 4500 },
+
+    provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
+    tradeConfig: {
+      CHAIN_ID: 56,
+
+      USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+      USDT_DECIMALS: 18,
+      TOKEN_ADDRESS: '0x205da589b2B147a348059226F4a8f68baBbA08fB',
+      TOKEN_DECIMALS: 18,
+
+      BANK_ADDRESS: '0xD96A10C620478f3CF16A85920A9a9448f23Fc0f8',
+      BOT_MANAGER: '0x20745b9A32D0f94124DC32f9B9AcF56313D905f3',
+
+      dex: Dex.Pancake,
+      dexVersion: DexVersion.V3,
+
+      FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
+      POOL_ADDRESS: '0x034e05cab2ec0868727d22472b0e0e66c7076f8e',
+      POOL_FEE: FeeAmount.LOWEST,
+
+      amountTypes: config.PROD
+        ? {
+            big: {
+              id: 0,
+              percent: 100,
+              data: [100, 300],
+            },
+          }
+        : {
+            small: {
+              id: 0,
+              percent: 100,
+              data: [2, 2],
+            },
+          },
+
+      sellMethod: 'sellV3',
+      buyMethod: 'buyV3',
+    },
+  },
   // {
   //   // TEST PRICE ONLY
   //   id: 'TEST',

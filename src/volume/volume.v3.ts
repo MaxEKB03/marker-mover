@@ -226,8 +226,7 @@ export class VolumeV3 extends VolumeBase {
       const k = (60 * 60) / this.tradeConfig.txsInHours;
       const randomMin = k - k * 0.1;
       const randomMax = k + k * 0.1;
-      const randomEnd = this.randomService.general(randomMin, randomMax);
-      awaitTime = minTimeWaiting + randomEnd;
+      awaitTime = this.randomService.general(randomMin, randomMax);
     }
 
     this.logger.log(

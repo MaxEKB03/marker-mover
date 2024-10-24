@@ -196,7 +196,15 @@ export class VolumeV2 extends VolumeBase {
     const randomMin = minTimeWaiting * 0.2;
     const randomMax = minTimeWaiting * 0.35;
     const randomEnd = this.randomService.general(randomMin, randomMax);
-    const awaitTime = minTimeWaiting + randomEnd;
+    let awaitTime = minTimeWaiting + randomEnd;
+
+    if (this.tradeConfig.txsInHours) {
+      const k = (60 * 60) / this.tradeConfig.txsInHours;
+      const randomMin = k - k * 0.1;
+      const randomMax = k + k * 0.1;
+      const randomEnd = this.randomService.general(randomMin, randomMax);
+      awaitTime = minTimeWaiting + randomEnd;
+    }
 
     this.logger.log(
       `Next tx will run after ${(awaitTime / 60).toFixed(2)} minutes`,

@@ -21,6 +21,7 @@ export interface TradeConfigBase extends DexConfig {
   BOT_MANAGER: string;
 
   amountTypes: RandomConfigure;
+  txsInHours?: number;
 
   sellMethod: string;
   buyMethod: string;

@@ -197,50 +197,50 @@ export const projects: Project[] = [
       buyMethod: 'buyV3',
     },
   },
-  {
-    id: 'SWC',
-    managerId: 2600,
-    walletRange: { startId: 2601, endId: 3101 },
+  // {
+  //   id: 'SWC',
+  //   managerId: 2600,
+  //   walletRange: { startId: 2601, endId: 3101 },
 
-    provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
-    tradeConfig: {
-      CHAIN_ID: 56,
+  //   provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
+  //   tradeConfig: {
+  //     CHAIN_ID: 56,
 
-      USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
-      USDT_DECIMALS: 18,
-      TOKEN_ADDRESS: '0xc82e4d728d4f51201c2cda7dbd42722a4f23ec63',
-      TOKEN_DECIMALS: 18,
+  //     USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+  //     USDT_DECIMALS: 18,
+  //     TOKEN_ADDRESS: '0xc82e4d728d4f51201c2cda7dbd42722a4f23ec63',
+  //     TOKEN_DECIMALS: 18,
 
-      BANK_ADDRESS: '0x438ffD9F5790cb7069b42257a229BCF99Be6aE79',
-      BOT_MANAGER: '0xbb0FEf328BF22f3fd769280E3CF8351892Ec2e15',
+  //     BANK_ADDRESS: '0x438ffD9F5790cb7069b42257a229BCF99Be6aE79',
+  //     BOT_MANAGER: '0xbb0FEf328BF22f3fd769280E3CF8351892Ec2e15',
 
-      dex: Dex.Pancake,
-      dexVersion: DexVersion.V3,
+  //     dex: Dex.Pancake,
+  //     dexVersion: DexVersion.V3,
 
-      FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
-      POOL_ADDRESS: '0x84d5748fe47567a00544d9378d1d24d3bcfed6d1',
-      POOL_FEE: FeeAmount.LOWEST,
+  //     FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
+  //     POOL_ADDRESS: '0x84d5748fe47567a00544d9378d1d24d3bcfed6d1',
+  //     POOL_FEE: FeeAmount.LOWEST,
 
-      amountTypes: config.PROD
-        ? {
-            big: {
-              id: 0,
-              percent: 100,
-              data: [100, 300],
-            },
-          }
-        : {
-            small: {
-              id: 0,
-              percent: 100,
-              data: [2, 2],
-            },
-          },
+  //     amountTypes: config.PROD
+  //       ? {
+  //           big: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [100, 300],
+  //           },
+  //         }
+  //       : {
+  //           small: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [2, 2],
+  //           },
+  //         },
 
-      sellMethod: 'sellV3',
-      buyMethod: 'buyV3',
-    },
-  },
+  //     sellMethod: 'sellV3',
+  //     buyMethod: 'buyV3',
+  //   },
+  // },
   {
     id: 'LABRA',
     managerId: 2036,

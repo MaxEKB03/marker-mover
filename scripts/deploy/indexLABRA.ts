@@ -15,8 +15,10 @@ const waitTx = async (callMethod: BaseContractMethod, ...args) => {
 
 const manager = 2036;
 const whitelistAddr = '0x9e25448517aa8f694408c6238fb2d12549dd0bdb';
-const startId = 4001;
-const endId = 4500;
+// const startId = 4001;
+// const endId = 4500;
+const startId = 4501;
+const endId = 5000;
 
 export async function deploy() {
   const wallet = getWalletById(manager);

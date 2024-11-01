@@ -66,49 +66,49 @@ export const projects: Project[] = [
       buyMethod: 'buy',
     },
   },
-  {
-    id: 'LION',
-    managerId: 505,
-    walletRange: { startId: 510, endId: 1010 },
+  // {
+  //   id: 'LION',
+  //   managerId: 505,
+  //   walletRange: { startId: 510, endId: 1010 },
 
-    provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
-    tradeConfig: {
-      CHAIN_ID: 56,
+  //   provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
+  //   tradeConfig: {
+  //     CHAIN_ID: 56,
 
-      USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
-      USDT_DECIMALS: 18,
-      TOKEN_ADDRESS: '0x8B0Ce9C8797c393eFEef48791960EE3D7297bAc6',
-      TOKEN_DECIMALS: 18,
+  //     USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+  //     USDT_DECIMALS: 18,
+  //     TOKEN_ADDRESS: '0x8B0Ce9C8797c393eFEef48791960EE3D7297bAc6',
+  //     TOKEN_DECIMALS: 18,
 
-      BANK_ADDRESS: '0x1b6d67Daf777eb0E0905B33B24685bc9895229d4',
-      BOT_MANAGER: '0xcA4C9548e7E8e0043E992d4B00965e07BCcd8B69',
+  //     BANK_ADDRESS: '0x1b6d67Daf777eb0E0905B33B24685bc9895229d4',
+  //     BOT_MANAGER: '0xcA4C9548e7E8e0043E992d4B00965e07BCcd8B69',
 
-      dex: Dex.Pancake,
-      dexVersion: DexVersion.V2,
+  //     dex: Dex.Pancake,
+  //     dexVersion: DexVersion.V2,
 
-      FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
-      PAIR_ADDRESS: '0xA921804330947ac2F574A08E202d3CfD29ff369e',
+  //     FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+  //     PAIR_ADDRESS: '0xA921804330947ac2F574A08E202d3CfD29ff369e',
 
-      amountTypes: config.PROD
-        ? {
-            big: {
-              id: 0,
-              percent: 100,
-              data: [100, 400],
-            },
-          }
-        : {
-            small: {
-              id: 0,
-              percent: 100,
-              data: [2, 2],
-            },
-          },
+  //     amountTypes: config.PROD
+  //       ? {
+  //           big: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [100, 400],
+  //           },
+  //         }
+  //       : {
+  //           small: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [2, 2],
+  //           },
+  //         },
 
-      sellMethod: 'sellV2',
-      buyMethod: 'buyV2',
-    },
-  },
+  //     sellMethod: 'sellV2',
+  //     buyMethod: 'buyV2',
+  //   },
+  // },
   {
     id: 'BUB',
     managerId: 1521,
@@ -280,57 +280,57 @@ export const projects: Project[] = [
               data: [2, 2],
             },
           },
-      txsInHours: 20,
+      txsInHours: 4,
 
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
     },
   },
-  {
-    id: 'LABRAUNI',
-    managerId: 2037,
-    walletRange: { startId: 4501, endId: 5000 },
+  // {
+  //   id: 'LABRAUNI',
+  //   managerId: 2037,
+  //   walletRange: { startId: 4501, endId: 5000 },
 
-    provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
-    tradeConfig: {
-      CHAIN_ID: 56,
+  //   provider: new JsonRpcProvider(config.JSON_RPC_MAINNET),
+  //   tradeConfig: {
+  //     CHAIN_ID: 56,
 
-      USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
-      USDT_DECIMALS: 18,
-      TOKEN_ADDRESS: '0x205da589b2B147a348059226F4a8f68baBbA08fB',
-      TOKEN_DECIMALS: 18,
+  //     USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+  //     USDT_DECIMALS: 18,
+  //     TOKEN_ADDRESS: '0x205da589b2B147a348059226F4a8f68baBbA08fB',
+  //     TOKEN_DECIMALS: 18,
 
-      BANK_ADDRESS: '0x33be2e30A58Ba6129A8fd1f06408f8831A7724Df',
-      BOT_MANAGER: '0x28dE8955279bCaA422F02B47506cd5d1BE1A0037',
+  //     BANK_ADDRESS: '0x33be2e30A58Ba6129A8fd1f06408f8831A7724Df',
+  //     BOT_MANAGER: '0x28dE8955279bCaA422F02B47506cd5d1BE1A0037',
 
-      dex: Dex.Uniswap,
-      dexVersion: DexVersion.V3,
+  //     dex: Dex.Uniswap,
+  //     dexVersion: DexVersion.V3,
 
-      FACTORY_ADDRESS: '0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7',
-      POOL_ADDRESS: '0xb8e241523d79dcd4ffce4131e5ddb6c98b05e6fb',
-      POOL_FEE: FeeAmount.LOWEST,
+  //     FACTORY_ADDRESS: '0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7',
+  //     POOL_ADDRESS: '0xb8e241523d79dcd4ffce4131e5ddb6c98b05e6fb',
+  //     POOL_FEE: FeeAmount.LOWEST,
 
-      amountTypes: config.PROD
-        ? {
-            big: {
-              id: 0,
-              percent: 100,
-              data: [400, 800],
-            },
-          }
-        : {
-            small: {
-              id: 0,
-              percent: 100,
-              data: [2, 2],
-            },
-          },
-      txsInHours: 10,
+  //     amountTypes: config.PROD
+  //       ? {
+  //           big: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [400, 800],
+  //           },
+  //         }
+  //       : {
+  //           small: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [2, 2],
+  //           },
+  //         },
+  //     txsInHours: 10,
 
-      sellMethod: 'sellV3',
-      buyMethod: 'buyV3',
-    },
-  },
+  //     sellMethod: 'sellV3',
+  //     buyMethod: 'buyV3',
+  //   },
+  // },
   // {
   //   // TEST PRICE ONLY
   //   id: 'TEST',

@@ -57,7 +57,7 @@ export class VolumeV3 extends VolumeBase {
           this.id,
         );
 
-        await wait(300);
+        await wait(30);
         this.storage.eventEmitter.emit(Events.NextIteration);
       }
     });

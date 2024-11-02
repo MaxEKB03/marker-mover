@@ -290,7 +290,7 @@ export const projects: Project[] = [
     provider: new JsonRpcProvider(config.JSON_RPC_ARBITRUM),
     tradeConfig: {
       CHAIN_ID: 42161,
-      USDT_ADDRESS: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+      USDT_ADDRESS: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
       USDT_DECIMALS: 18,
       TOKEN_ADDRESS: '0x0d5105ec5bbbf17dba7a87e1aed2c2c15394a9e2',
       TOKEN_DECIMALS: 18,
@@ -299,7 +299,7 @@ export const projects: Project[] = [
       dex: Dex.Uniswap,
       dexVersion: DexVersion.V3,
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
-      POOL_ADDRESS: '0x7805eaf84ee98755cddff8c322cc4213b3d07cd0',
+      POOL_ADDRESS: '0x584a741d849b512fe1e850ecc80665eed8c7f288',
       POOL_FEE: FeeAmount.LOWEST,
       amountTypes: config.PROD
         ? {
@@ -316,7 +316,7 @@ export const projects: Project[] = [
               data: [2, 2],
             },
           },
-      // txsInHours: 10,
+      txsInHours: 30,
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
     },

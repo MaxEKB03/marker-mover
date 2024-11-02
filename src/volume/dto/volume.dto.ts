@@ -6,8 +6,8 @@ export const slippage = 0.5;
 export const minBalanceMainnet: bigint = ethers.parseEther('0.0002');
 export const transferAmountMainnet: bigint = ethers.parseEther('0.001');
 
-export const minBalanceArbitrum: bigint = ethers.parseEther('0.0000002');
-export const transferAmountArbitrum: bigint = ethers.parseEther('0.000001');
+export const minBalanceArbitrum: bigint = ethers.parseEther('0.00002');
+export const transferAmountArbitrum: bigint = ethers.parseEther('0.0001');
 
 export const walletRange: { startId: number; endId: number } = {
   startId: 2,

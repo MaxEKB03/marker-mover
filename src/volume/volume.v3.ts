@@ -79,9 +79,9 @@ export class VolumeV3 extends VolumeBase {
       `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
     );
     await this.increaseBalance();
-    // await this.runTrade();
-    // await this.waitRandomTime();
-    // this.storage.eventEmitter.emit(Events.NextIteration);
+    await this.runTrade();
+    await this.waitRandomTime();
+    this.storage.eventEmitter.emit(Events.NextIteration);
   }
 
   private async runTrade() {
@@ -206,10 +206,27 @@ export class VolumeV3 extends VolumeBase {
       tradeAmount,
     );
 
-    const txMethod = isSelling
-      ? botManager[this.tradeConfig.sellMethod](slippageAmount, tradeAmount)
-      : botManager[this.tradeConfig.buyMethod](tradeAmount, slippageAmount);
-    const tx: TransactionResponse = await txMethod;
+    const encodedData = isSelling
+      ? botManager.interface.encodeFunctionData(
+          `${this.tradeConfig.sellMethod}(uint256,uint256)`,
+          [slippageAmount, tradeAmount],
+        )
+      : botManager.interface.encodeFunctionData(
+          `${this.tradeConfig.buyMethod}(uint256,uint256)`,
+          [tradeAmount, slippageAmount],
+        );
+
+    const { gasPrice } = await this.provider.getFeeData();
+    const nonce = await executer.getNonce();
+    const tx = await executer.sendTransaction({
+      from: executer.address,
+      to: this.tradeConfig.BOT_MANAGER,
+      data: encodedData,
+      gasLimit: 1000000,
+      value: 0,
+      gasPrice,
+      nonce,
+    });
     const response = await tx.wait();
     this.logger.log(`response.hash: ${response.hash}`);
     message += `\n\nhttps://bscscan.com/tx/${response.hash}`;

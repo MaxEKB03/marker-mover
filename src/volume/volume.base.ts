@@ -2,8 +2,15 @@ import { Logger } from '@nestjs/common';
 import { ControlsService } from './controls/controls.service';
 import { getWalletById } from 'scripts/addressFactory';
 import { Provider } from 'ethers';
-import { Events, minBalance, transferAmount } from './dto/volume.dto';
+import {
+  Events,
+  minBalanceArbitrum,
+  minBalanceMainnet,
+  transferAmountArbitrum,
+  transferAmountMainnet,
+} from './dto/volume.dto';
 import { TelegramService } from 'src/telegram/telegram.service';
+import config from 'src/config/base.config';
 
 export abstract class VolumeBase {
   storage = this.controlsService.slots[this.id];
@@ -46,6 +53,18 @@ export abstract class VolumeBase {
     const manager = this.getManager();
     const executer = this.getExecuter();
 
+    const minBalance =
+      config.DEFAULT_NETWORK === 'mainnet'
+        ? minBalanceMainnet
+        : minBalanceArbitrum;
+
+    const transferAmount =
+      config.DEFAULT_NETWORK === 'mainnet'
+        ? transferAmountMainnet
+        : transferAmountArbitrum;
+
+    const network = config.DEFAULT_NETWORK === 'mainnet';
+
     const managerBalance = await this.provider.getBalance(manager.address);
     const executerBalance = await this.provider.getBalance(executer.address);
 
@@ -56,16 +75,18 @@ export abstract class VolumeBase {
 
     if (executerBalance < minBalance) {
       const { gasPrice } = await this.provider.getFeeData();
+
       const nonce = await manager.getNonce();
       const txParams = {
         from: manager.address, // sender wallet address
         to: executer.address, // receiver address
         data: '0x',
         value: transferAmount,
-        gasLimit: 21000,
+        gasLimit: 50000,
         gasPrice,
         nonce,
       };
+
       const tx = await manager.sendTransaction(txParams);
       await tx.wait();
     }

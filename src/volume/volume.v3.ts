@@ -79,9 +79,9 @@ export class VolumeV3 extends VolumeBase {
       `Next executer ${this.storage.walletId}/${this.walletRange.endId} is: ${executer.address}`,
     );
     await this.increaseBalance();
-    await this.runTrade();
-    await this.waitRandomTime();
-    this.storage.eventEmitter.emit(Events.NextIteration);
+    // await this.runTrade();
+    // await this.waitRandomTime();
+    // this.storage.eventEmitter.emit(Events.NextIteration);
   }
 
   private async runTrade() {

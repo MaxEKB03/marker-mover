@@ -19,6 +19,11 @@ const hardhatConfig: HardhatUserConfig = {
       chainId: 56,
       accounts,
     },
+    arbitrum: {
+      url: config.JSON_RPC_ARBITRUM,
+      chainId: 42161,
+      accounts,
+    },
   },
   solidity: {
     version: '0.8.24',

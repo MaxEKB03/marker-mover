@@ -4,6 +4,7 @@ const config = {
   PROD: types.boolean,
   DEFAULT_NETWORK: types.string,
   JSON_RPC_MAINNET: types.string,
+  JSON_RPC_ARBITRUM: types.string,
   JSON_RPC_TESTNET: types.string,
   MNEMONIC: types.string,
   PORT: types.number,

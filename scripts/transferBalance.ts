@@ -1,13 +1,11 @@
-import { hash } from 'crypto';
 import { getWalletsByRange } from './addressFactory';
 import { provider } from './provider';
-import { ChainId } from '@uniswap/sdk-core';
 import { TransactionRequest } from 'ethers';
 
-const target = '0xD67b242A631d9091ff0B9E6F337884481dC256a6';
+const target = '0x7f8E8336CD9cdbA582F458b53e224B5040A9e147';
 
 async function main() {
-  const wallets = getWalletsByRange(0, 502);
+  const wallets = getWalletsByRange(2601, 3101);
   const signs: string[] = [];
   const { gasPrice } = await provider.getFeeData();
 
@@ -15,7 +13,7 @@ async function main() {
     const wallet = wallets[i].connect(provider);
     const balance: bigint = await provider.getBalance(wallet.address);
 
-    if (balance > 1000000000000000n) {
+    if (balance > 600000000000000n) {
       console.log(i, true);
 
       // transfer
@@ -32,7 +30,7 @@ async function main() {
         gasLimit,
         gasPrice,
         nonce,
-        chainId: 97,
+        chainId: 56,
       };
 
       const sign = await wallet.signTransaction(txParams);
@@ -41,7 +39,7 @@ async function main() {
       // const response = await tx.wait();
       // console.log(response.hash);
     } else {
-      console.log(i, false);
+      console.log(i, false, wallet.address, balance);
     }
   }
   console.log('Broadcast signs');

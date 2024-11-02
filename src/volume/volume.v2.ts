@@ -29,7 +29,7 @@ export class VolumeV2 extends VolumeBase {
   ) {
     super(id, controlsService, provider, telegramService);
     this.listen();
-    this.storage.eventEmitter.emit(Events.Start);
+    // this.storage.eventEmitter.emit(Events.Start);
   }
 
   cancelFunctions: { [id: number]: () => void } = {};

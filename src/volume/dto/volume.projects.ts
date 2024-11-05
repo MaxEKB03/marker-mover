@@ -283,6 +283,44 @@ export const projects: Project[] = [
   //     buyMethod: 'buyV3',
   //   },
   // },
+  // {
+  //   id: 'RCGE',
+  //   managerId: 2038,
+  //   walletRange: { startId: 5001, endId: 5500 },
+  //   provider: new JsonRpcProvider(config.JSON_RPC_ARBITRUM),
+  //   tradeConfig: {
+  //     CHAIN_ID: 42161,
+  //     USDT_ADDRESS: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  //     USDT_DECIMALS: 18,
+  //     TOKEN_ADDRESS: '0x0d5105ec5bbbf17dba7a87e1aed2c2c15394a9e2',
+  //     TOKEN_DECIMALS: 18,
+  //     BANK_ADDRESS: '0x153dDb9A11f5aeC7e4a4a78887deafb77Ea2e1D8',
+  //     BOT_MANAGER: '0x6BDC811C7da66f50f13507f89553E7468ee9E551',
+  //     dex: Dex.Uniswap,
+  //     dexVersion: DexVersion.V3,
+  //     FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
+  //     POOL_ADDRESS: '0x584a741d849b512fe1e850ecc80665eed8c7f288',
+  //     POOL_FEE: FeeAmount.LOWEST,
+  //     amountTypes: config.PROD
+  //       ? {
+  //           big: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [500, 1300],
+  //           },
+  //         }
+  //       : {
+  //           small: {
+  //             id: 0,
+  //             percent: 100,
+  //             data: [2, 2],
+  //           },
+  //         },
+  //     txsInHours: 30,
+  //     sellMethod: 'sellV3',
+  //     buyMethod: 'buyV3',
+  //   },
+  // },
   {
     id: 'RCGE',
     managerId: 2038,
@@ -290,8 +328,8 @@ export const projects: Project[] = [
     provider: new JsonRpcProvider(config.JSON_RPC_ARBITRUM),
     tradeConfig: {
       CHAIN_ID: 42161,
-      USDT_ADDRESS: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-      USDT_DECIMALS: 18,
+      USDT_ADDRESS: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+      USDT_DECIMALS: 6,
       TOKEN_ADDRESS: '0x0d5105ec5bbbf17dba7a87e1aed2c2c15394a9e2',
       TOKEN_DECIMALS: 18,
       BANK_ADDRESS: '0x153dDb9A11f5aeC7e4a4a78887deafb77Ea2e1D8',
@@ -299,7 +337,7 @@ export const projects: Project[] = [
       dex: Dex.Uniswap,
       dexVersion: DexVersion.V3,
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
-      POOL_ADDRESS: '0x584a741d849b512fe1e850ecc80665eed8c7f288',
+      POOL_ADDRESS: '0x93930bd4e30a416a3259575daf2f85ef43dc6083',
       POOL_FEE: FeeAmount.LOWEST,
       amountTypes: config.PROD
         ? {
@@ -319,6 +357,7 @@ export const projects: Project[] = [
       txsInHours: 30,
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
+      scanerUrl: 'https://arbiscan.io/tx/',
     },
   },
   // {

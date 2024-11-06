@@ -218,7 +218,7 @@ export class VolumeV3 extends VolumeBase {
 
     const nonce = await executer.getNonce();
     const res = await this.provider.getFeeData();
-    const gasPrice = BigInt(Number(res.gasPrice) * 1.025);
+    const gasPrice = BigInt(Math.round(Number(res.gasPrice) * 1.025));
 
     const tx = await executer.sendTransaction({
       from: executer.address,

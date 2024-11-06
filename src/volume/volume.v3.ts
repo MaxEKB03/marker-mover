@@ -217,7 +217,9 @@ export class VolumeV3 extends VolumeBase {
         );
 
     const nonce = await executer.getNonce();
-    const { gasPrice } = await this.provider.getFeeData();
+    const res = await this.provider.getFeeData();
+    const gasPrice = BigInt(Number(res.gasPrice) * 1.01);
+
     const tx = await executer.sendTransaction({
       from: executer.address,
       to: this.tradeConfig.BOT_MANAGER,

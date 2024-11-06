@@ -316,7 +316,7 @@ export const projects: Project[] = [
               data: [2, 2],
             },
           },
-      txsInHours: 30,
+      txsInHours: 60,
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
     },

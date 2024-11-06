@@ -222,7 +222,7 @@ export class VolumeV3 extends VolumeBase {
       from: executer.address,
       to: this.tradeConfig.BOT_MANAGER,
       data: encodedData,
-      gasLimit: 3000000,
+      gasLimit: 1000000,
       value: 0,
       gasPrice,
       nonce,

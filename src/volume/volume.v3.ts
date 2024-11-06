@@ -216,8 +216,8 @@ export class VolumeV3 extends VolumeBase {
           [tradeAmount, slippageAmount],
         );
 
-    const { gasPrice } = await this.provider.getFeeData();
     const nonce = await executer.getNonce();
+    const { gasPrice } = await this.provider.getFeeData();
     const tx = await executer.sendTransaction({
       from: executer.address,
       to: this.tradeConfig.BOT_MANAGER,

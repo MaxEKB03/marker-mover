@@ -9,6 +9,12 @@ export interface DexConfig {
   dexVersion: DexVersion;
 }
 
+export enum Networks {
+  arbitrum = 'arbitrum',
+  bsc = 'mainnet',
+  bsc_testnet = 'testnet',
+}
+
 export interface TradeConfigBase extends DexConfig {
   CHAIN_ID: number;
 
@@ -25,6 +31,8 @@ export interface TradeConfigBase extends DexConfig {
 
   sellMethod: string;
   buyMethod: string;
+
+  scanerUrl: string;
 }
 
 export interface DexV2 extends DexConfig {
@@ -57,6 +65,7 @@ export type TradeConfigV3 = TradeConfigBase & DexV3;
 export type TradeConfigV2 = TradeConfigBase & DexV2;
 export type TradeConfig = TradeConfigV3 | TradeConfigV2;
 
+export const IS_ARBITRUM = config.DEFAULT_NETWORK === 'arbitrum';
 export const IS_MAINNET = config.DEFAULT_NETWORK === 'mainnet';
 
 const deployed = getDeployed();
@@ -99,6 +108,7 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
 
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
+      scanerUrl: 'https://bscscan.com/tx/',
     }
   : // testnet
     {
@@ -137,4 +147,5 @@ export const TRADE_CONFIG: TradeConfig = IS_MAINNET
 
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
+      scanerUrl: 'https://bscscan.com/tx/',
     };

@@ -14,36 +14,6 @@ export class PancakeService {
 
   constructor() {}
 
-  // async smth1() {
-  //   const formattedIn = '1';
-  //   const amountIn = Number(ethers.parseEther(formattedIn));
-
-  //   const price = await this.getOutputAmount(amountIn);
-
-  //   const formattedOut = ethers.formatUnits(price.subAmount.toString(), 18);
-  //   console.log(`price ${formattedOut}`);
-
-  //   const amountOut = price.subAmount;
-
-  //   // console.log(`${amountIn} > ${amountOut}`);
-  //   console.log(`${formattedIn} > ${formattedOut}`);
-  // }
-
-  // async smth2() {
-  //   const formattedOut = '1';
-  //   const amountOut = Number(ethers.parseEther(formattedOut));
-
-  //   const price = await this.getOutputAmountReversed(amountOut);
-
-  //   const formattedIn = ethers.formatUnits(price.subAmount.toString(), 18);
-  //   console.log(`price ${formattedIn}`);
-
-  //   const amountIn = price.subAmount;
-
-  //   // console.log(`${amountOut} > ${amountIn}`);
-  //   console.log(`${formattedOut} > ${formattedIn}`);
-  // }
-
   checkSupportV3(tradeConfig: TradeConfig): TradeConfigV3 {
     if (tradeConfig.dexVersion != DexVersion.V3) {
       throw this.BadRequest;
@@ -134,16 +104,20 @@ export class PancakeService {
       tradeConfig.POOL_FEE,
     );
 
-    const inputAmount = CurrencyAmount.fromRawAmount(
+    const inputCurrncyAmount = CurrencyAmount.fromRawAmount(
       isFirst ? tradeToken : usdToken,
       rawInputAmount,
     );
 
-    const currencyAmount = await pool.getOutputAmount(inputAmount);
+    const [outputCurrencyAmount] =
+      await pool.getOutputAmount(inputCurrncyAmount);
     const quoteAmount = Number(
-      ethers.parseUnits(currencyAmount[0].toExact(), 18),
+      ethers.parseUnits(
+        outputCurrencyAmount.toExact(),
+        outputCurrencyAmount.currency.decimals,
+      ),
     );
-    const portionAmount = quoteAmount * 0.0025;
+    const portionAmount = Number((quoteAmount * 0.0025).toFixed(0));
     const outputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: outputAmount };
@@ -177,60 +151,23 @@ export class PancakeService {
       tradeConfig.POOL_FEE,
     );
 
-    const inputAmount = CurrencyAmount.fromRawAmount(
+    const inputCurrencyAmount = CurrencyAmount.fromRawAmount(
       isFirst ? usdToken : tradeToken,
       rawInputAmount,
     );
 
-    const currencyAmount = await pool.getOutputAmount(inputAmount);
+    const [outputCurrencyAmount] =
+      await pool.getOutputAmount(inputCurrencyAmount);
     const quoteAmount = Number(
-      ethers.parseUnits(currencyAmount[0].toExact(), 18),
+      ethers.parseUnits(
+        outputCurrencyAmount.toExact(),
+        outputCurrencyAmount.currency.decimals,
+      ),
     );
-    const portionAmount = quoteAmount * 0.0025;
+    const portionAmount = Number((quoteAmount * 0.0025).toFixed(0));
     const outputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: outputAmount };
-
-    return res;
-  }
-
-  async getInputAmount(tradeConfig: TradeConfig, rawOutputAmount: number) {
-    tradeConfig = this.checkSupportV3(tradeConfig);
-
-    if (tradeConfig.dexVersion != DexVersion.V3) {
-      throw this.BadRequest;
-    }
-    const usdToken = await this.createToken(
-      tradeConfig.CHAIN_ID,
-      tradeConfig.USDT_ADDRESS,
-      tradeConfig.USDT_DECIMALS,
-    );
-    const tradeToken = await this.createToken(
-      tradeConfig.CHAIN_ID,
-      tradeConfig.TOKEN_ADDRESS,
-      tradeConfig.TOKEN_DECIMALS,
-    );
-
-    const pool = await this.createPool(
-      usdToken,
-      tradeToken,
-      tradeConfig.POOL_ADDRESS,
-      tradeConfig.POOL_FEE,
-    );
-
-    const outputAmount = CurrencyAmount.fromRawAmount(
-      usdToken,
-      rawOutputAmount,
-    );
-
-    const currencyAmount = await pool.getInputAmount(outputAmount);
-    const quoteAmount = Number(
-      ethers.parseUnits(currencyAmount[0].toExact(), 18),
-    );
-    const portionAmount = quoteAmount * 0.0025;
-    const inputAmount = quoteAmount - portionAmount;
-
-    const res = { quoteAmount, portionAmount, subAmount: inputAmount };
 
     return res;
   }

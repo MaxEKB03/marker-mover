@@ -103,9 +103,17 @@ export class VolumeV2 extends VolumeBase {
     const usdAmount = this.randomService.general(min, max);
     const bankBalances = await this.getBankBalance();
 
-    const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
-      Math.round(Number(ethers.formatEther(bigValue))),
+    const bankUsdAmount = Math.round(
+      Number(
+        ethers.formatUnits(bankBalances[0], this.tradeConfig.USDT_DECIMALS),
+      ),
     );
+    const bankTokenAmount = Math.round(
+      Number(
+        ethers.formatUnits(bankBalances[1], this.tradeConfig.TOKEN_DECIMALS),
+      ),
+    );
+
     const tokenAmount = await this.usdToToken(usdAmount.toString());
     const tokenAmountFormatted = Math.round(
       Number(ethers.formatEther(tokenAmount)),
@@ -213,7 +221,9 @@ export class VolumeV2 extends VolumeBase {
   }
 
   async usdToToken(usdInDecimal: string) {
-    const usdAmount = Number(ethers.parseEther(usdInDecimal));
+    const usdAmount = Number(
+      ethers.parseUnits(usdInDecimal, this.tradeConfig.USDT_DECIMALS),
+    );
     const promiseGetOutputAmountReversed =
       this.tradeConfig.dex === Dex.Uniswap
         ? this.uniswapServiceV2.getOutputAmountReversed(
@@ -254,10 +264,8 @@ export class VolumeV2 extends VolumeBase {
     const tokenBalance: bigint = await tokenContract.balanceOf(
       this.tradeConfig.BANK_ADDRESS,
     );
-    // const usdtBalance = ethers.parseEther('100');
-    // const tokenBalance = ethers.parseEther('100');
-    const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
+    // const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
-    return [usdtBalance, tokenBalance, tokenInUSD];
+    return [usdtBalance, tokenBalance]; //, tokenInUSD];
   }
 }

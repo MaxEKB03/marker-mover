@@ -17,36 +17,6 @@ export class UniswapServiceV2 {
 
   constructor() {}
 
-  // async smth1() {
-  //   const formattedIn = '1';
-  //   const amountIn = Number(ethers.parseEther(formattedIn));
-
-  //   const price = await this.getOutputAmount(amountIn);
-
-  //   const formattedOut = ethers.formatUnits(price.subAmount.toString(), 18);
-  //   console.log(`price ${formattedOut}`);
-
-  //   const amountOut = price.subAmount;
-
-  //   // console.log(`${amountIn} > ${amountOut}`);
-  //   console.log(`${formattedIn} > ${formattedOut}`);
-  // }
-
-  // async smth2() {
-  //   const formattedOut = '1';
-  //   const amountOut = Number(ethers.parseEther(formattedOut));
-
-  //   const price = await this.getOutputAmountReversed(amountOut);
-
-  //   const formattedIn = ethers.formatUnits(price.subAmount.toString(), 18);
-  //   console.log(`price ${formattedIn}`);
-
-  //   const amountIn = price.subAmount;
-
-  //   // console.log(`${amountOut} > ${amountIn}`);
-  //   console.log(`${formattedOut} > ${formattedIn}`);
-  // }
-
   checkSupportV3(tradeConfig: TradeConfig): TradeConfigV3 {
     if (tradeConfig.dexVersion != DexVersion.V3) {
       throw this.BadRequest;
@@ -115,7 +85,7 @@ export class UniswapServiceV2 {
     // console.log('getOutputAmount');
 
     const [token0, token1, isFirst] = await this.createTokens(tradeConfig);
-    const inputAmount = new TokenAmount(
+    const inputCurrencyAmount = new TokenAmount(
       isFirst ? token0 : token1,
       BigInt(rawInputAmount),
     );
@@ -126,10 +96,15 @@ export class UniswapServiceV2 {
       tradeConfig.PAIR_ADDRESS,
     );
 
-    const [currencyAmount] = pair.getOutputAmount(inputAmount);
+    const [outputCurrencyAmount] = pair.getOutputAmount(inputCurrencyAmount);
 
-    const quoteAmount = Number(ethers.parseUnits(currencyAmount.toExact(), 18));
-    const portionAmount = quoteAmount * 0.0025;
+    const quoteAmount = Number(
+      ethers.parseUnits(
+        outputCurrencyAmount.toExact(),
+        outputCurrencyAmount.currency.decimals,
+      ),
+    );
+    const portionAmount = Number((quoteAmount * 0.0025).toFixed(0));
     const outputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: outputAmount };
@@ -145,7 +120,7 @@ export class UniswapServiceV2 {
     // console.log('getOutputAmountReversed');
 
     const [token0, token1, isFirst] = await this.createTokens(tradeConfig);
-    const inputAmount = new TokenAmount(
+    const inputCurrencyAmount = new TokenAmount(
       !isFirst ? token0 : token1,
       BigInt(rawInputAmount),
     );
@@ -156,24 +131,19 @@ export class UniswapServiceV2 {
       tradeConfig.PAIR_ADDRESS,
     );
 
-    const [currencyAmount] = pair.getOutputAmount(inputAmount);
+    const [outputCurrencyAmount] = pair.getOutputAmount(inputCurrencyAmount);
 
-    const quoteAmount = Number(ethers.parseUnits(currencyAmount.toExact(), 18));
-    const portionAmount = quoteAmount * 0.0025;
+    const quoteAmount = Number(
+      ethers.parseUnits(
+        outputCurrencyAmount.toExact(),
+        outputCurrencyAmount.currency.decimals,
+      ),
+    );
+    const portionAmount = Number((quoteAmount * 0.0025).toFixed(0));
     const outputAmount = quoteAmount - portionAmount;
 
     const res = { quoteAmount, portionAmount, subAmount: outputAmount };
     // console.log(res);
-
-    return res;
-  }
-
-  async getInputAmount(tradeConfig: TradeConfig, rawOutputAmount: number) {
-    const res = {
-      quoteAmount: 1,
-      portionAmount: 1,
-      subAmount: 1 /* outputAmount */,
-    };
 
     return res;
   }

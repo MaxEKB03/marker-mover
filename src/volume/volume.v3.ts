@@ -108,25 +108,33 @@ export class VolumeV3 extends VolumeBase {
     const usdAmount = this.randomService.general(min, max);
 
     const bankBalances = await this.getBankBalance();
-    const [bankUsdAmount, bankTokenAmount] = bankBalances.map((bigValue) =>
-      Math.round(Number(ethers.formatEther(bigValue))),
+    const bankUsdUnited = Number(
+      ethers
+        .formatUnits(bankBalances[0], this.tradeConfig.USDT_DECIMALS)
+        .split('.')[0],
     );
-    const tokenAmount = await this.usdToToken(usdAmount.toString());
-    const tokenAmountFormatted = Math.round(
-      Number(ethers.formatEther(tokenAmount)),
-    );
-    let tradeAmountUnited = isSellingByRandom
-      ? usdAmount
-      : Math.round(Number(ethers.formatEther(tokenAmount)));
 
-    const compareValue = isSellingByRandom ? bankUsdAmount : bankTokenAmount;
+    const bankTokenUnited = Number(
+      ethers
+        .formatUnits(bankBalances[1], this.tradeConfig.TOKEN_DECIMALS)
+        .split('.')[0],
+    );
+
+    const tokenAmount = await this.usdToToken(usdAmount.toString());
+    const tokenAmountUnited = Math.round(
+      Number(ethers.formatUnits(tokenAmount, this.tradeConfig.TOKEN_DECIMALS)),
+    );
+
+    let tradeAmountUnited = isSellingByRandom ? usdAmount : tokenAmountUnited;
+
+    const compareValue = isSellingByRandom ? bankUsdUnited : bankTokenUnited;
 
     const isPossible = tradeAmountUnited * 1.2 < compareValue;
 
     tradeAmountUnited = !isPossible
       ? !isSellingByRandom
         ? usdAmount
-        : tokenAmountFormatted
+        : tokenAmountUnited
       : tradeAmountUnited;
 
     let message = `\n${this.storage.walletId}/${this.walletRange.endId}|${executer.address}\n`;
@@ -135,10 +143,10 @@ export class VolumeV3 extends VolumeBase {
       message += 'Direction was changed, cause balance of bank is low\n';
     }
 
-    const decimalsOut = isSelling
+    const decimalsIn = isSelling
       ? this.tradeConfig.USDT_DECIMALS
       : this.tradeConfig.TOKEN_DECIMALS;
-    const decimalsIn = isSelling
+    const decimalsOut = isSelling
       ? this.tradeConfig.TOKEN_DECIMALS
       : this.tradeConfig.USDT_DECIMALS;
 
@@ -164,25 +172,25 @@ export class VolumeV3 extends VolumeBase {
     const exactAmount = await getExactAmount;
 
     let slippageAmount;
-    const round = (n: number) => {
-      const rounBy = 10;
+    const round = (n: number, roundBy = 10) => {
       let nBig = BigInt(n);
       let nStr = nBig.toString();
-      if (nStr.length < rounBy + 1) {
+      if (nStr.length < roundBy + 1) {
         throw new Error('input is so low');
       }
-      nStr = nStr.slice(0, nStr.length - rounBy);
-      nStr = nStr.concat('0'.repeat(rounBy));
-      // console.log('rounding', n, BigInt(nStr));
+      nStr = nStr.slice(0, nStr.length - roundBy);
+      nStr = nStr.concat('0'.repeat(roundBy));
       return BigInt(nStr);
     };
 
+    const roundBy = decimalsOut > 10 ? 10 : 2;
+
     if (this.tradeConfig.dex === Dex.Uniswap) {
       slippageAmount = isSelling
-        ? round(exactAmount.quoteAmount)
-        : round(exactAmount.subAmount);
+        ? round(exactAmount.quoteAmount, roundBy)
+        : round(exactAmount.subAmount, roundBy);
     } else {
-      slippageAmount = round(exactAmount.quoteAmount);
+      slippageAmount = round(exactAmount.quoteAmount, roundBy);
     }
 
     const slippageAmountUnited = ethers.formatUnits(
@@ -217,10 +225,11 @@ export class VolumeV3 extends VolumeBase {
         );
 
     const nonce = await executer.getNonce();
+
     const res = await this.provider.getFeeData();
     const gasPrice = BigInt(Math.round(Number(res.gasPrice) * 1.025));
 
-    const tx = await executer.sendTransaction({
+    const txBody = {
       from: executer.address,
       to: this.tradeConfig.BOT_MANAGER,
       data: encodedData,
@@ -228,10 +237,12 @@ export class VolumeV3 extends VolumeBase {
       value: 0,
       gasPrice,
       nonce,
-    });
+    };
+
+    const tx = await executer.sendTransaction(txBody);
     const response = await tx.wait();
     this.logger.log(`response.hash: ${response.hash}`);
-    message += `\n\nhttps://bscscan.com/tx/${response.hash}`;
+    message += `\n\n${this.tradeConfig.scanerUrl}${response.hash}`;
 
     await this.telegramService.notify(message, this.id);
   }
@@ -256,7 +267,9 @@ export class VolumeV3 extends VolumeBase {
   }
 
   async usdToToken(usdInDecimal: string) {
-    const usdAmount = Number(ethers.parseEther(usdInDecimal));
+    const usdAmount = Number(
+      ethers.parseUnits(usdInDecimal, this.tradeConfig.USDT_DECIMALS),
+    );
 
     const isFirst =
       this.tradeConfig.USDT_ADDRESS > this.tradeConfig.TOKEN_ADDRESS;
@@ -315,6 +328,6 @@ export class VolumeV3 extends VolumeBase {
 
     const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
-    return [usdtBalance, tokenBalance, tokenInUSD];
+    return [usdtBalance, tokenBalance]; //, tokenInUSD];
   }
 }

@@ -344,7 +344,7 @@ export const projects: Project[] = [
             big: {
               id: 0,
               percent: 100,
-              data: [1000, 3000],
+              data: [1000, 2000],
             },
           }
         : {
@@ -354,7 +354,7 @@ export const projects: Project[] = [
               data: [2, 2],
             },
           },
-      txsInHours: 60,
+      txsInHours: 90,
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
       scanerUrl: 'https://arbiscan.io/tx/',

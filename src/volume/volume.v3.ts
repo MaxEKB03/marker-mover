@@ -2,7 +2,7 @@ import { RandomService } from 'src/random/random.service';
 import { UniswapService } from 'src/uniswap/uniswap.service';
 import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
-import { Provider, TransactionResponse } from 'ethers';
+import { Provider, TransactionLike, TransactionResponse } from 'ethers';
 import { wait } from 'src/helpers/time';
 import { AmountTypes, Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
 import { ethers } from 'ethers';
@@ -57,7 +57,7 @@ export class VolumeV3 extends VolumeBase {
           this.id,
         );
 
-        await wait(30);
+        await wait(5);
         this.storage.eventEmitter.emit(Events.NextIteration);
       }
     });
@@ -103,6 +103,9 @@ export class VolumeV3 extends VolumeBase {
       this.tradeConfig.USDT_ADDRESS > this.tradeConfig.TOKEN_ADDRESS;
 
     const isSellingByRandom = txType.id != 0;
+    // const buy = true;
+    // const sell = false;
+    // const isSellingByRandom = sell;
     const tradeDirection = isFirst ? isSellingByRandom : !isSellingByRandom;
 
     const usdAmount = this.randomService.general(min, max);
@@ -120,6 +123,14 @@ export class VolumeV3 extends VolumeBase {
         .split('.')[0],
     );
 
+    const bankTokenUnitedUSD = Number(
+      ethers
+        .formatUnits(bankBalances[2], this.tradeConfig.USDT_DECIMALS)
+        .split('.')[0],
+    );
+
+    console.log('bank balance:', bankUsdUnited, bankTokenUnitedUSD);
+
     const tokenAmount = await this.usdToToken(usdAmount.toString());
     const tokenAmountUnited = Math.round(
       Number(ethers.formatUnits(tokenAmount, this.tradeConfig.TOKEN_DECIMALS)),
@@ -129,7 +140,7 @@ export class VolumeV3 extends VolumeBase {
 
     const compareValue = isSellingByRandom ? bankUsdUnited : bankTokenUnited;
 
-    const isPossible = tradeAmountUnited * 1.2 < compareValue;
+    const isPossible = tradeAmountUnited * 1.05 < compareValue;
 
     tradeAmountUnited = !isPossible
       ? !isSellingByRandom
@@ -141,6 +152,8 @@ export class VolumeV3 extends VolumeBase {
     const isSelling = isPossible ? tradeDirection : !tradeDirection; // Check balance to trade, else change direction
     if (!isPossible) {
       message += 'Direction was changed, cause balance of bank is low\n';
+      // console.log(message);
+      // return;
     }
 
     const decimalsIn = isSelling
@@ -226,23 +239,32 @@ export class VolumeV3 extends VolumeBase {
 
     const nonce = await executer.getNonce();
 
-    const res = await this.provider.getFeeData();
-    const gasPrice = BigInt(Math.round(Number(res.gasPrice) * 1.025));
+    const feeData = await this.provider.getFeeData();
+    // const gasPrice = BigInt(Math.round(Number(res.gasPrice) * 1.025));
+    const { maxFeePerGas, maxPriorityFeePerGas } = feeData;
 
-    const txBody = {
+    const txBody: TransactionLike = {
       from: executer.address,
       to: this.tradeConfig.BOT_MANAGER,
       data: encodedData,
-      gasLimit: 1000000,
       value: 0,
-      gasPrice,
       nonce,
+      chainId: 42161,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
     };
 
-    const tx = await executer.sendTransaction(txBody);
-    const response = await tx.wait();
-    this.logger.log(`response.hash: ${response.hash}`);
-    message += `\n\n${this.tradeConfig.scanerUrl}${response.hash}`;
+    try {
+      const tx = await executer.sendTransaction(txBody);
+      const response = await tx.wait();
+      this.logger.log(`response.hash: ${response.hash}`);
+      message += `\n\n${this.tradeConfig.scanerUrl}${response.hash}`;
+    } catch (error) {
+      console.log('Tx reveted', error);
+      console.log(txBody);
+      const { result } = error;
+      console.log(result);
+    }
 
     await this.telegramService.notify(message, this.id);
   }
@@ -328,6 +350,11 @@ export class VolumeV3 extends VolumeBase {
 
     const tokenInUSD = await this.tokenToUSD(Number(tokenBalance));
 
-    return [usdtBalance, tokenBalance]; //, tokenInUSD];
+    return [usdtBalance, tokenBalance, tokenInUSD];
   }
 }
+
+/*
+0x03ddb1bf0000000000000000000000000000000000000000000036c207840f5b2f8c000000000000000000000000000000000000000000000000000000000000ab737b88
+0x03ddb1bf000000000000000000000000000000000000000000001ed6ac1dc1e4b01c00000000000000000000000000000000000000000000000000000000000062f61ff0
+*/

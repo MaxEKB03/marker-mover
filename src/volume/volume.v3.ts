@@ -129,7 +129,12 @@ export class VolumeV3 extends VolumeBase {
         .split('.')[0],
     );
 
-    console.log('bank balance:', bankUsdUnited, bankTokenUnitedUSD);
+    console.log(
+      'bank balance:',
+      bankUsdUnited + bankTokenUnitedUSD,
+      bankUsdUnited,
+      bankTokenUnitedUSD,
+    );
 
     const tokenAmount = await this.usdToToken(usdAmount.toString());
     const tokenAmountUnited = Math.round(

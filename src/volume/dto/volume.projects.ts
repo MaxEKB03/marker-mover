@@ -337,14 +337,14 @@ export const projects: Project[] = [
       dex: Dex.Uniswap,
       dexVersion: DexVersion.V3,
       FACTORY_ADDRESS: '0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865',
-      POOL_ADDRESS: '0x93930bd4e30a416a3259575daf2f85ef43dc6083',
-      POOL_FEE: FeeAmount.LOWEST,
+      POOL_ADDRESS: '0x1dcEd2B17cFE903Ea9A50dD4708c42F23D5dAB65',
+      POOL_FEE: FeeAmount.HIGH,
       amountTypes: config.PROD
         ? {
             big: {
               id: 0,
               percent: 100,
-              data: [1000, 2000],
+              data: [500, 2500],
             },
           }
         : {
@@ -354,7 +354,7 @@ export const projects: Project[] = [
               data: [2, 2],
             },
           },
-      txsInHours: 90,
+      txsInHours: 60,
       sellMethod: 'sellV3',
       buyMethod: 'buyV3',
       scanerUrl: 'https://arbiscan.io/tx/',

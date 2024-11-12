@@ -259,17 +259,15 @@ export class VolumeV3 extends VolumeBase {
       maxPriorityFeePerGas,
     };
 
-    try {
-      const tx = await executer.sendTransaction(txBody);
-      const response = await tx.wait();
-      this.logger.log(`response.hash: ${response.hash}`);
-      message += `\n\n${this.tradeConfig.scanerUrl}${response.hash}`;
-    } catch (error) {
-      console.log('Tx reveted', error);
-      console.log(txBody);
-      const { result } = error;
-      console.log(result);
-    }
+    const tx = await executer.sendTransaction(txBody);
+    const response = await tx.wait();
+    this.logger.log(`response.hash: ${response.hash}`);
+    message += `\n\n${this.tradeConfig.scanerUrl}${response.hash}`;
+    //   console.log('Tx reveted', error);
+    //   console.log(txBody);
+    //   const { result } = error;
+    //   console.log(result);
+    // }
 
     await this.telegramService.notify(message, this.id);
   }

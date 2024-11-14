@@ -4,7 +4,7 @@ import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
 import { Provider, TransactionLike, TransactionResponse } from 'ethers';
 import { wait } from 'src/helpers/time';
-import { AmountTypes, Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
+import { Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
 import { ethers } from 'ethers';
 import { TradeConfigV3 } from 'src/config/trade.config';
 import { VolumeBase } from './volume.base';
@@ -64,15 +64,6 @@ export class VolumeV3 extends VolumeBase {
   }
 
   private async process(id: number) {
-    // return new Promise<void>(async (resolve, reject) => {
-    //   const cancelFn = () => {
-    //     reject(new Error(`Task ${id} was cancelled`));
-    //   };
-
-    //   this.cancelFunctions[id] = cancelFn;
-
-    //   delete this.cancelFunctions[id];
-    // });
     this.storage.computeNextWalletId();
     const executer = this.getExecuter();
     this.logger.log(
@@ -102,11 +93,9 @@ export class VolumeV3 extends VolumeBase {
     const isFirst =
       this.tradeConfig.USDT_ADDRESS > this.tradeConfig.TOKEN_ADDRESS;
 
-    const isSellingByRandom = txType.id != 0;
-    // const buy = true;
-    // const sell = false;
-    // const isSellingByRandom = sell;
-    const tradeDirection = isFirst ? isSellingByRandom : !isSellingByRandom;
+    const tradeDirection = isFirst
+      ? this.tradeConfig.tradeDirection
+      : !this.tradeConfig.tradeDirection;
 
     const usdAmount = this.randomService.general(min, max);
 
@@ -141,14 +130,13 @@ export class VolumeV3 extends VolumeBase {
       Number(ethers.formatUnits(tokenAmount, this.tradeConfig.TOKEN_DECIMALS)),
     );
 
-    let tradeAmountUnited = isSellingByRandom ? usdAmount : tokenAmountUnited;
-
-    const compareValue = isSellingByRandom ? bankUsdUnited : bankTokenUnited;
+    let tradeAmountUnited = tradeDirection ? usdAmount : tokenAmountUnited;
+    const compareValue = tradeDirection ? bankUsdUnited : bankTokenUnited;
 
     const isPossible = tradeAmountUnited * 1.05 < compareValue;
 
     tradeAmountUnited = !isPossible
-      ? !isSellingByRandom
+      ? !tradeAmountUnited
         ? usdAmount
         : tokenAmountUnited
       : tradeAmountUnited;
@@ -157,8 +145,8 @@ export class VolumeV3 extends VolumeBase {
     const isSelling = isPossible ? tradeDirection : !tradeDirection; // Check balance to trade, else change direction
     if (!isPossible) {
       message += 'Direction was changed, cause balance of bank is low\n';
-      // console.log(message);
-      // return;
+      this.storage.eventEmitter.emit(Events.Stop);
+      throw new Error('Market mover stoped, cause balance low');
     }
 
     const decimalsIn = isSelling
@@ -263,11 +251,6 @@ export class VolumeV3 extends VolumeBase {
     const response = await tx.wait();
     this.logger.log(`response.hash: ${response.hash}`);
     message += `\n\n${this.tradeConfig.scanerUrl}${response.hash}`;
-    //   console.log('Tx reveted', error);
-    //   console.log(txBody);
-    //   const { result } = error;
-    //   console.log(result);
-    // }
 
     await this.telegramService.notify(message, this.id);
   }
@@ -356,8 +339,3 @@ export class VolumeV3 extends VolumeBase {
     return [usdtBalance, tokenBalance, tokenInUSD];
   }
 }
-
-/*
-0x03ddb1bf0000000000000000000000000000000000000000000036c207840f5b2f8c000000000000000000000000000000000000000000000000000000000000ab737b88
-0x03ddb1bf000000000000000000000000000000000000000000001ed6ac1dc1e4b01c00000000000000000000000000000000000000000000000000000000000062f61ff0
-*/

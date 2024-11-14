@@ -3,7 +3,7 @@ import { ControlsService } from './controls/controls.service';
 import { TelegramService } from 'src/telegram/telegram.service';
 import { Provider, TransactionResponse } from 'ethers';
 import { wait } from 'src/helpers/time';
-import { AmountTypes, Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
+import { Events, minTimeWaiting, TxTypes } from './dto/volume.dto';
 import { ethers } from 'ethers';
 import { VolumeBase } from './volume.base';
 import { ContractsService } from 'src/contracts/contracts.service';
@@ -67,15 +67,6 @@ export class VolumeV2 extends VolumeBase {
   }
 
   private async process(id: number) {
-    // return new Promise<void>(async (resolve, reject) => {
-    //   const cancelFn = () => {
-    //     reject(new Error(`Task was cancelled`));
-    //   };
-
-    //   this.cancelFunctions[id] = cancelFn;
-    // delete this.cancelFunctions[id];
-
-    // });
     this.storage.computeNextWalletId();
     const executer = this.getExecuter();
     this.logger.log(

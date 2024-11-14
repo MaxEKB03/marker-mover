@@ -8,7 +8,13 @@ import { TelegramModule } from './telegram/telegram.module';
 import { ContractsModule } from './contracts/contracts.module';
 
 @Module({
-  imports: [VolumeModule, UniswapModule, RandomModule, TelegramModule, ContractsModule],
+  imports: [
+    VolumeModule,
+    UniswapModule,
+    RandomModule,
+    TelegramModule,
+    ContractsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

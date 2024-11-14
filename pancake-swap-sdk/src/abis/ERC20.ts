@@ -17,4 +17,4 @@ export const ERC20 = [
     stateMutability: 'view',
     type: 'function',
   },
-]
+];

@@ -91,9 +91,7 @@
             "evm.methodIdentifiers",
             "metadata"
           ],
-          "": [
-            "ast"
-          ]
+          "": ["ast"]
         }
       }
     }
@@ -104,18 +102,10 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/access/AccessControl.sol",
           "exportedSymbols": {
-            "AccessControl": [
-              295
-            ],
-            "Context": [
-              638
-            ],
-            "ERC165": [
-              662
-            ],
-            "IAccessControl": [
-              378
-            ]
+            "AccessControl": [295],
+            "Context": [638],
+            "ERC165": [662],
+            "IAccessControl": [378]
           },
           "id": 296,
           "license": "MIT",
@@ -123,12 +113,7 @@
           "nodes": [
             {
               "id": 1,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "108:24:0"
             },
@@ -214,9 +199,7 @@
                   "baseName": {
                     "id": 9,
                     "name": "Context",
-                    "nameLocations": [
-                      "1988:7:0"
-                    ],
+                    "nameLocations": ["1988:7:0"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 638,
                     "src": "1988:7:0"
@@ -229,9 +212,7 @@
                   "baseName": {
                     "id": 11,
                     "name": "IAccessControl",
-                    "nameLocations": [
-                      "1997:14:0"
-                    ],
+                    "nameLocations": ["1997:14:0"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 378,
                     "src": "1997:14:0"
@@ -244,9 +225,7 @@
                   "baseName": {
                     "id": 13,
                     "name": "ERC165",
-                    "nameLocations": [
-                      "2013:6:0"
-                    ],
+                    "nameLocations": ["2013:6:0"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 662,
                     "src": "2013:6:0"
@@ -267,13 +246,7 @@
               },
               "fullyImplemented": true,
               "id": 295,
-              "linearizedBaseContracts": [
-                295,
-                662,
-                674,
-                378,
-                638
-              ],
+              "linearizedBaseContracts": [295, 662, 674, 378, 638],
               "name": "AccessControl",
               "nameLocation": "1971:13:0",
               "nodeType": "ContractDefinition",
@@ -410,9 +383,7 @@
                       "pathNode": {
                         "id": 23,
                         "name": "RoleData",
-                        "nameLocations": [
-                          "2156:8:0"
-                        ],
+                        "nameLocations": ["2156:8:0"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 21,
                         "src": "2156:8:0"
@@ -503,10 +474,7 @@
                             "id": 34,
                             "name": "_checkRole",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              93,
-                              114
-                            ],
+                            "overloadedDeclarations": [93, 114],
                             "referencedDeclaration": 93,
                             "src": "2464:10:0",
                             "typeDescriptions": {
@@ -590,9 +558,7 @@
                   "visibility": "internal"
                 },
                 {
-                  "baseFunctions": [
-                    661
-                  ],
+                  "baseFunctions": [661],
                   "body": {
                     "id": 61,
                     "nodeType": "Block",
@@ -878,9 +844,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    345
-                  ],
+                  "baseFunctions": [345],
                   "body": {
                     "id": 79,
                     "nodeType": "Block",
@@ -1155,10 +1119,7 @@
                             "id": 86,
                             "name": "_checkRole",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              93,
-                              114
-                            ],
+                            "overloadedDeclarations": [93, 114],
                             "referencedDeclaration": 114,
                             "src": "3265:10:0",
                             "typeDescriptions": {
@@ -1505,9 +1466,7 @@
                   "visibility": "internal"
                 },
                 {
-                  "baseFunctions": [
-                    353
-                  ],
+                  "baseFunctions": [353],
                   "body": {
                     "id": 127,
                     "nodeType": "Block",
@@ -1663,9 +1622,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    361
-                  ],
+                  "baseFunctions": [361],
                   "body": {
                     "id": 146,
                     "nodeType": "Block",
@@ -1811,9 +1768,7 @@
                       "modifierName": {
                         "id": 135,
                         "name": "onlyRole",
-                        "nameLocations": [
-                          "4291:8:0"
-                        ],
+                        "nameLocations": ["4291:8:0"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40,
                         "src": "4291:8:0"
@@ -1900,9 +1855,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    369
-                  ],
+                  "baseFunctions": [369],
                   "body": {
                     "id": 165,
                     "nodeType": "Block",
@@ -2048,9 +2001,7 @@
                       "modifierName": {
                         "id": 154,
                         "name": "onlyRole",
-                        "nameLocations": [
-                          "4708:8:0"
-                        ],
+                        "nameLocations": ["4708:8:0"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40,
                         "src": "4708:8:0"
@@ -2137,9 +2088,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    377
-                  ],
+                  "baseFunctions": [377],
                   "body": {
                     "id": 188,
                     "nodeType": "Block",
@@ -2421,9 +2370,7 @@
                     "src": "5771:174:0",
                     "statements": [
                       {
-                        "assignments": [
-                          198
-                        ],
+                        "assignments": [198],
                         "declarations": [
                           {
                             "constant": false,
@@ -3720,15 +3667,8 @@
               ],
               "scope": 296,
               "src": "1953:5096:0",
-              "usedErrors": [
-                305,
-                308
-              ],
-              "usedEvents": [
-                317,
-                326,
-                335
-              ]
+              "usedErrors": [305, 308],
+              "usedEvents": [317, 326, 335]
             }
           ],
           "src": "108:6942:0"
@@ -3739,9 +3679,7 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/access/IAccessControl.sol",
           "exportedSymbols": {
-            "IAccessControl": [
-              378
-            ]
+            "IAccessControl": [378]
           },
           "id": 379,
           "license": "MIT",
@@ -3749,12 +3687,7 @@
           "nodes": [
             {
               "id": 297,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "109:24:1"
             },
@@ -3772,9 +3705,7 @@
               },
               "fullyImplemented": false,
               "id": 378,
-              "linearizedBaseContracts": [
-                378
-              ],
+              "linearizedBaseContracts": [378],
               "name": "IAccessControl",
               "nameLocation": "235:14:1",
               "nodeType": "ContractDefinition",
@@ -4673,15 +4604,8 @@
               ],
               "scope": 379,
               "src": "225:3033:1",
-              "usedErrors": [
-                305,
-                308
-              ],
-              "usedEvents": [
-                317,
-                326,
-                335
-              ]
+              "usedErrors": [305, 308],
+              "usedEvents": [317, 326, 335]
             }
           ],
           "src": "109:3150:1"
@@ -4692,12 +4616,8 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/access/Ownable.sol",
           "exportedSymbols": {
-            "Context": [
-              638
-            ],
-            "Ownable": [
-              526
-            ]
+            "Context": [638],
+            "Ownable": [526]
           },
           "id": 527,
           "license": "MIT",
@@ -4705,12 +4625,7 @@
           "nodes": [
             {
               "id": 380,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "102:24:2"
             },
@@ -4746,9 +4661,7 @@
                   "baseName": {
                     "id": 384,
                     "name": "Context",
-                    "nameLocations": [
-                      "692:7:2"
-                    ],
+                    "nameLocations": ["692:7:2"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 638,
                     "src": "692:7:2"
@@ -4769,10 +4682,7 @@
               },
               "fullyImplemented": true,
               "id": 526,
-              "linearizedBaseContracts": [
-                526,
-                638
-              ],
+              "linearizedBaseContracts": [526, 638],
               "name": "Ownable",
               "nameLocation": "681:7:2",
               "nodeType": "ContractDefinition",
@@ -5793,9 +5703,7 @@
                       "modifierName": {
                         "id": 466,
                         "name": "onlyOwner",
-                        "nameLocations": [
-                          "2337:9:2"
-                        ],
+                        "nameLocations": ["2337:9:2"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 437,
                         "src": "2337:9:2"
@@ -6110,9 +6018,7 @@
                       "modifierName": {
                         "id": 482,
                         "name": "onlyOwner",
-                        "nameLocations": [
-                          "2603:9:2"
-                        ],
+                        "nameLocations": ["2603:9:2"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 437,
                         "src": "2603:9:2"
@@ -6178,9 +6084,7 @@
                     "src": "2975:124:2",
                     "statements": [
                       {
-                        "assignments": [
-                          512
-                        ],
+                        "assignments": [512],
                         "declarations": [
                           {
                             "constant": false,
@@ -6405,13 +6309,8 @@
               ],
               "scope": 527,
               "src": "663:2438:2",
-              "usedErrors": [
-                392,
-                397
-              ],
-              "usedEvents": [
-                403
-              ]
+              "usedErrors": [392, 397],
+              "usedEvents": [403]
             }
           ],
           "src": "102:3000:2"
@@ -6422,9 +6321,7 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/interfaces/IERC20.sol",
           "exportedSymbols": {
-            "IERC20": [
-              608
-            ]
+            "IERC20": [608]
           },
           "id": 531,
           "license": "MIT",
@@ -6432,12 +6329,7 @@
           "nodes": [
             {
               "id": 528,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "105:24:3"
             },
@@ -6475,9 +6367,7 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
           "exportedSymbols": {
-            "IERC20": [
-              608
-            ]
+            "IERC20": [608]
           },
           "id": 609,
           "license": "MIT",
@@ -6485,12 +6375,7 @@
           "nodes": [
             {
               "id": 532,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "106:24:4"
             },
@@ -6508,9 +6393,7 @@
               },
               "fullyImplemented": false,
               "id": 608,
-              "linearizedBaseContracts": [
-                608
-              ],
+              "linearizedBaseContracts": [608],
               "name": "IERC20",
               "nameLocation": "213:6:4",
               "nodeType": "ContractDefinition",
@@ -7383,10 +7266,7 @@
               "scope": 609,
               "src": "203:2575:4",
               "usedErrors": [],
-              "usedEvents": [
-                542,
-                551
-              ]
+              "usedEvents": [542, 551]
             }
           ],
           "src": "106:2673:4"
@@ -7397,9 +7277,7 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/utils/Context.sol",
           "exportedSymbols": {
-            "Context": [
-              638
-            ]
+            "Context": [638]
           },
           "id": 639,
           "license": "MIT",
@@ -7407,12 +7285,7 @@
           "nodes": [
             {
               "id": 610,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "101:24:5"
             },
@@ -7430,9 +7303,7 @@
               },
               "fullyImplemented": true,
               "id": 638,
-              "linearizedBaseContracts": [
-                638
-              ],
+              "linearizedBaseContracts": [638],
               "name": "Context",
               "nameLocation": "642:7:5",
               "nodeType": "ContractDefinition",
@@ -7724,12 +7595,8 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
           "exportedSymbols": {
-            "ERC165": [
-              662
-            ],
-            "IERC165": [
-              674
-            ]
+            "ERC165": [662],
+            "IERC165": [674]
           },
           "id": 663,
           "license": "MIT",
@@ -7737,12 +7604,7 @@
           "nodes": [
             {
               "id": 640,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "114:24:6"
             },
@@ -7778,9 +7640,7 @@
                   "baseName": {
                     "id": 644,
                     "name": "IERC165",
-                    "nameLocations": [
-                      "687:7:6"
-                    ],
+                    "nameLocations": ["687:7:6"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 674,
                     "src": "687:7:6"
@@ -7801,18 +7661,13 @@
               },
               "fullyImplemented": true,
               "id": 662,
-              "linearizedBaseContracts": [
-                662,
-                674
-              ],
+              "linearizedBaseContracts": [662, 674],
               "name": "ERC165",
               "nameLocation": "677:6:6",
               "nodeType": "ContractDefinition",
               "nodes": [
                 {
-                  "baseFunctions": [
-                    673
-                  ],
+                  "baseFunctions": [673],
                   "body": {
                     "id": 660,
                     "nodeType": "Block",
@@ -8023,9 +7878,7 @@
         "ast": {
           "absolutePath": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
           "exportedSymbols": {
-            "IERC165": [
-              674
-            ]
+            "IERC165": [674]
           },
           "id": 675,
           "license": "MIT",
@@ -8033,12 +7886,7 @@
           "nodes": [
             {
               "id": 664,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".20"
-              ],
+              "literals": ["solidity", "^", "0.8", ".20"],
               "nodeType": "PragmaDirective",
               "src": "115:24:7"
             },
@@ -8056,9 +7904,7 @@
               },
               "fullyImplemented": false,
               "id": 674,
-              "linearizedBaseContracts": [
-                674
-              ],
+              "linearizedBaseContracts": [674],
               "name": "IERC165",
               "nameLocation": "431:7:7",
               "nodeType": "ContractDefinition",
@@ -8167,27 +8013,13 @@
         "ast": {
           "absolutePath": "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol",
           "exportedSymbols": {
-            "IUniswapV3Pool": [
-              696
-            ],
-            "IUniswapV3PoolActions": [
-              792
-            ],
-            "IUniswapV3PoolDerivedState": [
-              823
-            ],
-            "IUniswapV3PoolEvents": [
-              942
-            ],
-            "IUniswapV3PoolImmutables": [
-              982
-            ],
-            "IUniswapV3PoolOwnerActions": [
-              1008
-            ],
-            "IUniswapV3PoolState": [
-              1116
-            ]
+            "IUniswapV3Pool": [696],
+            "IUniswapV3PoolActions": [792],
+            "IUniswapV3PoolDerivedState": [823],
+            "IUniswapV3PoolEvents": [942],
+            "IUniswapV3PoolImmutables": [982],
+            "IUniswapV3PoolOwnerActions": [1008],
+            "IUniswapV3PoolState": [1116]
           },
           "id": 697,
           "license": "GPL-2.0-or-later",
@@ -8195,12 +8027,7 @@
           "nodes": [
             {
               "id": 676,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.5",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.5", ".0"],
               "nodeType": "PragmaDirective",
               "src": "45:24:8"
             },
@@ -8283,9 +8110,7 @@
                   "baseName": {
                     "id": 684,
                     "name": "IUniswapV3PoolImmutables",
-                    "nameLocations": [
-                      "637:24:8"
-                    ],
+                    "nameLocations": ["637:24:8"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 982,
                     "src": "637:24:8"
@@ -8298,9 +8123,7 @@
                   "baseName": {
                     "id": 686,
                     "name": "IUniswapV3PoolState",
-                    "nameLocations": [
-                      "667:19:8"
-                    ],
+                    "nameLocations": ["667:19:8"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 1116,
                     "src": "667:19:8"
@@ -8313,9 +8136,7 @@
                   "baseName": {
                     "id": 688,
                     "name": "IUniswapV3PoolDerivedState",
-                    "nameLocations": [
-                      "692:26:8"
-                    ],
+                    "nameLocations": ["692:26:8"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 823,
                     "src": "692:26:8"
@@ -8328,9 +8149,7 @@
                   "baseName": {
                     "id": 690,
                     "name": "IUniswapV3PoolActions",
-                    "nameLocations": [
-                      "724:21:8"
-                    ],
+                    "nameLocations": ["724:21:8"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 792,
                     "src": "724:21:8"
@@ -8343,9 +8162,7 @@
                   "baseName": {
                     "id": 692,
                     "name": "IUniswapV3PoolOwnerActions",
-                    "nameLocations": [
-                      "751:26:8"
-                    ],
+                    "nameLocations": ["751:26:8"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 1008,
                     "src": "751:26:8"
@@ -8358,9 +8175,7 @@
                   "baseName": {
                     "id": 694,
                     "name": "IUniswapV3PoolEvents",
-                    "nameLocations": [
-                      "783:20:8"
-                    ],
+                    "nameLocations": ["783:20:8"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 942,
                     "src": "783:20:8"
@@ -8381,15 +8196,7 @@
               },
               "fullyImplemented": false,
               "id": 696,
-              "linearizedBaseContracts": [
-                696,
-                942,
-                1008,
-                792,
-                823,
-                1116,
-                982
-              ],
+              "linearizedBaseContracts": [696, 942, 1008, 792, 823, 1116, 982],
               "name": "IUniswapV3Pool",
               "nameLocation": "615:14:8",
               "nodeType": "ContractDefinition",
@@ -8397,17 +8204,7 @@
               "scope": 697,
               "src": "605:203:8",
               "usedErrors": [],
-              "usedEvents": [
-                833,
-                850,
-                865,
-                880,
-                897,
-                912,
-                919,
-                930,
-                941
-              ]
+              "usedEvents": [833, 850, 865, 880, 897, 912, 919, 930, 941]
             }
           ],
           "src": "45:764:8"
@@ -8418,9 +8215,7 @@
         "ast": {
           "absolutePath": "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolActions.sol",
           "exportedSymbols": {
-            "IUniswapV3PoolActions": [
-              792
-            ]
+            "IUniswapV3PoolActions": [792]
           },
           "id": 793,
           "license": "GPL-2.0-or-later",
@@ -8428,12 +8223,7 @@
           "nodes": [
             {
               "id": 698,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.5",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.5", ".0"],
               "nodeType": "PragmaDirective",
               "src": "45:24:9"
             },
@@ -8451,9 +8241,7 @@
               },
               "fullyImplemented": false,
               "id": 792,
-              "linearizedBaseContracts": [
-                792
-              ],
+              "linearizedBaseContracts": [792],
               "name": "IUniswapV3PoolActions",
               "nameLocation": "183:21:9",
               "nodeType": "ContractDefinition",
@@ -9583,9 +9371,7 @@
         "ast": {
           "absolutePath": "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolDerivedState.sol",
           "exportedSymbols": {
-            "IUniswapV3PoolDerivedState": [
-              823
-            ]
+            "IUniswapV3PoolDerivedState": [823]
           },
           "id": 824,
           "license": "GPL-2.0-or-later",
@@ -9593,12 +9379,7 @@
           "nodes": [
             {
               "id": 794,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.5",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.5", ".0"],
               "nodeType": "PragmaDirective",
               "src": "45:24:10"
             },
@@ -9616,9 +9397,7 @@
               },
               "fullyImplemented": false,
               "id": 823,
-              "linearizedBaseContracts": [
-                823
-              ],
+              "linearizedBaseContracts": [823],
               "name": "IUniswapV3PoolDerivedState",
               "nameLocation": "303:26:10",
               "nodeType": "ContractDefinition",
@@ -9951,9 +9730,7 @@
         "ast": {
           "absolutePath": "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolEvents.sol",
           "exportedSymbols": {
-            "IUniswapV3PoolEvents": [
-              942
-            ]
+            "IUniswapV3PoolEvents": [942]
           },
           "id": 943,
           "license": "GPL-2.0-or-later",
@@ -9961,12 +9738,7 @@
           "nodes": [
             {
               "id": 825,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.5",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.5", ".0"],
               "nodeType": "PragmaDirective",
               "src": "45:24:11"
             },
@@ -9984,9 +9756,7 @@
               },
               "fullyImplemented": true,
               "id": 942,
-              "linearizedBaseContracts": [
-                942
-              ],
+              "linearizedBaseContracts": [942],
               "name": "IUniswapV3PoolEvents",
               "nameLocation": "169:20:11",
               "nodeType": "ContractDefinition",
@@ -11436,17 +11206,7 @@
               "scope": 943,
               "src": "159:5804:11",
               "usedErrors": [],
-              "usedEvents": [
-                833,
-                850,
-                865,
-                880,
-                897,
-                912,
-                919,
-                930,
-                941
-              ]
+              "usedEvents": [833, 850, 865, 880, 897, 912, 919, 930, 941]
             }
           ],
           "src": "45:5919:11"
@@ -11457,9 +11217,7 @@
         "ast": {
           "absolutePath": "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolImmutables.sol",
           "exportedSymbols": {
-            "IUniswapV3PoolImmutables": [
-              982
-            ]
+            "IUniswapV3PoolImmutables": [982]
           },
           "id": 983,
           "license": "GPL-2.0-or-later",
@@ -11467,12 +11225,7 @@
           "nodes": [
             {
               "id": 944,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.5",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.5", ".0"],
               "nodeType": "PragmaDirective",
               "src": "45:24:12"
             },
@@ -11490,9 +11243,7 @@
               },
               "fullyImplemented": false,
               "id": 982,
-              "linearizedBaseContracts": [
-                982
-              ],
+              "linearizedBaseContracts": [982],
               "name": "IUniswapV3PoolImmutables",
               "nameLocation": "234:24:12",
               "nodeType": "ContractDefinition",
@@ -11881,9 +11632,7 @@
         "ast": {
           "absolutePath": "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolOwnerActions.sol",
           "exportedSymbols": {
-            "IUniswapV3PoolOwnerActions": [
-              1008
-            ]
+            "IUniswapV3PoolOwnerActions": [1008]
           },
           "id": 1009,
           "license": "GPL-2.0-or-later",
@@ -11891,12 +11640,7 @@
           "nodes": [
             {
               "id": 984,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.5",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.5", ".0"],
               "nodeType": "PragmaDirective",
               "src": "45:24:13"
             },
@@ -11914,9 +11658,7 @@
               },
               "fullyImplemented": false,
               "id": 1008,
-              "linearizedBaseContracts": [
-                1008
-              ],
+              "linearizedBaseContracts": [1008],
               "name": "IUniswapV3PoolOwnerActions",
               "nameLocation": "197:26:13",
               "nodeType": "ContractDefinition",
@@ -12195,9 +11937,7 @@
         "ast": {
           "absolutePath": "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolState.sol",
           "exportedSymbols": {
-            "IUniswapV3PoolState": [
-              1116
-            ]
+            "IUniswapV3PoolState": [1116]
           },
           "id": 1117,
           "license": "GPL-2.0-or-later",
@@ -12205,12 +11945,7 @@
           "nodes": [
             {
               "id": 1010,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.5",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.5", ".0"],
               "nodeType": "PragmaDirective",
               "src": "45:24:14"
             },
@@ -12228,9 +11963,7 @@
               },
               "fullyImplemented": false,
               "id": 1116,
-              "linearizedBaseContracts": [
-                1116
-              ],
+              "linearizedBaseContracts": [1116],
               "name": "IUniswapV3PoolState",
               "nameLocation": "250:19:14",
               "nodeType": "ContractDefinition",
@@ -13478,27 +13211,13 @@
         "ast": {
           "absolutePath": "contracts/BotManager.sol",
           "exportedSymbols": {
-            "AccessControl": [
-              295
-            ],
-            "BotManager": [
-              1852
-            ],
-            "BytesLib": [
-              2432
-            ],
-            "IERC20": [
-              608
-            ],
-            "IUniswapV3Pool": [
-              696
-            ],
-            "IWhitelist": [
-              1138
-            ],
-            "SafeCast": [
-              2581
-            ]
+            "AccessControl": [295],
+            "BotManager": [1852],
+            "BytesLib": [2432],
+            "IERC20": [608],
+            "IUniswapV3Pool": [696],
+            "IWhitelist": [1138],
+            "SafeCast": [2581]
           },
           "id": 1853,
           "license": "MIT",
@@ -13506,12 +13225,7 @@
           "nodes": [
             {
               "id": 1118,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:25:15"
             },
@@ -13673,9 +13387,7 @@
               "contractKind": "interface",
               "fullyImplemented": false,
               "id": 1138,
-              "linearizedBaseContracts": [
-                1138
-              ],
+              "linearizedBaseContracts": [1138],
               "name": "IWhitelist",
               "nameLocation": "466:10:15",
               "nodeType": "ContractDefinition",
@@ -13777,9 +13489,7 @@
                   "baseName": {
                     "id": 1139,
                     "name": "AccessControl",
-                    "nameLocations": [
-                      "577:13:15"
-                    ],
+                    "nameLocations": ["577:13:15"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 295,
                     "src": "577:13:15"
@@ -13794,14 +13504,7 @@
               "contractKind": "contract",
               "fullyImplemented": true,
               "id": 1852,
-              "linearizedBaseContracts": [
-                1852,
-                295,
-                662,
-                674,
-                378,
-                638
-              ],
+              "linearizedBaseContracts": [1852, 295, 662, 674, 378, 638],
               "name": "BotManager",
               "nameLocation": "563:10:15",
               "nodeType": "ContractDefinition",
@@ -13812,9 +13515,7 @@
                   "libraryName": {
                     "id": 1141,
                     "name": "BytesLib",
-                    "nameLocations": [
-                      "604:8:15"
-                    ],
+                    "nameLocations": ["604:8:15"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 2432,
                     "src": "604:8:15"
@@ -13838,9 +13539,7 @@
                   "libraryName": {
                     "id": 1144,
                     "name": "SafeCast",
-                    "nameLocations": [
-                      "635:8:15"
-                    ],
+                    "nameLocations": ["635:8:15"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 2581,
                     "src": "635:8:15"
@@ -14039,9 +13738,7 @@
                     "pathNode": {
                       "id": 1157,
                       "name": "IWhitelist",
-                      "nameLocations": [
-                        "802:10:15"
-                      ],
+                      "nameLocations": ["802:10:15"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1138,
                       "src": "802:10:15"
@@ -14948,9 +14645,7 @@
                         "src": "1666:34:15"
                       },
                       {
-                        "assignments": [
-                          1234
-                        ],
+                        "assignments": [1234],
                         "declarations": [
                           {
                             "constant": false,
@@ -14973,9 +14668,7 @@
                               "pathNode": {
                                 "id": 1232,
                                 "name": "IUniswapV3Pool",
-                                "nameLocations": [
-                                  "1723:14:15"
-                                ],
+                                "nameLocations": ["1723:14:15"],
                                 "nodeType": "IdentifierPath",
                                 "referencedDeclaration": 696,
                                 "src": "1723:14:15"
@@ -15616,10 +15309,7 @@
                             "id": 1270,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "2022:7:15",
                             "typeDescriptions": {
@@ -15675,9 +15365,7 @@
                     "src": "2171:214:15",
                     "statements": [
                       {
-                        "assignments": [
-                          1288
-                        ],
+                        "assignments": [1288],
                         "declarations": [
                           {
                             "constant": false,
@@ -15777,9 +15465,7 @@
                         "src": "2182:41:15"
                       },
                       {
-                        "assignments": [
-                          1295
-                        ],
+                        "assignments": [1295],
                         "declarations": [
                           {
                             "constant": false,
@@ -15879,9 +15565,7 @@
                         "src": "2234:41:15"
                       },
                       {
-                        "assignments": [
-                          1302
-                        ],
+                        "assignments": [1302],
                         "declarations": [
                           {
                             "constant": false,
@@ -16172,9 +15856,7 @@
                     "src": "2472:80:15",
                     "statements": [
                       {
-                        "assignments": [
-                          1325
-                        ],
+                        "assignments": [1325],
                         "declarations": [
                           {
                             "constant": false,
@@ -16998,9 +16680,7 @@
                         "src": "3066:12:15"
                       },
                       {
-                        "assignments": [
-                          1395
-                        ],
+                        "assignments": [1395],
                         "declarations": [
                           {
                             "constant": false,
@@ -17023,9 +16703,7 @@
                               "pathNode": {
                                 "id": 1393,
                                 "name": "IUniswapV3Pool",
-                                "nameLocations": [
-                                  "3091:14:15"
-                                ],
+                                "nameLocations": ["3091:14:15"],
                                 "nodeType": "IdentifierPath",
                                 "referencedDeclaration": 696,
                                 "src": "3091:14:15"
@@ -17354,9 +17032,7 @@
                       "modifierName": {
                         "id": 1385,
                         "name": "onlyRole",
-                        "nameLocations": [
-                          "3026:8:15"
-                        ],
+                        "nameLocations": ["3026:8:15"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40,
                         "src": "3026:8:15"
@@ -17583,9 +17259,7 @@
                         },
                         "id": 1447,
                         "initializationExpression": {
-                          "assignments": [
-                            1429
-                          ],
+                          "assignments": [1429],
                           "declarations": [
                             {
                               "constant": false,
@@ -17698,9 +17372,7 @@
                       "modifierName": {
                         "id": 1424,
                         "name": "onlyRole",
-                        "nameLocations": [
-                          "3328:8:15"
-                        ],
+                        "nameLocations": ["3328:8:15"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40,
                         "src": "3328:8:15"
@@ -17936,9 +17608,7 @@
                         },
                         "id": 1477,
                         "initializationExpression": {
-                          "assignments": [
-                            1459
-                          ],
+                          "assignments": [1459],
                           "declarations": [
                             {
                               "constant": false,
@@ -18051,9 +17721,7 @@
                       "modifierName": {
                         "id": 1454,
                         "name": "onlyRole",
-                        "nameLocations": [
-                          "3556:8:15"
-                        ],
+                        "nameLocations": ["3556:8:15"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40,
                         "src": "3556:8:15"
@@ -18218,10 +17886,7 @@
                             "id": 1488,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "3847:7:15",
                             "typeDescriptions": {
@@ -18542,10 +18207,7 @@
                             "id": 1512,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "4078:7:15",
                             "typeDescriptions": {
@@ -18919,10 +18581,7 @@
                               "id": 1543,
                               "name": "revert",
                               "nodeType": "Identifier",
-                              "overloadedDeclarations": [
-                                -19,
-                                -19
-                              ],
+                              "overloadedDeclarations": [-19, -19],
                               "referencedDeclaration": -19,
                               "src": "4344:6:15",
                               "typeDescriptions": {
@@ -18952,9 +18611,7 @@
                         }
                       },
                       {
-                        "assignments": [
-                          1549
-                        ],
+                        "assignments": [1549],
                         "declarations": [
                           {
                             "constant": false,
@@ -19058,11 +18715,7 @@
                         "src": "4378:37:15"
                       },
                       {
-                        "assignments": [
-                          1556,
-                          null,
-                          1558
-                        ],
+                        "assignments": [1556, null, 1558],
                         "declarations": [
                           {
                             "constant": false,
@@ -19174,10 +18827,7 @@
                         "src": "4428:53:15"
                       },
                       {
-                        "assignments": [
-                          1564,
-                          1566
-                        ],
+                        "assignments": [1564, 1566],
                         "declarations": [
                           {
                             "constant": false,
@@ -19621,10 +19271,7 @@
                                     "id": 1609,
                                     "name": "revert",
                                     "nodeType": "Identifier",
-                                    "overloadedDeclarations": [
-                                      -19,
-                                      -19
-                                    ],
+                                    "overloadedDeclarations": [-19, -19],
                                     "referencedDeclaration": -19,
                                     "src": "4924:6:15",
                                     "typeDescriptions": {
@@ -19654,9 +19301,7 @@
                               }
                             },
                             {
-                              "assignments": [
-                                1616
-                              ],
+                              "assignments": [1616],
                               "declarations": [
                                 {
                                   "constant": false,
@@ -19679,9 +19324,7 @@
                                     "pathNode": {
                                       "id": 1614,
                                       "name": "IERC20",
-                                      "nameLocations": [
-                                        "4976:6:15"
-                                      ],
+                                      "nameLocations": ["4976:6:15"],
                                       "nodeType": "IdentifierPath",
                                       "referencedDeclaration": 608,
                                       "src": "4976:6:15"
@@ -19877,9 +19520,7 @@
                           "src": "4697:169:15",
                           "statements": [
                             {
-                              "assignments": [
-                                1591
-                              ],
+                              "assignments": [1591],
                               "declarations": [
                                 {
                                   "constant": false,
@@ -19902,9 +19543,7 @@
                                     "pathNode": {
                                       "id": 1589,
                                       "name": "IERC20",
-                                      "nameLocations": [
-                                        "4754:6:15"
-                                      ],
+                                      "nameLocations": ["4754:6:15"],
                                       "nodeType": "IdentifierPath",
                                       "referencedDeclaration": 608,
                                       "src": "4754:6:15"
@@ -20341,9 +19980,7 @@
                       "modifierName": {
                         "id": 1639,
                         "name": "IsExecuter",
-                        "nameLocations": [
-                          "5165:10:15"
-                        ],
+                        "nameLocations": ["5165:10:15"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 1280,
                         "src": "5165:10:15"
@@ -20435,11 +20072,7 @@
                     "src": "5360:384:15",
                     "statements": [
                       {
-                        "assignments": [
-                          1664,
-                          1666,
-                          1668
-                        ],
+                        "assignments": [1664, 1666, 1668],
                         "declarations": [
                           {
                             "constant": false,
@@ -20725,9 +20358,7 @@
                         "src": "5371:197:15"
                       },
                       {
-                        "assignments": [
-                          1683
-                        ],
+                        "assignments": [1683],
                         "declarations": [
                           {
                             "constant": false,
@@ -20962,10 +20593,7 @@
                               "id": 1697,
                               "name": "revert",
                               "nodeType": "Identifier",
-                              "overloadedDeclarations": [
-                                -19,
-                                -19
-                              ],
+                              "overloadedDeclarations": [-19, -19],
                               "referencedDeclaration": -19,
                               "src": "5700:6:15",
                               "typeDescriptions": {
@@ -21007,9 +20635,7 @@
                       "modifierName": {
                         "id": 1660,
                         "name": "IsExecuter",
-                        "nameLocations": [
-                          "5340:10:15"
-                        ],
+                        "nameLocations": ["5340:10:15"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 1280,
                         "src": "5340:10:15"
@@ -21261,9 +20887,7 @@
                       "modifierName": {
                         "id": 1709,
                         "name": "IsExecuter",
-                        "nameLocations": [
-                          "5814:10:15"
-                        ],
+                        "nameLocations": ["5814:10:15"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 1280,
                         "src": "5814:10:15"
@@ -21398,11 +21022,7 @@
                         "src": "6022:35:15"
                       },
                       {
-                        "assignments": [
-                          1738,
-                          1740,
-                          1742
-                        ],
+                        "assignments": [1738, 1740, 1742],
                         "declarations": [
                           {
                             "constant": false,
@@ -21703,9 +21323,7 @@
                         "src": "6070:137:15"
                       },
                       {
-                        "assignments": [
-                          1758
-                        ],
+                        "assignments": [1758],
                         "declarations": [
                           {
                             "constant": false,
@@ -21984,10 +21602,7 @@
                               "id": 1775,
                               "name": "revert",
                               "nodeType": "Identifier",
-                              "overloadedDeclarations": [
-                                -19,
-                                -19
-                              ],
+                              "overloadedDeclarations": [-19, -19],
                               "referencedDeclaration": -19,
                               "src": "6357:6:15",
                               "typeDescriptions": {
@@ -22072,9 +21687,7 @@
                       "modifierName": {
                         "id": 1730,
                         "name": "IsExecuter",
-                        "nameLocations": [
-                          "5991:10:15"
-                        ],
+                        "nameLocations": ["5991:10:15"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 1280,
                         "src": "5991:10:15"
@@ -22193,11 +21806,7 @@
                     "src": "6668:406:15",
                     "statements": [
                       {
-                        "assignments": [
-                          1805,
-                          null,
-                          1807
-                        ],
+                        "assignments": [1805, null, 1807],
                         "declarations": [
                           {
                             "constant": false,
@@ -23112,16 +22721,8 @@
               ],
               "scope": 1853,
               "src": "554:6528:15",
-              "usedErrors": [
-                305,
-                308,
-                2275
-              ],
-              "usedEvents": [
-                317,
-                326,
-                335
-              ]
+              "usedErrors": [305, 308, 2275],
+              "usedEvents": [317, 326, 335]
             }
           ],
           "src": "33:7051:15"
@@ -23132,12 +22733,8 @@
         "ast": {
           "absolutePath": "contracts/ERC20.sol",
           "exportedSymbols": {
-            "ERC20": [
-              2178
-            ],
-            "IERC20": [
-              1921
-            ]
+            "ERC20": [2178],
+            "IERC20": [1921]
           },
           "id": 2179,
           "license": "MIT",
@@ -23145,12 +22742,7 @@
           "nodes": [
             {
               "id": 1854,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:25:16"
             },
@@ -23162,9 +22754,7 @@
               "contractKind": "interface",
               "fullyImplemented": false,
               "id": 1921,
-              "linearizedBaseContracts": [
-                1921
-              ],
+              "linearizedBaseContracts": [1921],
               "name": "IERC20",
               "nameLocation": "72:6:16",
               "nodeType": "ContractDefinition",
@@ -23964,10 +23554,7 @@
               "scope": 2179,
               "src": "62:1851:16",
               "usedErrors": [],
-              "usedEvents": [
-                1912,
-                1920
-              ]
+              "usedEvents": [1912, 1920]
             },
             {
               "abstract": false,
@@ -23976,9 +23563,7 @@
                   "baseName": {
                     "id": 1922,
                     "name": "IERC20",
-                    "nameLocations": [
-                      "1935:6:16"
-                    ],
+                    "nameLocations": ["1935:6:16"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 1921,
                     "src": "1935:6:16"
@@ -23993,10 +23578,7 @@
               "contractKind": "contract",
               "fullyImplemented": true,
               "id": 2178,
-              "linearizedBaseContracts": [
-                2178,
-                1921
-              ],
+              "linearizedBaseContracts": [2178, 1921],
               "name": "ERC20",
               "nameLocation": "1926:5:16",
               "nodeType": "ContractDefinition",
@@ -24747,9 +24329,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    1872
-                  ],
+                  "baseFunctions": [1872],
                   "body": {
                     "id": 2025,
                     "nodeType": "Block",
@@ -24871,10 +24451,7 @@
                             "id": 1993,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "3382:7:16",
                             "typeDescriptions": {
@@ -25295,18 +24872,14 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    1884
-                  ],
+                  "baseFunctions": [1884],
                   "body": {
                     "id": 2094,
                     "nodeType": "Block",
                     "src": "3785:481:16",
                     "statements": [
                       {
-                        "assignments": [
-                          2039
-                        ],
+                        "assignments": [2039],
                         "declarations": [
                           {
                             "constant": false,
@@ -25578,10 +25151,7 @@
                             "id": 2047,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "3854:7:16",
                             "typeDescriptions": {
@@ -26162,9 +25732,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    1862
-                  ],
+                  "baseFunctions": [1862],
                   "body": {
                     "id": 2107,
                     "nodeType": "Block",
@@ -26305,9 +25873,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    1894
-                  ],
+                  "baseFunctions": [1894],
                   "body": {
                     "id": 2136,
                     "nodeType": "Block",
@@ -26663,9 +26229,7 @@
                   "visibility": "public"
                 },
                 {
-                  "baseFunctions": [
-                    1904
-                  ],
+                  "baseFunctions": [1904],
                   "body": {
                     "id": 2153,
                     "nodeType": "Block",
@@ -27155,10 +26719,7 @@
               "scope": 2179,
               "src": "1917:3076:16",
               "usedErrors": [],
-              "usedEvents": [
-                1912,
-                1920
-              ]
+              "usedEvents": [1912, 1920]
             }
           ],
           "src": "33:4960:16"
@@ -27169,12 +26730,8 @@
         "ast": {
           "absolutePath": "contracts/Whitelist.sol",
           "exportedSymbols": {
-            "Ownable": [
-              526
-            ],
-            "Whitelist": [
-              2269
-            ]
+            "Ownable": [526],
+            "Whitelist": [2269]
           },
           "id": 2270,
           "license": "MIT",
@@ -27182,12 +26739,7 @@
           "nodes": [
             {
               "id": 2180,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:25:17"
             },
@@ -27223,9 +26775,7 @@
                   "baseName": {
                     "id": 2183,
                     "name": "Ownable",
-                    "nameLocations": [
-                      "157:7:17"
-                    ],
+                    "nameLocations": ["157:7:17"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 526,
                     "src": "157:7:17"
@@ -27240,11 +26790,7 @@
               "contractKind": "contract",
               "fullyImplemented": true,
               "id": 2269,
-              "linearizedBaseContracts": [
-                2269,
-                526,
-                638
-              ],
+              "linearizedBaseContracts": [2269, 526, 638],
               "name": "Whitelist",
               "nameLocation": "144:9:17",
               "nodeType": "ContractDefinition",
@@ -27295,9 +26841,7 @@
                       "modifierName": {
                         "id": 2186,
                         "name": "Ownable",
-                        "nameLocations": [
-                          "186:7:17"
-                        ],
+                        "nameLocations": ["186:7:17"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 526,
                         "src": "186:7:17"
@@ -27547,9 +27091,7 @@
                         },
                         "id": 2224,
                         "initializationExpression": {
-                          "assignments": [
-                            2205
-                          ],
+                          "assignments": [2205],
                           "declarations": [
                             {
                               "constant": false,
@@ -27648,9 +27190,7 @@
                       "modifierName": {
                         "id": 2201,
                         "name": "onlyOwner",
-                        "nameLocations": [
-                          "305:9:17"
-                        ],
+                        "nameLocations": ["305:9:17"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 437,
                         "src": "305:9:17"
@@ -27888,9 +27428,7 @@
                         },
                         "id": 2254,
                         "initializationExpression": {
-                          "assignments": [
-                            2235
-                          ],
+                          "assignments": [2235],
                           "declarations": [
                             {
                               "constant": false,
@@ -27989,9 +27527,7 @@
                       "modifierName": {
                         "id": 2231,
                         "name": "onlyOwner",
-                        "nameLocations": [
-                          "493:9:17"
-                        ],
+                        "nameLocations": ["493:9:17"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 437,
                         "src": "493:9:17"
@@ -28196,13 +27732,8 @@
               ],
               "scope": 2270,
               "src": "135:614:17",
-              "usedErrors": [
-                392,
-                397
-              ],
-              "usedEvents": [
-                403
-              ]
+              "usedErrors": [392, 397],
+              "usedEvents": [403]
             }
           ],
           "src": "33:718:17"
@@ -28213,12 +27744,8 @@
         "ast": {
           "absolutePath": "contracts/lib/BytesLib.sol",
           "exportedSymbols": {
-            "BytesLib": [
-              2432
-            ],
-            "Constants": [
-              2493
-            ]
+            "BytesLib": [2432],
+            "Constants": [2493]
           },
           "id": 2433,
           "license": "MIT",
@@ -28226,12 +27753,7 @@
           "nodes": [
             {
               "id": 2271,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:25:18"
             },
@@ -28268,9 +27790,7 @@
               "contractKind": "library",
               "fullyImplemented": true,
               "id": 2432,
-              "linearizedBaseContracts": [
-                2432
-              ],
+              "linearizedBaseContracts": [2432],
               "name": "BytesLib",
               "nameLocation": "116:8:18",
               "nodeType": "ContractDefinition",
@@ -29114,9 +28634,7 @@
                     "src": "2068:567:18",
                     "statements": [
                       {
-                        "assignments": [
-                          2330
-                        ],
+                        "assignments": [2330],
                         "declarations": [
                           {
                             "constant": false,
@@ -29704,10 +29222,7 @@
                     "src": "2944:181:18",
                     "statements": [
                       {
-                        "assignments": [
-                          2355,
-                          2357
-                        ],
+                        "assignments": [2355, 2357],
                         "declarations": [
                           {
                             "constant": false,
@@ -30039,10 +29554,7 @@
                     "src": "3451:181:18",
                     "statements": [
                       {
-                        "assignments": [
-                          2377,
-                          2379
-                        ],
+                        "assignments": [2377, 2379],
                         "declarations": [
                           {
                             "constant": false,
@@ -30384,10 +29896,7 @@
                     "src": "3949:181:18",
                     "statements": [
                       {
-                        "assignments": [
-                          2399,
-                          2401
-                        ],
+                        "assignments": [2399, 2401],
                         "declarations": [
                           {
                             "constant": false,
@@ -30728,10 +30237,7 @@
                     "src": "4444:181:18",
                     "statements": [
                       {
-                        "assignments": [
-                          2421,
-                          2423
-                        ],
+                        "assignments": [2421, 2423],
                         "declarations": [
                           {
                             "constant": false,
@@ -31068,9 +30574,7 @@
               ],
               "scope": 2433,
               "src": "108:4520:18",
-              "usedErrors": [
-                2275
-              ],
+              "usedErrors": [2275],
               "usedEvents": []
             }
           ],
@@ -31082,12 +30586,8 @@
         "ast": {
           "absolutePath": "contracts/lib/Constants.sol",
           "exportedSymbols": {
-            "Constants": [
-              2493
-            ],
-            "IWETH9": [
-              2511
-            ]
+            "Constants": [2493],
+            "IWETH9": [2511]
           },
           "id": 2494,
           "license": "MIT",
@@ -31095,12 +30595,7 @@
           "nodes": [
             {
               "id": 2434,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:25:19"
             },
@@ -31143,9 +30638,7 @@
               },
               "fullyImplemented": true,
               "id": 2493,
-              "linearizedBaseContracts": [
-                2493
-              ],
+              "linearizedBaseContracts": [2493],
               "name": "Constants",
               "nameLocation": "194:9:19",
               "nodeType": "ContractDefinition",
@@ -31871,12 +31364,8 @@
         "ast": {
           "absolutePath": "contracts/lib/IWETH9.sol",
           "exportedSymbols": {
-            "IERC20": [
-              608
-            ],
-            "IWETH9": [
-              2511
-            ]
+            "IERC20": [608],
+            "IWETH9": [2511]
           },
           "id": 2512,
           "license": "MIT",
@@ -31884,12 +31373,7 @@
           "nodes": [
             {
               "id": 2495,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:25:20"
             },
@@ -31925,9 +31409,7 @@
                   "baseName": {
                     "id": 2499,
                     "name": "IERC20",
-                    "nameLocations": [
-                      "188:6:20"
-                    ],
+                    "nameLocations": ["188:6:20"],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 608,
                     "src": "188:6:20"
@@ -31948,10 +31430,7 @@
               },
               "fullyImplemented": false,
               "id": 2511,
-              "linearizedBaseContracts": [
-                2511,
-                608
-              ],
+              "linearizedBaseContracts": [2511, 608],
               "name": "IWETH9",
               "nameLocation": "178:6:20",
               "nodeType": "ContractDefinition",
@@ -32054,10 +31533,7 @@
               "scope": 2512,
               "src": "168:222:20",
               "usedErrors": [],
-              "usedEvents": [
-                542,
-                551
-              ]
+              "usedEvents": [542, 551]
             }
           ],
           "src": "33:359:20"
@@ -32068,9 +31544,7 @@
         "ast": {
           "absolutePath": "contracts/lib/SafeCast.sol",
           "exportedSymbols": {
-            "SafeCast": [
-              2581
-            ]
+            "SafeCast": [2581]
           },
           "id": 2582,
           "license": "MIT",
@@ -32078,12 +31552,7 @@
           "nodes": [
             {
               "id": 2513,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:24:21"
             },
@@ -32101,9 +31570,7 @@
               },
               "fullyImplemented": true,
               "id": 2581,
-              "linearizedBaseContracts": [
-                2581
-              ],
+              "linearizedBaseContracts": [2581],
               "name": "SafeCast",
               "nameLocation": "165:8:21",
               "nodeType": "ContractDefinition",
@@ -32257,10 +31724,7 @@
                             "id": 2522,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "428:7:21",
                             "typeDescriptions": {
@@ -32526,10 +31990,7 @@
                             "id": 2543,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "727:7:21",
                             "typeDescriptions": {
@@ -32746,10 +32207,7 @@
                             "id": 2564,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "1007:7:21",
                             "typeDescriptions": {
@@ -32969,12 +32427,8 @@
         "ast": {
           "absolutePath": "contracts/test.sol",
           "exportedSymbols": {
-            "IUniswapV3Pool": [
-              696
-            ],
-            "Test": [
-              2632
-            ]
+            "IUniswapV3Pool": [696],
+            "Test": [2632]
           },
           "id": 2633,
           "license": "MIT",
@@ -32982,12 +32436,7 @@
           "nodes": [
             {
               "id": 2583,
-              "literals": [
-                "solidity",
-                ">=",
-                "0.8",
-                ".0"
-              ],
+              "literals": ["solidity", ">=", "0.8", ".0"],
               "nodeType": "PragmaDirective",
               "src": "33:25:22"
             },
@@ -33024,9 +32473,7 @@
               "contractKind": "contract",
               "fullyImplemented": true,
               "id": 2632,
-              "linearizedBaseContracts": [
-                2632
-              ],
+              "linearizedBaseContracts": [2632],
               "name": "Test",
               "nameLocation": "165:4:22",
               "nodeType": "ContractDefinition",
@@ -33053,9 +32500,7 @@
                     "pathNode": {
                       "id": 2586,
                       "name": "IUniswapV3Pool",
-                      "nameLocations": [
-                        "177:14:22"
-                      ],
+                      "nameLocations": ["177:14:22"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 696,
                       "src": "177:14:22"
@@ -33218,9 +32663,7 @@
                     "src": "350:181:22",
                     "statements": [
                       {
-                        "assignments": [
-                          2606
-                        ],
+                        "assignments": [2606],
                         "declarations": [
                           {
                             "constant": false,
@@ -33303,9 +32746,7 @@
                         "src": "361:30:22"
                       },
                       {
-                        "assignments": [
-                          2612
-                        ],
+                        "assignments": [2612],
                         "declarations": [
                           {
                             "constant": false,
@@ -33387,9 +32828,7 @@
                         "src": "402:23:22"
                       },
                       {
-                        "assignments": [
-                          2618
-                        ],
+                        "assignments": [2618],
                         "declarations": [
                           {
                             "constant": false,

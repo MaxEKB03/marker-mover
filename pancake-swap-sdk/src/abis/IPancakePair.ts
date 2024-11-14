@@ -704,4 +704,4 @@ export const IPancakePair = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-]
+];
